@@ -66,6 +66,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .authorizeRequests()
                     .and()
                     .formLogin()
+                    .loginPage("/login")
                     .usernameParameter("userId")
                     .passwordParameter("userPwd")
 

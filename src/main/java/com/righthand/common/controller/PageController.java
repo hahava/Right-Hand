@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class PageController {
 
-
     @RequestMapping("/")
     public String index(HttpServletRequest request) {
         return "/index.html";
