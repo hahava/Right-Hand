@@ -30,6 +30,16 @@ public class MembershipInfo implements  UserDetails{
     private List<String> authoritiesStr;
     private int authoritiesLevel;
 
+    public int getProfileSeq() {
+        return profileSeq;
+    }
+
+    public void setProfileSeq(int profileSeq) {
+        this.profileSeq = profileSeq;
+    }
+
+    private int profileSeq;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
