@@ -117,7 +117,7 @@ public class MembershipServiceImpl implements MembershipService {
                 input_data.put("loginType", configMembership.getLoginTypeEmail());
                 input_data.put("email", userId);
             }
-
+//            System.out.println("email : " + input_data.get("email"));
             // 2) email의 pattern
             if (configValidationCheck.checkEmail((String) input_data.get("email")) != 0) {
                 signUpSemaphore.release();
