@@ -7,6 +7,8 @@ import lombok.Data;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
+
+
 @Data
 @ApiModel(value = "회원가입 파라미터")
 public class SignupReq implements Serializable {

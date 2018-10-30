@@ -43,15 +43,25 @@ public class MembershipController {
      */
 
     @ApiOperation(value="이메일 중복확인")
-    @GetMapping(value = "/checkEmailDup")
-    public ResponseHandler<?> checkEmailDup(final EmailReq _params){
+    @PostMapping(value = "/check/email/dup")
+    public boolean checkEmailDup(@Valid @RequestBody final EmailReq _params){
         final ResponseHandler<?> result = new ResponseHandler<>();
-        Map<String, Object> params = ConvertUtil.convertObjectToMap(_params);
+        Map params = ConvertUtil.convertObjectToMap(_params);
+        boolean isExistedEmail = false;
         ReturnType rtn;
 
         try {
-            rtn = membershipService
+//            isExistedEmail = membershipService.checkExistInUser(params);
+                isExistedEmail = membershipService.checkExistEmail(params);
+           // result.setReturnCode(rtn);
         }
+        catch (Exception e) {
+            logger.error("[EmailCheck][Exception] " + e.toString());
+//            result.setReturnCode(ReturnType.RTN_TYPE_NG);
+        }
+
+        return isExistedEmail;
+//        return result;
     }
 
     @ApiOperation(value = "회원가입")
