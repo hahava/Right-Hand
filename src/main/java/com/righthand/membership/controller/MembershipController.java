@@ -5,6 +5,7 @@ import com.righthand.common.dto.res.ResponseHandler;
 import com.righthand.common.type.ReturnType;
 import com.righthand.common.util.ConvertUtil;
 import com.righthand.membership.config.ConfigMembership;
+import com.righthand.membership.dto.req.EmailReq;
 import com.righthand.membership.dto.req.SignupReq;
 import com.righthand.membership.dto.res.SessionRes;
 import com.righthand.membership.service.MembershipInfo;
@@ -13,10 +14,7 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Map;
@@ -43,6 +41,19 @@ public class MembershipController {
      * @param : membership 설정값
      * @return : ReturnType
      */
+
+    @ApiOperation(value="이메일 중복확인")
+    @GetMapping(value = "/checkEmailDup")
+    public ResponseHandler<?> checkEmailDup(final EmailReq _params){
+        final ResponseHandler<?> result = new ResponseHandler<>();
+        Map<String, Object> params = ConvertUtil.convertObjectToMap(_params);
+        ReturnType rtn;
+
+        try {
+            rtn = membershipService
+        }
+    }
+
     @ApiOperation(value = "회원가입")
     @PostMapping(value="/signUp")
     public ResponseHandler<?> signUp(@Valid @RequestBody(required=false) final SignupReq _params) {
