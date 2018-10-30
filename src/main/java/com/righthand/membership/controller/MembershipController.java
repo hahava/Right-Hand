@@ -48,7 +48,6 @@ public class MembershipController {
     public ResponseHandler<?> signUp(@Valid @RequestBody(required=false) final SignupReq _params) {
         final ResponseHandler<?> result = new ResponseHandler<>();
         Map<String, Object> params = ConvertUtil.convertObjectToMap(_params);
-//        System.out.println(params.get("email"));
         ReturnType rtn;
 
         try{
