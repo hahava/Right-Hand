@@ -90,5 +90,7 @@
             AND UPD_DT = #{updDt}
         </if>
     </select>
-
+    <select id="countEmail" resultType="int" parameterType="map">
+        SELECT COUNT(*) FROM TB_USER WHERE EMAIL = #{email}
+    </select>
 </mapper>

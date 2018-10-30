@@ -62,7 +62,7 @@ public class MembershipServiceImpl implements MembershipService {
      * @param params
      * @return ReturnType
      */
-    public boolean checkExistInUser(Map<String, Object> params) throws  Exception{
+    public boolean checkExistInUser(Map params) throws  Exception{
 
         // user 데이터에서 찾기
         Map resMemberData = membershipDao.selectUser(params);
@@ -76,6 +76,16 @@ public class MembershipServiceImpl implements MembershipService {
             }
         }
 
+        return false;
+    }
+
+    public boolean checkExistEmail(Map params){
+        // user 데이터에서 찾기
+        int userCount = membershipDao.countEmail(params);
+        System.out.println("!!!!!!!!!!!!!!!!!!! " + userCount);
+        if(userCount > 0) {
+            return true;
+        }
         return false;
     }
 
