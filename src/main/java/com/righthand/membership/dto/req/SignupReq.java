@@ -18,9 +18,6 @@ public class SignupReq implements Serializable {
     @ApiModelProperty(value = "이메일")
     private String email;
 
-    @ApiModelProperty(value = "로그인 타입")
-    private String loginType;
-
     @ApiParam(value = "비밀번호", format = "password")
     private String userPwd; //  userPwd
 
@@ -28,27 +25,30 @@ public class SignupReq implements Serializable {
     @NotNull
     private String nickName; //  userName
 
-    @ApiModelProperty(value = "성별")
-    @NotNull
-    private String gender; //  gender
+//    @ApiModelProperty(value = "로그인 타입")
+//    private String loginType;
 
-    @ApiModelProperty(value = "생년")
-    @NotNull
-    private int birthYear; //
-
-    @ApiModelProperty(value = "자녀여부")
-    @NotNull
-    private String childrenYn; //
-
-    @ApiModelProperty(value = "마켓팅 동의 여부")
-    private String marketingAdvYn;
-
-    @ApiModelProperty(value = "서드파티 이미지 패스")
-    private String profileImgPath;
-
-    @ApiModelProperty(value = "언어")
-    private String lang;
-
-    private int authority; //
+//    @ApiModelProperty(value = "성별")
+//    @NotNull
+//    private String gender; //  gender
+//
+//    @ApiModelProperty(value = "생년")
+//    @NotNull
+//    private int birthYear; //
+//
+//    @ApiModelProperty(value = "자녀여부")
+//    @NotNull
+//    private String childrenYn; //
+//
+//    @ApiModelProperty(value = "마켓팅 동의 여부")
+//    private String marketingAdvYn;
+//
+//    @ApiModelProperty(value = "서드파티 이미지 패스")
+//    private String profileImgPath;
+//
+//    @ApiModelProperty(value = "언어")
+//    private String lang;
+//
+//    private int authority; //
 
 }
