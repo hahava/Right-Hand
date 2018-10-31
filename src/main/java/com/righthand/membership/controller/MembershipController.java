@@ -7,6 +7,7 @@ import com.righthand.common.util.ConvertUtil;
 import com.righthand.membership.config.ConfigMembership;
 import com.righthand.membership.dto.req.EmailReq;
 import com.righthand.membership.dto.req.SignupReq;
+import com.righthand.membership.dto.res.EmailRes;
 import com.righthand.membership.dto.res.SessionRes;
 import com.righthand.membership.service.MembershipInfo;
 import com.righthand.membership.service.MembershipService;
@@ -44,24 +45,22 @@ public class MembershipController {
 
     @ApiOperation(value="이메일 중복확인")
     @PostMapping(value = "/check/email/dup")
-    public boolean checkEmailDup(@Valid @RequestBody final EmailReq _params){
-        final ResponseHandler<?> result = new ResponseHandler<>();
-        Map params = ConvertUtil.convertObjectToMap(_params);
-        boolean isExistedEmail = false;
+    public ResponseHandler<EmailRes> checkEmailDup(@Valid @RequestBody final EmailReq _params){
+        final ResponseHandler<EmailRes> result = new ResponseHandler<>();
+        Map<String, Object> params = ConvertUtil.convertObjectToMap(_params);
         ReturnType rtn;
-
-        try {
-//            isExistedEmail = membershipService.checkExistInUser(params);
-                isExistedEmail = membershipService.checkExistEmail(params);
-           // result.setReturnCode(rtn);
+        try{
+            EmailRes emailRes = new EmailRes();
+            rtn = membershipService.canUseEmail(params);
+            if(rtn.equals(ReturnType.RTN_TYPE_OK)) emailRes.setIsExist(false);
+            else emailRes.setIsExist(true);
+            result.setData(emailRes);
+            result.setReturnCode(rtn);
+        } catch(Exception e) {
+            logger.error("[EmailDUP][Exception] " + e.toString());
+            result.setReturnCode(ReturnType.RTN_TYPE_NG);
         }
-        catch (Exception e) {
-            logger.error("[EmailCheck][Exception] " + e.toString());
-//            result.setReturnCode(ReturnType.RTN_TYPE_NG);
-        }
-
-        return isExistedEmail;
-//        return result;
+        return  result;
     }
 
     @ApiOperation(value = "회원가입")

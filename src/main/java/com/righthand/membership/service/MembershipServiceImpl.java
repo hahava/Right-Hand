@@ -79,14 +79,13 @@ public class MembershipServiceImpl implements MembershipService {
         return false;
     }
 
-    public boolean checkExistEmail(Map params){
+    public ReturnType canUseEmail(Map input_data){
         // user 데이터에서 찾기
-        int userCount = membershipDao.countEmail(params);
-        System.out.println("!!!!!!!!!!!!!!!!!!! " + userCount);
+        int userCount = membershipDao.countEmail(input_data);
         if(userCount > 0) {
-            return true;
+            return ReturnType.RTN_TYPE_MEMBERSSHIP_EAMIL_EXIST_NG;
         }
-        return false;
+        return ReturnType.RTN_TYPE_OK;
     }
 
     /**
