@@ -1,14 +1,453 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="ko">
 <head>
-    <meta charset="utf-8"/>
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="kalin" content="blockchain based forum">
+    <title>Right Hand</title>
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Church Template CSS -->
+    <link href="css/church.css" rel="stylesheet">
+    <link href="css/fancybox.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <script src="js/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Favicons -->
+    <!--<link rel="shortcut icon" href="images/favicon.png">-->
+
+    <!-- Custom Google Font : Montserrat and Droid Serif -->
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700' rel='stylesheet' type='text/css'>
 </head>
 <body>
 
-<h1> Right Hand Project</h1>
-<h2> </h2>
 
-<br>
+<!--Login  Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="user_login_email">이메일 주소</label>
+                        <input type="email" class="form-control" id="user_login_email" placeholder="Email">
+                    </div>
+                    <div class="form-group">
+                        <label for="user_login_pw">비밀번호</label>
+                        <input type="password" class="form-control" id="user_login_pw" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                        <!--반드시 a 타입으로 해야 모달이 안 닫힌다.-->
+                        <a style="width: 100%;" class="btn btn-primary " id="submitBtn" type="submit"
+                           onclick="return login();">
+                            Login
+                        </a>
+                    </div>
+                    <div class="form-group">
+                        <button style="width: 100%;" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Register  Modal -->
+<div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="register_email">이메일 주소</label>
+                        <input type="email" class="form-control" id="register_email" placeholder="Email">
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-primary">중복확인</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="register_nickname">닉네임</label>
+                        <input type="text" class="form-control" id="register_nickname" placeholder="닉네임">
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-primary">중복확인</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="register_pw">비밀번호</label>
+                        <input type="password" class="form-control" id="register_pw" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                        <label for="register_pw_check">비밀번호 확인</label>
+                        <input type="password" class="form-control" id="register_pw_check" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                        <a style="width: 100%;" class="btn btn-primary " id="register_submit"
+                           onclick="return register()">
+                            회원가입
+                        </a>
+                    </div>
+                    <div class="form-group">
+                        <button style="width: 100%;" class="btn btn-danger" data-dismiss="modal">취소</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--/////// modal-->
+
+<!-- Navigation Bar Starts -->
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span
+                    class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span
+                    class="icon-bar"></span> <span class="icon-bar"></span></button>
+            <a class="navbar-brand" href="index.html"> <img alt="Logo" class="img-responsive"></a></div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#none">개발 이야기</a></li>
+                <li><a href="#none">IT 이야기</a></li>
+                <li><a href="#none">공지사항</a></li>
+                <li><a href="#none">고객센터</a></li>
+                <li><a href="#" data-toggle="modal" data-target="#loginModal" id="modalOpener">Login</a></li>
+                <li><a href="#" data-toggle="modal" data-target="#registerModal" id="registerOpener">Register</a></li>
+            </ul>
+        </div>
+        <!--/.nav-collapse -->
+
+    </div>
+</div>
+<!--// Navbar Ends-->
+
+<!-- BANNER SLIDER
+    ================================================== -->
+<div id="myCarousel" class="carousel slide" data-ride="carousel">
+    <!-- Indicators -->
+    <ol class="carousel-indicators">
+        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+        <li data-target="#myCarousel" data-slide-to="1"></li>
+        <li data-target="#myCarousel" data-slide-to="2"></li>
+    </ol>
+    <div class="carousel-inner">
+        <div class="item slide-one active">
+            <div class="container">
+                <img src="images/arrows.png">
+                <div class="carousel-caption">
+                    <h2>Hello Developers!</h2>
+                    <p class="lead">Right Hand는 개발자들을 위한 공간입니다. <br>최신 기술, IT 제품 리뷰등의 다양한 소식을 놓치지 마세요</p>
+                </div>
+            </div>
+        </div>
+        <div class="item slide-two">
+            <div class="container">
+                <div class="carousel-caption">
+                    <h2>의견에 가치를 더하세요</h2>
+                    <p class="lead">작성한 모든 글들은 열람한 사람들의 의해 정당한 보상을 받을 수 있습니다.</p>
+                </div>
+            </div>
+        </div>
+        <div class="item slide-three">
+            <div class="container">
+                <div class="carousel-caption">
+                    <h2>혼자 고민하지 마세요</h2>
+                    <p class="lead">무엇이든 어떤 것이든 질문해보세요!<br>당신이 원하는 해답을 찾을 수 있을겁니다.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev"><span
+            class="glyphicon glyphicon-chevron-left"></span></a> <a class="right carousel-control" href="#myCarousel"
+                                                                    role="button" data-slide="next"><span
+        class="glyphicon glyphicon-chevron-right"></span></a></div>
+<!-- // Banner Slider -->
+
+
+<hr>
+<!-- BLOG LIST / LATEST SERMONS -->
+<div class="container has-margin-bottom">
+    <div class="row">
+        <div class="col-md-12 has-margin-bottom">
+            <div class="section-title left-align-desktop">
+                <h4> 최신글 </h4>
+            </div>
+            <!--Blog list-->
+            <div class="row has-margin-bottom">
+                <div class="col-md-4 col-sm-4"><img class="img-responsive center-block" src="images/blog-thumb-1.jpg"
+                                                    alt="bulletin blog"></div>
+                <div class="col-md-8 col-sm-8 bulletin">
+                    <a href="blog-single.html"><h4 class="media-heading">java와 javscript의 차이 및 역사 </h4></a>
+                    <p>2018-10-15 <a href="#" class="link-reverse">Danny Lee</a></p>
+                    <p> 선거에 있어서 최고득표자가 2인 이상인 때에는 국회의 재적의원 과반수가 출석한 공개회의에서 다수표를 얻은 자를 당선자로 한다. 모든 국민은 주거의 자유를 침해받지 아니한다.
+                        주거에 대한 압수나 수색을 할 때에는 검사의 신청에 의하여 법관이 발부한 영장을 제시하여야 한다. 대한민국은 통일을 지향하며, 자유민주적 기본질서에 입각한 평화적 통일
+                        정책을 수립하고 이를 추진한다. ...</p>
+                </div>
+            </div>
+            <!--Blog list-->
+            <div class="row has-margin-bottom">
+                <div class="col-md-4 col-sm-4"><img class="img-responsive center-block" src="images/blog-thumb-2.jpg"
+                                                    alt="bulletin blog"></div>
+                <div class="col-md-8 col-sm-8 bulletin">
+                    <a href="blog-single.html"><h4 class="media-heading">Node js 에서 MongoDB 사용하기</h4>
+                    </a>
+                    <p>2018-10-15 <a href="#" class="link-reverse">Danny Lee</a></p>
+
+                    <p class="media-content">국가유공자·상이군경 및 전몰군경의 유가족은 법률이 정하는 바에 의하여 우선적으로 근로의 기회를 부여받는다. 대한민국의 주권은 국민에게
+                        있고, 모든 권력은 국민으로부터 나온다.
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 col-sm-4"></div>
+                <div class="col-md-8 col-sm-8 bulletin">
+                    <a href="blog-single.html"><h4 class="media-heading">블록체인에 대한 고찰</h4></a>
+                    <p>2018-10-15 <a href="#" class="link-reverse">Danny Lee</a></p>
+                    <p class="media-content">감사원의 조직·직무범위·감사위원의 자격·감사대상공무원의 범위 기타 필요한 사항은 법률로 정한다.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END BLOG LIST / LATEST SERMONS -->
+<hr>
+
+<div class="container has-margin-bottom">
+    <div class="row">
+        <div class="col-md-9 has-margin-bottom">
+            <div class="section-title left-align-desktop">
+                <h4> 게시판 소개 </h4>
+            </div>
+        </div>
+
+        <div class="row has-margin-bottom">
+            <div class="col-md-5 col-sm-5   bulletin">
+                <a href="blog-single.html"><h4 class="media-heading te">Dev. Story </h4></a>
+                <Br>
+                <p class="media-content ">개발 중 어려운 점이 있다면, 언제든지 무엇이든 질문하세요!
+                    만약, 원하는 답변을 찾았다면 RHT로 고마움을 표현하세요. </p>
+            </div>
+            <div class="col-md-5 col-sm-5 col-md-offset-1 col-sm-offset-1">
+                <img class="img-responsive center-block" src="images/gallery/img_gallery_8.jpg">
+            </div>
+        </div>
+    </div>
+
+    <div class="row has-margin-bottom">
+        <div class="col-md-5 col-sm-5">
+            <img class="img-responsive center-block" src="images/gallery/img_gallery_8.jpg">
+        </div>
+        <div class="col-md-5 col-sm-5 col-md-offset-1 col-sm-offset-1   bulletin">
+            <a href="blog-single.html"><h4 class="media-heading">IT. Story </h4></a>
+            <Br>
+            <p class="media-content">공유하고싶은 지식과 정보를 작성해보세요.
+                또한, 소개하고 싶은 IT 제품에 대한 글을 남겨보세요."</p>
+        </div>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6 col-md-5">
+                <h5>ABOUT THE RIGHT HAND</h5>
+                <p>도로명 : 서울특별시 강남구 도산대로 4길 14-8 2/3층 투도스</p>
+                <p>지번 : 서울특별시 강남구 논현동 1608 2/3층 투도스</p>
+                <p><span>T 070 - 4800 - 6111</span> <span>F 0303 - 3444 - 0471</span>
+                    <span>E hello@todos.co.kr</span>
+                </p>
+            </div>
+            <div class="col-sm-6 col-md-offset-5 col-md-2">
+                <h5>CONNECT</h5>
+                <div class="social-icons"><a href="#"><img src="images/fb-icon.png" alt="social"></a> <a
+                        href="#"><img src="images/tw-icon.png" alt="social"></a> <a href="#">
+                    <img src="images/in-icon.png" alt="social"></a></div>
+            </div>
+        </div>
+    </div>
+    <div class="copyright">
+        <div class="container">
+            <p class="text-center">Copyright © 2018 Todos all rights reserved</p>
+        </div>
+    </div>
+</footer>
+<!-- // END FOOTER -->
+
+<!-- // END -->
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="js/jquery.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/owl.carousel.min.js"></script>
+<script src="js/ketchup.all.js"></script>
+<script src="js/fancybox.js"></script>
+<script src="js/script.js"></script>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!--로그인 스크립트-->
+<script>
+    /*로그인 성공 여부 확인*/
+    var loginOk = false;
+
+    $(document).ready(function () {
+        /*모달 close 콜백 이벤트*/
+        $('#loginModal').on('hidden.bs.modal', function (e) {
+            alert('modal close');
+            if (loginOk) {
+                /*로그인 성공시 리다이렉트*/
+                window.location.href = "/user";
+            }
+        });
+
+    });
+
+    /*비동기 로그인 기능*/
+    function login() {
+        $.ajax({
+            type: 'POST',
+            url: "http://localhost:8080/api/login",
+            async: false,
+            data: {
+                userId: $('#user_login_email').val(),
+                userPwd: $('#user_login_pw').val()
+            },
+            success: function (data) {
+                alert(data.toString());
+                loginOk = true;
+                $('#submitBtn').attr('data-dismiss', 'modal');
+                window.reload();
+                return true;
+            },
+            error: function () {
+                loginOk = false;
+                alert("id 또는 password 가 틀렸습니다.");
+                return false;
+            }
+        });
+        return loginOk;
+    };
+</script>
+<!--회원가입 스크립트-->
+<script>
+
+    function register() {
+        var pw = $('#register_pw').val();
+        var check_pw = $('#register_pw_check').val();
+
+        var check = regex_checker(pw, check_pw);
+        var register_success = false;
+
+        if (check) {
+
+            var member = {
+                "userId": $('#register_email').val(),
+                "userPwd": $('#register_pw').val(),
+                "nickName": $('#register_nickname').val(),
+                "email": $('#register_email').val()
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: "http://localhost:8080/api/membership/signUp",
+                async: false,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                data: JSON.stringify(member),
+                success: function (data) {
+                    loginOk = true;
+                    $('#register_submit').attr('data-dismiss', 'modal');
+                    register_success = true;
+                    window.reload();
+                    return true;
+                }
+                ,
+                error: function (data) {
+                    alert(data.toString());
+                    register_success = false;
+                    return false;
+                }
+            })
+            ;
+            return true;
+        }
+        return register_success;
+    };
+
+
+    var input_checker = function () {
+        if ($('#register_email').val().length == 0 || $('#register_email').val() == "") {
+            $('#register_email').focus();
+            return false;
+        }
+    };
+
+    var regex_checker = function (pw, check_pw) {
+
+        var regex = /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/;
+
+
+        // 암호 길이
+        if (pw.length < 8 || pw.length > 16) {
+            alert("비빌번호는 8자 이상 15자 이하로 해주세요!");
+            return false;
+        }
+
+        //암호 형식
+        if (!regex.test(pw)) {
+            alert("비빌번호는 대소문자와 특수문자를 포함해야 합니다.");
+            return false;
+        }
+
+        //암호 2번 입력
+        if (pw != check_pw) {
+            alert("비밀번호가 일치 하지 않습니다.");
+            $('#register_pw_check').focus();
+            return false;
+        }
+
+        alert("성공이다!");
+        return true;
+
+    };
+
+
+    // function login() {
+    //     $.ajax({
+    //         type: 'POST',
+    //         url: "http://localhost:8080/api/login",
+    //         async: false,
+    //         data: {
+    //             userId: $('#userId').val(),
+    //             userPwd: $('#userPwd').val()
+    //         },
+    //         success: function (data) {
+    //             alert(data.toString());
+    //             loginOk = true;
+    //             $('#submitBtn').attr('data-dismiss', 'modal');
+    //             window.reload();
+    //             return true;
+    //         },
+    //         error: function () {
+    //             loginOk = false;
+    //             alert("id 또는 password 가 틀렸습니다.");
+    //             return false;
+    //         }
+    //     })
+    //     return loginOk;
+    // };
+</script>
+
+
 </body>
-
 </html>
