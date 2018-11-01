@@ -90,7 +90,7 @@ public class MembershipController {
         try {
 
             MembershipInfo sessionInfo = membershipService.currentSessionUserInfo();
-
+            logger.info(sessionInfo.getUsername());
             //1. 토큰 유효성 체크
             if(sessionInfo != null) {
                 result.setReturnCode(ReturnType.RTN_TYPE_OK);
