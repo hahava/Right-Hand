@@ -58,7 +58,8 @@ public enum ReturnType {
     RTN_TYPE_BOARD_CONTENT_NO_EXIST(301, ""),
     RTN_TYPE_BOARD_USER_ID_NO_EXIST(302, ""),
     RTN_TYPE_BOARD_USER_NAME_NO_EXIST(303, ""),
-    RTN_TYPE_BOARD_USER_EMAIL_NO_EXIST(304, "");
+    RTN_TYPE_BOARD_USER_EMAIL_NO_EXIST(304, ""),
+    RTN_TYPE_BOARD_LIST_NO_EXIST(305, "글이 존재하지 않습니다.");
 
     private int code;
     private String message;
