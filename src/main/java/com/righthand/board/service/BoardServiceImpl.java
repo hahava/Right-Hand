@@ -2,11 +2,10 @@ package com.righthand.board.service;
 
 import com.righthand.board.dao.BoardDao;
 import com.righthand.board.dto.model.BoardCountVO;
+import com.righthand.board.dto.model.BoardDetailVO;
 import com.righthand.board.dto.model.BoardSearchVO;
-import com.righthand.board.dto.req.BoardReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Map;
@@ -58,5 +57,22 @@ public class BoardServiceImpl implements BoardService {
             throw new Exception(e);
         }
         return searchedBoardData;
+    }
+
+    @Override
+    public Map<String, Object> showBoardDetailTech(int boardSeq) throws Exception {
+        BoardDetailVO vo = new BoardDetailVO();
+        Map<String, Object> boardDetailData;
+        vo.setBoardSeq(boardSeq);
+        boardSemaphore.acquire();
+        try {
+            boardDetailData = boardDao.showBoardDetailTech(vo);
+            boardSemaphore.release();
+        }
+        catch (Exception e) {
+            boardSemaphore.release();
+            throw new Exception(e);
+        }
+        return boardDetailData;
     }
 }
