@@ -1,6 +1,7 @@
 package com.righthand.board.dao;
 
 import com.righthand.board.dto.model.BoardCountVO;
+import com.righthand.board.dto.model.BoardSearchVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Repository;
@@ -13,4 +14,5 @@ import java.util.Map;
 @ComponentScan(basePackages = "com.righthand.board.dao")
 public interface BoardDao {
     List<Map<String, Object>> selectBoardListTech(BoardCountVO vo);
+    List<Map<String, Object>> searchedBoardListTech(BoardSearchVO vo);
 }

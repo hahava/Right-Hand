@@ -11,4 +11,14 @@
       ORDER BY BOARD_DATE DESC
       LIMIT #{start}, #{end}
     </select>
+
+    <select id="searchedBoardListTech" resultType="hashMap" parameterType="com.righthand.board.dto.model.BoardSearchVO">
+        SELECT BOARD_TITLE, BOARD_CONTENT, BOARD_DATE, NICK_NAME
+        FROM
+        TB_IT_TECH_BOARD AS BOARD
+        , TB_PROFILE AS PROFILE
+        WHERE BOARD.BOARD_PROFILE_SEQ = PROFILE.PROFILE_SEQ AND (BOARD.BOARD_TITLE LIKE CONCAT('%',#{searchedWord},'%') OR BOARD_CONTENT LIKE CONCAT('%',#{searchedWord},'%'))
+        ORDER BY BOARD_DATE DESC
+        LIMIT #{start}, #{end}
+    </select>
 </mapper>
