@@ -438,5 +438,10 @@ public class MembershipServiceImpl implements MembershipService {
         return passwordHandler.getPasswordEncoder();
     }
 
+    @Override
+    public int getProfileSeq(int userSeq) {
+        return membershipDao.getProfileSeq(userSeq);
+    }
+
 }
 

@@ -6,6 +6,8 @@ import com.righthand.board.service.BoardService;
 import com.righthand.common.dto.res.ResponseHandler;
 import com.righthand.common.type.ReturnType;
 import com.righthand.common.util.ConvertUtil;
+import com.righthand.membership.service.MembershipInfo;
+import com.righthand.membership.service.MembershipService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,10 @@ public class BoardController {
 
     @Autowired
     BoardService boardService;
+
+    @Autowired
+    MembershipService membershipService;
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @GetMapping("/board/list/tech/{page}")
@@ -44,7 +50,6 @@ public class BoardController {
     @GetMapping("/board/list/tech/searched")
     public ResponseHandler<List<Map<String, Object>>> searchedBoardListTech(
             @RequestParam String searchedWord, @RequestParam int page
-//            @Valid @RequestBody final BoardReq _params
     ) {
         final ResponseHandler<List<Map<String, Object>>> result = new ResponseHandler<>();
         List<Map<String, Object>> tempBoardList;
@@ -62,6 +67,31 @@ public class BoardController {
             logger.error("[SearchBoardList] [Exception " + e.toString());
             result.setReturnCode(ReturnType.RTN_TYPE_NG);
         }
+        return result;
+    }
+
+    @PostMapping("/board/tech")
+    public ResponseHandler<?> writeBoardTech(@Valid @RequestBody final BoardReq _params){
+        final ResponseHandler<?> result = new ResponseHandler<>();
+        Map<String, Object> params = ConvertUtil.convertObjectToMap(_params);
+        try {
+            MembershipInfo membershipInfo = membershipService.currentSessionUserInfo();
+            System.out.println("profile seq : " + membershipInfo.getProfileSeq());
+            params.put("boardProfileSeq", membershipInfo.getProfileSeq());
+            ReturnType rtn;
+            try{
+                rtn = boardService.insertBoardListTech(params);
+                result.setReturnCode(rtn);
+            }catch (Exception e){
+                logger.error("[TechBoard][Exception] " + e.toString());
+                result.setReturnCode(ReturnType.RTN_TYPE_NG);
+            }
+        }
+        catch (Exception e) {
+            logger.error("[TechBoard][Exception] " + e.toString());
+            result.setReturnCode(ReturnType.RTN_TYPE_NG);
+        }
+
         return result;
     }
 

@@ -27,4 +27,6 @@ public interface MembershipService extends UserDetailsService {
 
     // password 암호화
     PasswordEncoder passwordEncoder();
+
+    int getProfileSeq(int userSeq);
 }
