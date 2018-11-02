@@ -2,8 +2,11 @@ package com.righthand.board.service;
 
 import com.righthand.board.dao.BoardDao;
 import com.righthand.board.dto.model.BoardCountVO;
+import com.righthand.board.dto.model.BoardSearchVO;
+import com.righthand.board.dto.req.BoardReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Map;
@@ -36,4 +39,24 @@ public class BoardServiceImpl implements BoardService {
         return resBoardData;
     }
 
+    @Override
+    public List<Map<String, Object>> searchedBoardListTech(String searchedWord, int page) throws Exception {
+        int start, end;
+        BoardSearchVO vo = new BoardSearchVO();
+        start = (page - 1) * 5;
+        end = start + 5;
+        vo.setStart(start); vo.setEnd(end);
+        vo.setSearchedWord(searchedWord);
+        List<Map<String, Object>> searchedBoardData;
+        boardSemaphore.acquire();
+        try {
+            searchedBoardData = boardDao.searchedBoardListTech(vo);
+            System.out.println("resBoard : " + searchedBoardData);
+            boardSemaphore.release();
+        }catch (Exception e) {
+            boardSemaphore.release();
+            throw new Exception(e);
+        }
+        return searchedBoardData;
+    }
 }
