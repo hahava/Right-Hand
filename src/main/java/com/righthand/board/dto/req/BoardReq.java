@@ -8,9 +8,14 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Data
-@ApiModel(value = "게시판 검색 파라미터")
+@ApiModel(value = "게시판 작성 파라미터")
 public class BoardReq implements Serializable {
-    @ApiParam(value = "검색어", required = true)
+
+    @ApiParam(value = "제목", required = true)
     @NotNull
-    private String searchedWord;
+    private String boardTitle;
+
+    @ApiParam(value = "내용", required = true)
+    @NotNull
+    private String boardContent;
 }

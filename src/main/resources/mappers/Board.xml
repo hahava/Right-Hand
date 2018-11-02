@@ -21,4 +21,9 @@
         ORDER BY BOARD_DATE DESC
         LIMIT #{start}, #{end}
     </select>
+
+    <insert id="insertBoardListTech" parameterType="map" useGeneratedKeys="true" keyProperty="BOARD_SEQ">
+        INSERT INTO TB_IT_TECH_BOARD(BOARD_TITLE, BOARD_CONTENT, BOARD_DATE, BOARD_PROFILE_SEQ)
+        VALUES (#{boardTitle}, #{boardContent}, CURRENT_TIMESTAMP , #{boardProfileSeq})
+    </insert>
 </mapper>

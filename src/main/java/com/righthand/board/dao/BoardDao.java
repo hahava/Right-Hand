@@ -15,4 +15,5 @@ import java.util.Map;
 public interface BoardDao {
     List<Map<String, Object>> selectBoardListTech(BoardCountVO vo);
     List<Map<String, Object>> searchedBoardListTech(BoardSearchVO vo);
+    void insertBoardListTech(Map boardData);
 }
