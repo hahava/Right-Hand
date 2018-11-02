@@ -1,13 +1,14 @@
 package com.righthand.board.controller;
 
-import com.amazonaws.log.InternalLogApi;
 import com.righthand.board.dto.req.BoardReq;
 import com.righthand.board.service.BoardService;
 import com.righthand.common.dto.res.ResponseHandler;
 import com.righthand.common.type.ReturnType;
+
 import com.righthand.common.util.ConvertUtil;
 import com.righthand.membership.service.MembershipInfo;
 import com.righthand.membership.service.MembershipService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,7 @@ public class BoardController {
     @GetMapping("/board/list/tech/searched")
     public ResponseHandler<List<Map<String, Object>>> searchedBoardListTech(
             @RequestParam String searchedWord, @RequestParam int page
+//            @Valid @RequestBody final BoardReq _params
     ) {
         final ResponseHandler<List<Map<String, Object>>> result = new ResponseHandler<>();
         List<Map<String, Object>> tempBoardList;
@@ -65,6 +67,25 @@ public class BoardController {
         }
         catch (Exception e) {
             logger.error("[SearchBoardList] [Exception " + e.toString());
+            result.setReturnCode(ReturnType.RTN_TYPE_NG);
+        }
+        return result;
+    }
+
+    @GetMapping("/board/tech/detail/{boardSeq}")
+    public  ResponseHandler<Map<String, Object>> showBoardDetail(@PathVariable(required = true) int boardSeq) {
+        final ResponseHandler<Map<String, Object>> result = new ResponseHandler<>();
+        Map<String, Object> boardDetailData;
+        try {
+            boardDetailData = boardService.showBoardDetailTech(boardSeq);
+            if (!(boardDetailData.isEmpty() || boardDetailData == null)) {
+                result.setData(boardDetailData);
+                result.setReturnCode(ReturnType.RTN_TYPE_OK);
+            } else {
+                result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST);
+            }
+        } catch (Exception e) {
+            logger.error("[BoardDetail] [Exception " + e.toString());
             result.setReturnCode(ReturnType.RTN_TYPE_NG);
         }
         return result;

@@ -13,7 +13,7 @@
     </select>
 
     <select id="searchedBoardListTech" resultType="hashMap" parameterType="com.righthand.board.dto.model.BoardSearchVO">
-        SELECT BOARD_TITLE, BOARD_CONTENT, BOARD_DATE, NICK_NAME
+        SELECT BOARD_TITLE, BOARD_DATE, NICK_NAME
         FROM
         TB_IT_TECH_BOARD AS BOARD
         , TB_PROFILE AS PROFILE
@@ -22,8 +22,18 @@
         LIMIT #{start}, #{end}
     </select>
 
+
+    <select id="showBoardDetailTech" resultType="hashMap" parameterType="com.righthand.board.dto.model.BoardDetailVO">
+        SELECT BOARD_TITLE, BOARD_CONTENT, BOARD_DATE, NICK_NAME
+        FROM
+        TB_IT_TECH_BOARD AS BOARD
+        , TB_PROFILE AS PROFILE
+        WHERE BOARD.BOARD_PROFILE_SEQ = PROFILE.PROFILE_SEQ AND BOARD.BOARD_SEQ = #{boardSeq}
+    </select>
+
     <insert id="insertBoardListTech" parameterType="map" useGeneratedKeys="true" keyProperty="BOARD_SEQ">
         INSERT INTO TB_IT_TECH_BOARD(BOARD_TITLE, BOARD_CONTENT, BOARD_DATE, BOARD_PROFILE_SEQ)
         VALUES (#{boardTitle}, #{boardContent}, CURRENT_TIMESTAMP , #{boardProfileSeq})
     </insert>
+
 </mapper>
