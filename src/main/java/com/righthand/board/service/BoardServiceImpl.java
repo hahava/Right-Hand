@@ -4,9 +4,15 @@ import com.righthand.board.dao.BoardDao;
 import com.righthand.board.dto.model.BoardCountVO;
 import com.righthand.board.dto.model.BoardDetailVO;
 import com.righthand.board.dto.model.BoardSearchVO;
+
+import com.righthand.board.dto.req.BoardReq;
+import com.righthand.common.type.ReturnType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
@@ -17,6 +23,7 @@ public class BoardServiceImpl implements BoardService {
     BoardDao boardDao;
 
     static Semaphore boardSemaphore = new Semaphore(1);
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
     public List<Map<String, Object>> selectBoardListTech(int page) throws Exception {
@@ -68,11 +75,27 @@ public class BoardServiceImpl implements BoardService {
         try {
             boardDetailData = boardDao.showBoardDetailTech(vo);
             boardSemaphore.release();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             boardSemaphore.release();
             throw new Exception(e);
         }
         return boardDetailData;
+    }
+
+    public ReturnType insertBoardListTech(Map input_data) throws Exception {
+        HashMap<String, Object> params = new HashMap<>();
+
+        logger.info("[Service][boardTech]");
+
+        boardSemaphore.acquire();
+
+        try{
+            boardDao.insertBoardListTech(input_data);
+        }catch (Exception e){
+            boardSemaphore.release();
+            return ReturnType.RTN_TYPE_NG;
+        }
+        boardSemaphore.release();
+        return ReturnType.RTN_TYPE_OK;
     }
 }
