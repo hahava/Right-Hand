@@ -15,4 +15,5 @@ public interface MembershipDao
     void insertProfile(Map profileData);
     Map selectUser(Map userData);
     int countEmail(Map userData);
+    int getProfileSeq(int userSeq);
 }

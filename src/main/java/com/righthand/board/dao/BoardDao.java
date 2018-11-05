@@ -1,6 +1,7 @@
 package com.righthand.board.dao;
 
 import com.righthand.board.dto.model.BoardCountVO;
+import com.righthand.board.dto.model.BoardDetailVO;
 import com.righthand.board.dto.model.BoardSearchVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.context.annotation.ComponentScan;
@@ -15,4 +16,9 @@ import java.util.Map;
 public interface BoardDao {
     List<Map<String, Object>> selectBoardListTech(BoardCountVO vo);
     List<Map<String, Object>> searchedBoardListTech(BoardSearchVO vo);
+    Map<String, Object> showBoardDetailTech(BoardDetailVO vo);
+    List<Map<String, Object>> showReplyBoardTech(BoardDetailVO vo);
+    void insertBoardListTech(Map boardData);
+    void insertReplyListTech(Map replyData);
+    int selectCountListTech();
 }

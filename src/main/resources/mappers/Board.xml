@@ -2,8 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.righthand.board.dao.BoardDao">
+
+    <select id="selectCountListTech" resultType="int">
+      SELECT COUNT(*) FROM TB_IT_TECH_BOARD
+    </select>
+
     <select id="selectBoardListTech" resultType="hashMap" parameterType="com.righthand.board.dto.model.BoardCountVO">
-      SELECT BOARD_TITLE, BOARD_DATE, NICK_NAME
+      SELECT BOARD_SEQ, BOARD_TITLE, BOARD_CONTENT, BOARD_DATE, NICK_NAME
       FROM
       TB_IT_TECH_BOARD AS BOARD
       , TB_PROFILE AS PROFILE
@@ -13,7 +18,7 @@
     </select>
 
     <select id="searchedBoardListTech" resultType="hashMap" parameterType="com.righthand.board.dto.model.BoardSearchVO">
-        SELECT BOARD_TITLE, BOARD_CONTENT, BOARD_DATE, NICK_NAME
+        SELECT BOARD_TITLE, BOARD_DATE, NICK_NAME
         FROM
         TB_IT_TECH_BOARD AS BOARD
         , TB_PROFILE AS PROFILE
@@ -21,4 +26,30 @@
         ORDER BY BOARD_DATE DESC
         LIMIT #{start}, #{end}
     </select>
+
+    <insert id="insertBoardListTech" parameterType="map" useGeneratedKeys="true" keyProperty="BOARD_SEQ">
+        INSERT INTO TB_IT_TECH_BOARD(BOARD_TITLE, BOARD_CONTENT, BOARD_DATE, BOARD_PROFILE_SEQ)
+        VALUES (#{boardTitle}, #{boardContent}, CURRENT_TIMESTAMP , #{boardProfileSeq})
+    </insert>
+
+    <select id="showBoardDetailTech" resultType="hashMap" parameterType="com.righthand.board.dto.model.BoardDetailVO">
+        SELECT BOARD_TITLE, BOARD_CONTENT, BOARD_DATE, NICK_NAME
+        FROM
+        TB_IT_TECH_BOARD AS BOARD
+        , TB_PROFILE AS PROFILE
+        WHERE BOARD.BOARD_PROFILE_SEQ = PROFILE.PROFILE_SEQ AND BOARD.BOARD_SEQ = #{boardSeq}
+    </select>
+
+    <select id="showReplyBoardTech" resultType="map" parameterType="com.righthand.board.dto.model.BoardDetailVO">
+        SELECT REPLY_CONTENT, REPLY_DATE, NICK_NAME
+        FROM TB_PROFILE AS PROFILE, TB_IT_TECH_REPLY AS REPLY
+        WHERE (REPLY.REPLY_BOARD_SEQ = #{boardSeq}) AND (REPLY.REPLY_PROFILE_SEQ = PROFILE.PROFILE_SEQ)
+        ORDER BY  REPLY.REPLY_DATE
+    </select>
+
+    <insert id="insertReplyListTech" parameterType="map" useGeneratedKeys="true" keyProperty="REPLY_SEQ">
+      INSERT INTO TB_IT_TECH_REPLY(REPLY_CONTENT, REPLY_DATE, REPLY_PROFILE_SEQ, REPLY_BOARD_SEQ)
+      VALUES (#{replyContent}, CURRENT_TIMESTAMP, #{replyProfileSeq}, #{boardSeq})
+    </insert>
+
 </mapper>

@@ -9,12 +9,6 @@ import org.springframework.http.ResponseEntity;
 public class ResponseHandler<T> extends HttpDefaultRes<T> {
 
     public static ResponseEntity<?> getObjectResponse(ReturnType rtn, Object obj, HttpStatus status) {
-        //obj.getClass()
-
-//        JSONObject obj = new JSONObject();
-//        obj.put("code", rtn.getValue());
-//        obj.put("msg", rtn.getMessage());
-
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add("Content-Type", "application/json; charset=UTF-8");
         return new ResponseEntity<>(obj, responseHeaders, status);
