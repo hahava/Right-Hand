@@ -2,11 +2,14 @@ package com.righthand.board.service;
 
 import com.righthand.board.dao.BoardDao;
 import com.righthand.board.dto.model.BoardCountVO;
+import com.righthand.board.dto.model.BoardDetailVO;
 import com.righthand.board.dto.model.BoardSearchVO;
-import com.righthand.board.dto.req.BoardReq;
+
+
 import com.righthand.common.type.ReturnType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -73,13 +76,29 @@ public class BoardServiceImpl implements BoardService {
 
         boardSemaphore.acquire();
 
-        try{
+        try {
             boardDao.insertBoardListTech(input_data);
-        }catch (Exception e){
+        } catch (Exception e) {
             boardSemaphore.release();
             return ReturnType.RTN_TYPE_NG;
         }
         boardSemaphore.release();
         return ReturnType.RTN_TYPE_OK;
+    }
+
+    public Map<String, Object> showBoardDetailTech(int boardSeq) throws Exception {
+        BoardDetailVO vo = new BoardDetailVO();
+        Map<String, Object> boardDetailData;
+        vo.setBoardSeq(boardSeq);
+        boardSemaphore.acquire();
+        try {
+            boardDetailData = boardDao.showBoardDetailTech(vo);
+            boardSemaphore.release();
+        }
+        catch (Exception e) {
+            boardSemaphore.release();
+            throw new Exception(e);
+        }
+        return boardDetailData;
     }
 }
