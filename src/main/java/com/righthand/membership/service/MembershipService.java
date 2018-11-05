@@ -1,6 +1,7 @@
 package com.righthand.membership.service;
 
 import com.righthand.common.type.ReturnType;
+import net.bytebuddy.asm.Advice;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,8 @@ import java.util.Map;
 @Service
 public interface MembershipService extends UserDetailsService {
 
+    ReturnType canUseEmail(Map input_data) throws Exception;
+
     // 회원가입
     ReturnType signUp(Map input_data) throws  Exception;
 
@@ -24,4 +27,6 @@ public interface MembershipService extends UserDetailsService {
 
     // password 암호화
     PasswordEncoder passwordEncoder();
+
+    int getProfileSeq(int userSeq);
 }

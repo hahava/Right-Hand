@@ -62,7 +62,7 @@ public class MembershipServiceImpl implements MembershipService {
      * @param params
      * @return ReturnType
      */
-    public boolean checkExistInUser(Map<String, Object> params) throws  Exception{
+    public boolean checkExistInUser(Map params) throws  Exception{
 
         // user 데이터에서 찾기
         Map resMemberData = membershipDao.selectUser(params);
@@ -77,6 +77,15 @@ public class MembershipServiceImpl implements MembershipService {
         }
 
         return false;
+    }
+
+    public ReturnType canUseEmail(Map input_data){
+        // user 데이터에서 찾기
+        int userCount = membershipDao.countEmail(input_data);
+        if(userCount > 0) {
+            return ReturnType.RTN_TYPE_MEMBERSSHIP_EAMIL_EXIST_NG;
+        }
+        return ReturnType.RTN_TYPE_OK;
     }
 
     /**
@@ -117,7 +126,7 @@ public class MembershipServiceImpl implements MembershipService {
                 input_data.put("loginType", configMembership.getLoginTypeEmail());
                 input_data.put("email", userId);
             }
-
+//            System.out.println("email : " + input_data.get("email"));
             // 2) email의 pattern
             if (configValidationCheck.checkEmail((String) input_data.get("email")) != 0) {
                 signUpSemaphore.release();
@@ -427,6 +436,11 @@ public class MembershipServiceImpl implements MembershipService {
     @Override
     public PasswordEncoder passwordEncoder() {
         return passwordHandler.getPasswordEncoder();
+    }
+
+    @Override
+    public int getProfileSeq(int userSeq) {
+        return membershipDao.getProfileSeq(userSeq);
     }
 
 }
