@@ -82,15 +82,26 @@ public class BoardServiceImpl implements BoardService {
         return boardDetailData;
     }
 
+    @Override
     public ReturnType insertBoardListTech(Map input_data) throws Exception {
-        HashMap<String, Object> params = new HashMap<>();
-
         logger.info("[Service][boardTech]");
-
         boardSemaphore.acquire();
-
         try{
             boardDao.insertBoardListTech(input_data);
+        }catch (Exception e){
+            boardSemaphore.release();
+            return ReturnType.RTN_TYPE_NG;
+        }
+        boardSemaphore.release();
+        return ReturnType.RTN_TYPE_OK;
+    }
+
+    @Override
+    public ReturnType insertReplyListTech(Map input_data) throws Exception {
+        logger.info("[Service][replyTech]");
+        boardSemaphore.acquire();
+        try {
+            boardDao.insertReplyListTech(input_data);
         }catch (Exception e){
             boardSemaphore.release();
             return ReturnType.RTN_TYPE_NG;

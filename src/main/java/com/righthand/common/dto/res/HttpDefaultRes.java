@@ -25,12 +25,8 @@ public class HttpDefaultRes<T> {
         this.setMessage(ret.getMessage());
     }
 
-
     public void setData(T obj){
         this.data = obj;
     }
 
-//    public void setData(JSONObject resultJson) {
-//        this.data = (T)resultJson;
-//    }
 }
