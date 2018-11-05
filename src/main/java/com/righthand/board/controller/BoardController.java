@@ -1,5 +1,6 @@
 package com.righthand.board.controller;
 
+import com.righthand.board.dao.BoardDao;
 import com.righthand.board.dto.req.BoardReq;
 import com.righthand.board.service.BoardService;
 import com.righthand.common.dto.res.ResponseHandler;
@@ -28,24 +29,22 @@ public class BoardController {
     @Autowired
     MembershipService membershipService;
 
+    @Autowired
+    BoardDao boardDao;
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @GetMapping("/board/list/tech/{page}")
     public ResponseHandler<?> showBoardListTech(@PathVariable int page){
         final ResponseHandler<Object> result = new ResponseHandler<>();
-//        final ResponseHandler<List<Map<String, Object>>> result = new ResponseHandler<>();
-        List<Map<String, Object>> tempBoardList;
         Map<String, Object> tempBoardData = new HashMap<>();
-        Map<String, Integer> total = new HashMap<String, Integer>();
-        total.put("total", 111);
+        List<Map<String, Object>> tempBoardList;
         try {
-            tempBoardData.put("total", 111);
-
+            tempBoardData.put("total", boardDao.selectCountListTech());
             tempBoardList = boardService.selectBoardListTech(page);
             tempBoardData.put("data", tempBoardList);
             if(!(tempBoardList.isEmpty() || tempBoardList == null)) {
                 result.setData(tempBoardData);
-//                result.setData(total);
                 result.setReturnCode(ReturnType.RTN_TYPE_OK);
             }else{
                 result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST);

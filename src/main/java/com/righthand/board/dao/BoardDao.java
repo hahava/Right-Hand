@@ -19,4 +19,5 @@ public interface BoardDao {
     Map<String, Object> showBoardDetailTech(BoardDetailVO vo);
     void insertBoardListTech(Map boardData);
     void insertReplyListTech(Map replyData);
+    int selectCountListTech();
 }
