@@ -105,14 +105,26 @@ public class BoardController {
     }
 
     @GetMapping("/board/tech/detail/{boardSeq}")
-    public  ResponseHandler<Map<String, Object>> showBoardDetail(@PathVariable(required = true) int boardSeq) {
-        final ResponseHandler<Map<String, Object>> result = new ResponseHandler<>();
+    public  ResponseHandler<?> showBoardDetail(@PathVariable(required = true) int boardSeq) {
+        final ResponseHandler<Object> result = new ResponseHandler<>();
         Map<String, Object> boardDetailData;
+        List<Map<String, Object>> replyDetilData;
+        Map<String, Object> resultData = new HashMap<>();
         try {
             boardDetailData = boardService.showBoardDetailTech(boardSeq);
+            replyDetilData = boardService.showReplyBoardTech(boardSeq);
             if(!(boardDetailData.isEmpty() || boardDetailData == null)) {
-                result.setData(boardDetailData);
-                result.setReturnCode(ReturnType.RTN_TYPE_OK);
+                if(replyDetilData.isEmpty() || replyDetilData == null) {
+                    resultData.put("boardDetailData", boardDetailData);
+                    result.setData(resultData);
+                    result.setReturnCode(ReturnType.RTN_TYPE_OK);
+                }
+                else {
+                    resultData.put("boardDetailData", boardDetailData);
+                    resultData.put("replyDetailData", replyDetilData);
+                    result.setData(resultData);
+                    result.setReturnCode(ReturnType.RTN_TYPE_OK);
+                }
             }
             else {
                 result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST);

@@ -1,9 +1,0 @@
-diff a/src/main/java/com/righthand/board/controller/BoardController.java b/src/main/java/com/righthand/board/controller/BoardController.java	(rejected hunks)
-@@ -50,7 +50,6 @@
-     @GetMapping("/board/list/tech/searched")
-     public ResponseHandler<List<Map<String, Object>>> searchedBoardListTech(
-             @RequestParam String searchedWord, @RequestParam int page
--//            @Valid @RequestBody final BoardReq _params
-     ) {
-         final ResponseHandler<List<Map<String, Object>>> result = new ResponseHandler<>();
-         List<Map<String, Object>> tempBoardList;
