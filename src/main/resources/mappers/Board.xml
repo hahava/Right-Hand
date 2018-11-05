@@ -2,8 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.righthand.board.dao.BoardDao">
+
+    <select id="selectCountListTech" resultType="int">
+      SELECT COUNT(*) FROM TB_IT_TECH_BOARD
+    </select>
+
     <select id="selectBoardListTech" resultType="hashMap" parameterType="com.righthand.board.dto.model.BoardCountVO">
-      SELECT BOARD_TITLE, BOARD_DATE, NICK_NAME
+      SELECT BOARD_SEQ, BOARD_TITLE, BOARD_CONTENT, BOARD_DATE, NICK_NAME
       FROM
       TB_IT_TECH_BOARD AS BOARD
       , TB_PROFILE AS PROFILE
@@ -34,6 +39,11 @@
     <insert id="insertBoardListTech" parameterType="map" useGeneratedKeys="true" keyProperty="BOARD_SEQ">
         INSERT INTO TB_IT_TECH_BOARD(BOARD_TITLE, BOARD_CONTENT, BOARD_DATE, BOARD_PROFILE_SEQ)
         VALUES (#{boardTitle}, #{boardContent}, CURRENT_TIMESTAMP , #{boardProfileSeq})
+    </insert>
+    
+    <insert id="insertReplyListTech" parameterType="map" useGeneratedKeys="true" keyProperty="REPLY_SEQ">
+      INSERT INTO TB_IT_TECH_REPLY(REPLY_CONTENT, REPLY_DATE, REPLY_PROFILE_SEQ, REPLY_BOARD_SEQ)
+      VALUES (#{replyContent}, CURRENT_TIMESTAMP, #{replyProfileSeq}, #{boardSeq})
     </insert>
 
 </mapper>

@@ -1,5 +1,6 @@
 package com.righthand.board.controller;
 
+import com.righthand.board.dao.BoardDao;
 import com.righthand.board.dto.req.BoardReq;
 import com.righthand.board.service.BoardService;
 import com.righthand.common.dto.res.ResponseHandler;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,16 +29,22 @@ public class BoardController {
     @Autowired
     MembershipService membershipService;
 
+    @Autowired
+    BoardDao boardDao;
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @GetMapping("/board/list/tech/{page}")
-    public ResponseHandler<List<Map<String, Object>>> showBoardListTech(@PathVariable(required = true) int page){
-        final ResponseHandler<List<Map<String, Object>>> result = new ResponseHandler<>();
+    public ResponseHandler<?> showBoardListTech(@PathVariable int page){
+        final ResponseHandler<Object> result = new ResponseHandler<>();
+        Map<String, Object> tempBoardData = new HashMap<>();
         List<Map<String, Object>> tempBoardList;
         try {
+            tempBoardData.put("total", boardDao.selectCountListTech());
             tempBoardList = boardService.selectBoardListTech(page);
+            tempBoardData.put("data", tempBoardList);
             if(!(tempBoardList.isEmpty() || tempBoardList == null)) {
-                result.setData(tempBoardList);
+                result.setData(tempBoardData);
                 result.setReturnCode(ReturnType.RTN_TYPE_OK);
             }else{
                 result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST);
@@ -51,7 +59,6 @@ public class BoardController {
     @GetMapping("/board/list/tech/searched")
     public ResponseHandler<List<Map<String, Object>>> searchedBoardListTech(
             @RequestParam String searchedWord, @RequestParam int page
-//            @Valid @RequestBody final BoardReq _params
     ) {
         final ResponseHandler<List<Map<String, Object>>> result = new ResponseHandler<>();
         List<Map<String, Object>> tempBoardList;
@@ -116,4 +123,28 @@ public class BoardController {
         return result;
     }
 
+    @PostMapping("/reply/tech/{boardSeq}")
+    public ResponseHandler<?> writeReplyTech(@PathVariable int boardSeq, @RequestParam String replyContent){
+        final ResponseHandler<?> result = new ResponseHandler<>();
+        Map<String, Object> params = new HashMap<String, Object>();
+        try {
+            MembershipInfo membershipInfo = membershipService.currentSessionUserInfo();
+            params.put("replyProfileSeq", membershipInfo.getProfileSeq());
+            params.put("boardSeq", boardSeq);
+            params.put("replyContent", replyContent);
+            ReturnType rtn;
+            try {
+                rtn = boardService.insertReplyListTech(params);
+                result.setReturnCode(rtn);
+            }catch (Exception e){
+                logger.error("[TechReply][Exception] " + e.toString());
+                result.setReturnCode(ReturnType.RTN_TYPE_NG);
+            }
+        } catch (Exception e) {
+            logger.error("[TechReply][Exception] " + e.toString());
+            result.setReturnCode(ReturnType.RTN_TYPE_NG);
+        }
+
+        return result;
+    }
 }
