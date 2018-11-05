@@ -27,6 +27,10 @@
         LIMIT #{start}, #{end}
     </select>
 
+    <insert id="insertBoardListTech" parameterType="map" useGeneratedKeys="true" keyProperty="BOARD_SEQ">
+        INSERT INTO TB_IT_TECH_BOARD(BOARD_TITLE, BOARD_CONTENT, BOARD_DATE, BOARD_PROFILE_SEQ)
+        VALUES (#{boardTitle}, #{boardContent}, CURRENT_TIMESTAMP , #{boardProfileSeq})
+    </insert>
 
     <select id="showBoardDetailTech" resultType="hashMap" parameterType="com.righthand.board.dto.model.BoardDetailVO">
         SELECT BOARD_TITLE, BOARD_CONTENT, BOARD_DATE, NICK_NAME
@@ -36,11 +40,6 @@
         WHERE BOARD.BOARD_PROFILE_SEQ = PROFILE.PROFILE_SEQ AND BOARD.BOARD_SEQ = #{boardSeq}
     </select>
 
-    <insert id="insertBoardListTech" parameterType="map" useGeneratedKeys="true" keyProperty="BOARD_SEQ">
-        INSERT INTO TB_IT_TECH_BOARD(BOARD_TITLE, BOARD_CONTENT, BOARD_DATE, BOARD_PROFILE_SEQ)
-        VALUES (#{boardTitle}, #{boardContent}, CURRENT_TIMESTAMP , #{boardProfileSeq})
-    </insert>
-    
     <insert id="insertReplyListTech" parameterType="map" useGeneratedKeys="true" keyProperty="REPLY_SEQ">
       INSERT INTO TB_IT_TECH_REPLY(REPLY_CONTENT, REPLY_DATE, REPLY_PROFILE_SEQ, REPLY_BOARD_SEQ)
       VALUES (#{replyContent}, CURRENT_TIMESTAMP, #{replyProfileSeq}, #{boardSeq})

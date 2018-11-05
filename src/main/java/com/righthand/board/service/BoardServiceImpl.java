@@ -5,12 +5,14 @@ import com.righthand.board.dto.model.BoardCountVO;
 import com.righthand.board.dto.model.BoardDetailVO;
 import com.righthand.board.dto.model.BoardSearchVO;
 
-import com.righthand.board.dto.req.BoardReq;
+
 import com.righthand.common.type.ReturnType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +21,7 @@ import java.util.concurrent.Semaphore;
 
 @Service
 public class BoardServiceImpl implements BoardService {
+
     @Autowired
     BoardDao boardDao;
 
@@ -86,9 +89,9 @@ public class BoardServiceImpl implements BoardService {
     public ReturnType insertBoardListTech(Map input_data) throws Exception {
         logger.info("[Service][boardTech]");
         boardSemaphore.acquire();
-        try{
+        try {
             boardDao.insertBoardListTech(input_data);
-        }catch (Exception e){
+        } catch (Exception e) {
             boardSemaphore.release();
             return ReturnType.RTN_TYPE_NG;
         }
@@ -102,11 +105,12 @@ public class BoardServiceImpl implements BoardService {
         boardSemaphore.acquire();
         try {
             boardDao.insertReplyListTech(input_data);
-        }catch (Exception e){
+        } catch (Exception e) {
             boardSemaphore.release();
             return ReturnType.RTN_TYPE_NG;
         }
         boardSemaphore.release();
         return ReturnType.RTN_TYPE_OK;
     }
+
 }

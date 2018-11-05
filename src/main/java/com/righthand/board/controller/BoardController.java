@@ -79,27 +79,9 @@ public class BoardController {
         return result;
     }
 
-    @GetMapping("/board/tech/detail/{boardSeq}")
-    public  ResponseHandler<Map<String, Object>> showBoardDetail(@PathVariable(required = true) int boardSeq) {
-        final ResponseHandler<Map<String, Object>> result = new ResponseHandler<>();
-        Map<String, Object> boardDetailData;
-        try {
-            boardDetailData = boardService.showBoardDetailTech(boardSeq);
-            if (!(boardDetailData.isEmpty() || boardDetailData == null)) {
-                result.setData(boardDetailData);
-                result.setReturnCode(ReturnType.RTN_TYPE_OK);
-            } else {
-                result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST);
-            }
-        } catch (Exception e) {
-            logger.error("[BoardDetail] [Exception " + e.toString());
-            result.setReturnCode(ReturnType.RTN_TYPE_NG);
-        }
-        return result;
-    }
 
     @PostMapping("/board/tech")
-    public ResponseHandler<?> writeBoardTech(@Valid @RequestBody final BoardReq _params){
+    public ResponseHandler<?> writeBoardTech(@Valid @RequestBody final BoardReq _params) {
         final ResponseHandler<?> result = new ResponseHandler<>();
         Map<String, Object> params = ConvertUtil.convertObjectToMap(_params);
         try {
@@ -107,16 +89,37 @@ public class BoardController {
             System.out.println("profile seq : " + membershipInfo.getProfileSeq());
             params.put("boardProfileSeq", membershipInfo.getProfileSeq());
             ReturnType rtn;
-            try{
+            try {
                 rtn = boardService.insertBoardListTech(params);
                 result.setReturnCode(rtn);
-            }catch (Exception e){
+            } catch (Exception e) {
                 logger.error("[TechBoard][Exception] " + e.toString());
                 result.setReturnCode(ReturnType.RTN_TYPE_NG);
             }
+        } catch (Exception e) {
+            logger.error("[TechBoard][Exception] " + e.toString());
+            result.setReturnCode(ReturnType.RTN_TYPE_NG);
+        }
+
+        return result;
+    }
+
+    @GetMapping("/board/tech/detail/{boardSeq}")
+    public  ResponseHandler<Map<String, Object>> showBoardDetail(@PathVariable(required = true) int boardSeq) {
+        final ResponseHandler<Map<String, Object>> result = new ResponseHandler<>();
+        Map<String, Object> boardDetailData;
+        try {
+            boardDetailData = boardService.showBoardDetailTech(boardSeq);
+            if(!(boardDetailData.isEmpty() || boardDetailData == null)) {
+                result.setData(boardDetailData);
+                result.setReturnCode(ReturnType.RTN_TYPE_OK);
+            }
+            else {
+                result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST);
+            }
         }
         catch (Exception e) {
-            logger.error("[TechBoard][Exception] " + e.toString());
+            logger.error("[BoardDetail] [Exception " + e.toString());
             result.setReturnCode(ReturnType.RTN_TYPE_NG);
         }
 
