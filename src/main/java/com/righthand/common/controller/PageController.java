@@ -9,9 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- *  Page 컨틀롤러
- *
- *
+ * Page 컨틀롤러
  */
 
 
@@ -20,17 +18,23 @@ public class PageController {
 
     @ApiOperation(value = "로그인")
     @GetMapping("/login")
-    public String customLogin(){
+    public String customLogin() {
         return "login";
     }
 
+    // blog 리스트 화면 리턴
+    @GetMapping("/boardlist")
+    public String boardList() {
+        return "boardlist";
+    }
+
     @GetMapping("/user")
-    public String user(){
+    public String user() {
         return "user";
     }
 
     @GetMapping("/admin")
-    public String admin(){
+    public String admin() {
         return "admin";
     }
 
