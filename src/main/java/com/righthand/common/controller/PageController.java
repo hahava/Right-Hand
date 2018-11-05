@@ -1,5 +1,6 @@
 package com.righthand.common.controller;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,10 +23,18 @@ public class PageController {
         return "login";
     }
 
-    // blog 리스트 화면 리턴
+    // tech 작성화면 화면 리턴
+    @ApiOperation(value = "IT 게시판 글 작성")
     @GetMapping("/boardlist")
     public String boardList() {
         return "boardlist";
+    }
+
+    // blog 리스트 화면 리턴
+    @ApiOperation(value = "IT 게시판 리스트 반환")
+    @GetMapping("/it/board")
+    public String itBoardList() {
+        return "itboard";
     }
 
     @GetMapping("/user")
