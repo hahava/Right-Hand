@@ -4,7 +4,21 @@
 <mapper namespace="com.righthand.board.dao.BoardDao">
 
     <select id="selectCountListTech" resultType="int">
-      SELECT COUNT(*) FROM TB_IT_TECH_BOARD
+        SELECT COUNT(*) FROM TB_IT_TECH_BOARD
+    </select>
+
+    <select id="selectCountListDev" resultType="int">
+        SELECT COUNT(*) FROM TB_DEVELOP_STORY_BOARD
+    </select>
+
+    <select id="selectSearchedCountListTech" resultType="int" parameterType="com.righthand.board.dto.model.BoardSearchVO">
+        SELECT COUNT(*) FROM TB_IT_TECH_BOARD
+        WHERE (BOARD_TITLE LIKE CONCAT('%',#{searchedWord},'%') OR BOARD_CONTENT LIKE CONCAT('%',#{searchedWord},'%'))
+    </select>
+
+    <select id="selectSearchedCountListDev" resultType="int" parameterType="com.righthand.board.dto.model.BoardSearchVO">
+        SELECT COUNT(*) FROM TB_DEVELOP_STORY_BOARD
+        WHERE (BOARD_TITLE LIKE CONCAT('%',#{searchedWord},'%') OR BOARD_CONTENT LIKE CONCAT('%',#{searchedWord},'%'))
     </select>
 
     <select id="selectBoardListTech" resultType="hashMap" parameterType="com.righthand.board.dto.model.BoardCountVO">
@@ -17,10 +31,30 @@
       LIMIT #{start}, #{end}
     </select>
 
+    <select id="selectBoardListDev" resultType="hashMap" parameterType="com.righthand.board.dto.model.BoardCountVO">
+      SELECT BOARD_SEQ, BOARD_TITLE, BOARD_CONTENT, BOARD_DATE, NICK_NAME
+      FROM
+      TB_DEVELOP_STORY_BOARD AS BOARD
+      , TB_PROFILE AS PROFILE
+      WHERE BOARD.BOARD_PROFILE_SEQ = PROFILE.PROFILE_SEQ
+      ORDER BY BOARD_DATE DESC
+      LIMIT #{start}, #{end}
+    </select>
+
     <select id="searchedBoardListTech" resultType="hashMap" parameterType="com.righthand.board.dto.model.BoardSearchVO">
-        SELECT BOARD_TITLE, BOARD_DATE, NICK_NAME
+        SELECT BOARD_TITLE, BOARD_CONTENT, BOARD_DATE, NICK_NAME
         FROM
         TB_IT_TECH_BOARD AS BOARD
+        , TB_PROFILE AS PROFILE
+        WHERE BOARD.BOARD_PROFILE_SEQ = PROFILE.PROFILE_SEQ AND (BOARD.BOARD_TITLE LIKE CONCAT('%',#{searchedWord},'%') OR BOARD_CONTENT LIKE CONCAT('%',#{searchedWord},'%'))
+        ORDER BY BOARD_DATE DESC
+        LIMIT #{start}, #{end}
+    </select>
+
+    <select id="searchedBoardListDev" resultType="hashMap" parameterType="com.righthand.board.dto.model.BoardSearchVO">
+        SELECT BOARD_TITLE, BOARD_CONTENT, BOARD_DATE, NICK_NAME
+        FROM
+        TB_DEVELOP_STORY_BOARD AS BOARD
         , TB_PROFILE AS PROFILE
         WHERE BOARD.BOARD_PROFILE_SEQ = PROFILE.PROFILE_SEQ AND (BOARD.BOARD_TITLE LIKE CONCAT('%',#{searchedWord},'%') OR BOARD_CONTENT LIKE CONCAT('%',#{searchedWord},'%'))
         ORDER BY BOARD_DATE DESC
@@ -32,10 +66,25 @@
         VALUES (#{boardTitle}, #{boardContent}, CURRENT_TIMESTAMP , #{boardProfileSeq})
     </insert>
 
+    <insert id="insertBoardListDev" parameterType="map" useGeneratedKeys="true" keyProperty="BOARD_SEQ">
+        INSERT INTO TB_DEVELOP_STORY_BOARD(BOARD_TITLE, BOARD_CONTENT, BOARD_DATE, BOARD_PROFILE_SEQ)
+        VALUES (#{boardTitle}, #{boardContent}, CURRENT_TIMESTAMP , #{boardProfileSeq})
+    </insert>
+
+
+
     <select id="showBoardDetailTech" resultType="hashMap" parameterType="com.righthand.board.dto.model.BoardDetailVO">
         SELECT BOARD_TITLE, BOARD_CONTENT, BOARD_DATE, NICK_NAME
         FROM
         TB_IT_TECH_BOARD AS BOARD
+        , TB_PROFILE AS PROFILE
+        WHERE BOARD.BOARD_PROFILE_SEQ = PROFILE.PROFILE_SEQ AND BOARD.BOARD_SEQ = #{boardSeq}
+    </select>
+
+    <select id="showBoardDetailDev" resultType="hashMap" parameterType="com.righthand.board.dto.model.BoardDetailVO">
+        SELECT BOARD_TITLE, BOARD_CONTENT, BOARD_DATE, NICK_NAME
+        FROM
+        TB_DEVELOP_STORY_BOARD AS BOARD
         , TB_PROFILE AS PROFILE
         WHERE BOARD.BOARD_PROFILE_SEQ = PROFILE.PROFILE_SEQ AND BOARD.BOARD_SEQ = #{boardSeq}
     </select>
@@ -47,9 +96,22 @@
         ORDER BY  REPLY.REPLY_DATE
     </select>
 
+    <select id="showReplyBoardDev" resultType="map" parameterType="com.righthand.board.dto.model.BoardDetailVO">
+        SELECT REPLY_CONTENT, REPLY_DATE, NICK_NAME
+        FROM TB_PROFILE AS PROFILE, TB_DEVELOP_STORY_REPLY AS REPLY
+        WHERE (REPLY.REPLY_BOARD_SEQ = #{boardSeq}) AND (REPLY.REPLY_PROFILE_SEQ = PROFILE.PROFILE_SEQ)
+        ORDER BY  REPLY.REPLY_DATE
+    </select>
+
     <insert id="insertReplyListTech" parameterType="map" useGeneratedKeys="true" keyProperty="REPLY_SEQ">
       INSERT INTO TB_IT_TECH_REPLY(REPLY_CONTENT, REPLY_DATE, REPLY_PROFILE_SEQ, REPLY_BOARD_SEQ)
       VALUES (#{replyContent}, CURRENT_TIMESTAMP, #{replyProfileSeq}, #{boardSeq})
     </insert>
+
+    <insert id="insertReplyListDev" parameterType="map" useGeneratedKeys="true" keyProperty="REPLY_SEQ">
+      INSERT INTO TB_DEVELOP_STORY_REPLY(REPLY_CONTENT, REPLY_DATE, REPLY_PROFILE_SEQ, REPLY_BOARD_SEQ)
+      VALUES (#{replyContent}, CURRENT_TIMESTAMP, #{replyProfileSeq}, #{boardSeq})
+    </insert>
+
 
 </mapper>

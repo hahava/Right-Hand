@@ -49,6 +49,25 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    public List<Map<String, Object>> selectBoardListDev(int page) throws Exception {
+        int start, end;
+        BoardCountVO vo = new BoardCountVO();
+        start = (page - 1) * 5;
+        end = start + 5;
+        vo.setStart(start); vo.setEnd(end);
+        List<Map<String, Object>> resBoardData;
+        boardSemaphore.acquire();
+        try{
+            resBoardData = boardDao.selectBoardListDev(vo);
+            boardSemaphore.release();
+        }catch (Exception e) {
+            boardSemaphore.release();
+            throw new Exception(e);
+        }
+        return resBoardData;
+    }
+
+    @Override
     public List<Map<String, Object>> searchedBoardListTech(String searchedWord, int page) throws Exception {
         int start, end;
         BoardSearchVO vo = new BoardSearchVO();
@@ -60,6 +79,27 @@ public class BoardServiceImpl implements BoardService {
         boardSemaphore.acquire();
         try {
             searchedBoardData = boardDao.searchedBoardListTech(vo);
+            System.out.println("resBoard : " + searchedBoardData);
+            boardSemaphore.release();
+        }catch (Exception e) {
+            boardSemaphore.release();
+            throw new Exception(e);
+        }
+        return searchedBoardData;
+    }
+
+    @Override
+    public List<Map<String, Object>> searchedBoardListDev(String searchedWord, int page) throws Exception{
+        int start, end;
+        BoardSearchVO vo = new BoardSearchVO();
+        start = (page - 1) * 5;
+        end = start + 5;
+        vo.setStart(start); vo.setEnd(end);
+        vo.setSearchedWord(searchedWord);
+        List<Map<String, Object>> searchedBoardData;
+        boardSemaphore.acquire();
+        try {
+            searchedBoardData = boardDao.searchedBoardListDev(vo);
             System.out.println("resBoard : " + searchedBoardData);
             boardSemaphore.release();
         }catch (Exception e) {
@@ -86,6 +126,22 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    public Map<String, Object> showBoardDetailDev(int boardSeq) throws Exception {
+        BoardDetailVO vo = new BoardDetailVO();
+        Map<String, Object> boardDetailData;
+        vo.setBoardSeq(boardSeq);
+        boardSemaphore.acquire();
+        try {
+            boardDetailData = boardDao.showBoardDetailDev(vo);
+            boardSemaphore.release();
+        } catch (Exception e) {
+            boardSemaphore.release();
+            throw new Exception(e);
+        }
+        return boardDetailData;
+    }
+
+    @Override
     public List<Map<String, Object>> showReplyBoardTech(int boardSeq) throws Exception {
         BoardDetailVO vo = new BoardDetailVO();
         List<Map<String, Object>> replyDetailData;
@@ -102,6 +158,25 @@ public class BoardServiceImpl implements BoardService {
 
         return replyDetailData;
     }
+
+    @Override
+    public List<Map<String, Object>> showReplyBoardDev(int boardSeq) throws Exception {
+        BoardDetailVO vo = new BoardDetailVO();
+        List<Map<String, Object>> replyDetailData;
+        vo.setBoardSeq(boardSeq);
+        boardSemaphore.acquire();
+        try {
+            replyDetailData = boardDao.showReplyBoardDev(vo);
+            boardSemaphore.release();
+        }
+        catch (Exception e) {
+            boardSemaphore.release();
+            throw new Exception(e);
+        }
+
+        return replyDetailData;
+    }
+
     @Override
     public ReturnType insertBoardListTech(Map input_data) throws Exception {
         logger.info("[Service][boardTech]");
@@ -117,11 +192,39 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    public ReturnType insertBoardListDev(Map input_data) throws Exception {
+        logger.info("[Service][boardDev]");
+        boardSemaphore.acquire();
+        try {
+            boardDao.insertBoardListDev(input_data);
+        } catch (Exception e) {
+            boardSemaphore.release();
+            return ReturnType.RTN_TYPE_NG;
+        }
+        boardSemaphore.release();
+        return ReturnType.RTN_TYPE_OK;
+    }
+
+    @Override
     public ReturnType insertReplyListTech(Map input_data) throws Exception {
         logger.info("[Service][replyTech]");
         boardSemaphore.acquire();
         try {
             boardDao.insertReplyListTech(input_data);
+        } catch (Exception e) {
+            boardSemaphore.release();
+            return ReturnType.RTN_TYPE_NG;
+        }
+        boardSemaphore.release();
+        return ReturnType.RTN_TYPE_OK;
+    }
+
+    @Override
+    public ReturnType insertReplyListDev(Map input_data) throws Exception {
+        logger.info("[Service][replyDev]");
+        boardSemaphore.acquire();
+        try {
+            boardDao.insertReplyListDev(input_data);
         } catch (Exception e) {
             boardSemaphore.release();
             return ReturnType.RTN_TYPE_NG;
