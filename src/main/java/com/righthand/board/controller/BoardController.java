@@ -11,6 +11,8 @@ import com.righthand.common.util.ConvertUtil;
 import com.righthand.membership.service.MembershipInfo;
 import com.righthand.membership.service.MembershipService;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,8 +37,11 @@ public class BoardController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
+
+    @ApiOperation("게시물 리스트")
     @GetMapping("/board/list/{btype}")
-    public ResponseHandler<?> showBoardListTech(@RequestParam int page, @PathVariable String btype){
+    public ResponseHandler<?> showBoardList(@ApiParam(value = "페이지 번호")@RequestParam int page,
+                                            @ApiParam(value="게시판 종류")@PathVariable String btype){
         final ResponseHandler<Object> result = new ResponseHandler<>();
         Map<String, Object> tempBoardData = new HashMap<>();
         List<Map<String, Object>> tempBoardList;
@@ -74,10 +79,12 @@ public class BoardController {
         return result;
     }
 
+    @ApiOperation("게시판 검색")
     @GetMapping("/board/list/searched/{btype}")
-    public ResponseHandler<?> searchedBoardListTech(
-            @RequestParam String searchedWord, @RequestParam int page,
-            @PathVariable String btype
+    public ResponseHandler<?> searchedBoardList(
+            @ApiParam(value = "검색어")@RequestParam String searchedWord,
+            @ApiParam(value = "페이지 번호")@RequestParam int page,
+            @ApiParam(value = "게시판 종류")@PathVariable String btype
     ) {
         final ResponseHandler<Object> result = new ResponseHandler<>();
         Map<String, Object> tempBoardData = new HashMap<>();
@@ -119,9 +126,10 @@ public class BoardController {
     }
 
 
+    @ApiOperation("글작성")
     @PostMapping("/board/{btype}")
-    public ResponseHandler<?> writeBoardTech(@Valid @RequestBody final BoardReq _params,
-                                             @PathVariable String btype) {
+    public ResponseHandler<?> writeBoard(@Valid @ApiParam(value = "게시물 제목, 내용")@RequestBody final BoardReq _params,
+                                             @ApiParam(value = "게시판 종류")@PathVariable String btype) {
         final ResponseHandler<?> result = new ResponseHandler<>();
         Map<String, Object> params = ConvertUtil.convertObjectToMap(_params);
         try {
@@ -154,8 +162,9 @@ public class BoardController {
         return result;
     }
 
+    @ApiOperation("게시물 상세보기")
     @GetMapping("/board/detail/{btype}")
-    public  ResponseHandler<?> showBoardDetail(@RequestParam int boardSeq, @PathVariable String btype) {
+    public  ResponseHandler<?> showBoardDetail(@ApiParam(value = "게시물 번호")@RequestParam int boardSeq, @ApiParam(value = "게시판 종류")@PathVariable String btype) {
         final ResponseHandler<Object> result = new ResponseHandler<>();
         Map<String, Object> boardDetailData = null;
         List<Map<String, Object>> replyDetilData = null;
@@ -193,10 +202,11 @@ public class BoardController {
         return result;
     }
 
+    @ApiOperation("댓글달기")
     @PostMapping("/reply/{btype}")
-    public ResponseHandler<?> writeReplyTech(@PathVariable String btype,
-                                             @RequestParam int boardSeq,
-                                             @RequestParam String replyContent){
+    public ResponseHandler<?> writeReply(@ApiParam(value = "게시판 종류")@PathVariable String btype,
+                                             @ApiParam(value = "게시물 번호")@RequestParam int boardSeq,
+                                             @ApiParam(value = "댓글 내용")@RequestParam String replyContent){
         final ResponseHandler<?> result = new ResponseHandler<>();
         Map<String, Object> params = new HashMap<String, Object>();
         try {
@@ -214,11 +224,11 @@ public class BoardController {
                     result.setReturnCode(rtn);
                 }
             }catch (Exception e){
-                logger.error("[TechReply][Exception] " + e.toString());
+                logger.error("[Reply][Exception] " + e.toString());
                 result.setReturnCode(ReturnType.RTN_TYPE_NG);
             }
         } catch (Exception e) {
-            logger.error("[TechReply][Exception] " + e.toString());
+            logger.error("[Reply][Exception] " + e.toString());
             result.setReturnCode(ReturnType.RTN_TYPE_NG);
         }
 
