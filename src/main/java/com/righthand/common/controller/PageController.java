@@ -37,16 +37,6 @@ public class PageController {
         return "itboard";
     }
 
-    @GetMapping("/user")
-    public String user() {
-        return "user";
-    }
-
-    @GetMapping("/admin")
-    public String admin() {
-        return "admin";
-    }
-
 
 //    @RequestMapping("/")
 //    public String index(HttpServletRequest request) {
