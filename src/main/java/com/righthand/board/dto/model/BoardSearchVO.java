@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class BoardSearchVO {
     int start;
-    int end;
+    int offset;
     String searchedWord;
 }
 
