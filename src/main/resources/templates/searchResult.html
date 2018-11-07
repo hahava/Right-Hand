@@ -5,109 +5,18 @@
 <head th:replace="fragment/head">
 </head>
 <body>
-<!--Login  Modal -->
-<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-                <form>
-                    <div class="form-group">
-                        <label for="user_login_email">이메일 주소</label>
-                        <input type="email" class="form-control" id="user_login_email" placeholder="Email">
-                    </div>
-                    <div class="form-group">
-                        <label for="user_login_pw">비밀번호</label>
-                        <input type="password" class="form-control" id="user_login_pw" placeholder="Password">
-                    </div>
-                    <div class="form-group">
-                        <!--반드시 a 타입으로 해야 모달이 안 닫힌다.-->
-                        <a style="width: 100%;" class="btn btn-primary " id="submitBtn" type="submit"
-                           onclick="return login();">
-                            Login
-                        </a>
-                    </div>
-                    <div class="form-group">
-                        <button style="width: 100%;" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                    </div>
-                </form>
-
-            </div>
-        </div>
-    </div>
-</div>
-
-<!--Register  Modal -->
-<div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-                <form>
-                    <div class="form-group">
-                        <label for="register_email">이메일 주소</label>
-                        <input type="email" class="form-control" id="register_email" placeholder="Email">
-                    </div>
-                    <div class="form-group">
-                        <button class="btn btn-primary">중복확인</button>
-                    </div>
-                    <div class="form-group">
-                        <label for="register_nickname">닉네임</label>
-                        <input type="text" class="form-control" id="register_nickname" placeholder="닉네임">
-                    </div>
-                    <div class="form-group">
-                        <button class="btn btn-primary">중복확인</button>
-                    </div>
-                    <div class="form-group">
-                        <label for="register_pw">비밀번호</label>
-                        <input type="password" class="form-control" id="register_pw" placeholder="Password">
-                    </div>
-                    <div class="form-group">
-                        <label for="register_pw_check">비밀번호 확인</label>
-                        <input type="password" class="form-control" id="register_pw_check" placeholder="Password">
-                    </div>
-                    <div class="form-group">
-                        <a style="width: 100%;" class="btn btn-primary " id="register_submit"
-                           onclick="return register()">
-                            회원가입
-                        </a>
-                    </div>
-                    <div class="form-group">
-                        <button style="width: 100%;" class="btn btn-danger" data-dismiss="modal">취소</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-<!--/////// modal-->
-
-
-<!--Navigation-->
 <navbar th:replace="fragment/navbar"></navbar>
-<!--///END Navigation///-->
 
 <!--SUBPAGE HEAD-->
 <div class="subpage-head has-margin-bottom">
     <div class="container">
-        <h3 id="board_title"></h3>
-        <p id="board_info" class="lead"></p>
+        <h3 id="board_title">Dev. Story</h3>
+        <p class="lead" id="board_info">개발 중 어려운 점이 있다면, 언제든지 무엇이든 질문하세요! 만약, 원하는 답변을 찾았다면 RHT로 고마움을 표현하세요.</p>
     </div>
 </div>
 <!-- // END SUBPAGE HEAD -->
 
-<div class="container">
-
-    <div class="row">
-        <div class="col-md-offset-8 col-md-4 blog-search has-margin-bottom">
-            <div class="input-group input-group-lg">
-                <input id="search_text" type="text" class="form-control" placeholder="Search..">
-                <span class="input-group-btn">
-          <a class="btn btn-default" type="button" href="javascript:search_result()"><i
-                  class="glyphicon glyphicon-search glyphicon-lg"></i></a>
-          </span></div>
-        </div>
-    </div>
-
-
+<div class="container" style="height: 100%">
     <div class="row">
         <div class="col-md-12 has-margin-bottom" id="blog_list">
             <!--Blog list-->
@@ -125,14 +34,11 @@
         </ul>
     </div>
     <!--///END PAGINATION///-->
-
 </div>
 
 
-<!-- FOOTER -->
-<footer th:replace="fragment/footer">
-</footer>
-<!-- END FOOTER -->
+<footer th:replace="fragment/footer"></footer>
+
 
 <!-- Bootstrap core JavaScript
   ================================================== -->
@@ -143,10 +49,7 @@
 <script th:src="@{../js/ketchup.all.js}"></script>
 <script th:src="@{../js/fancybox.js}"></script>
 <script th:src="@{../js/script.js}"></script>
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
-<!--Board List-->
 <script>
 
     // 요청 주소 뒤에 get 파라미터를 매핑한다.
@@ -166,7 +69,11 @@
     // 현재 페이지 정보
     var page = getParameterByName('page');
 
+    // 검색 키워드
+    var keyword = getParameterByName('searchedWord');
+
     $(document).ready(function () {
+
         var board_title;
         var board_info;
 
@@ -183,23 +90,20 @@
                 break;
         }
 
-        $('#board_title').text(board_title);
+        $('#board_info').text(board_title);
         $('#board_info').text(board_info);
 
-        if (page == null) {
-            req_page(1);
-        } else {
-            req_page(page);
-        }
+        search_result();
+
     });
 
-    // 사용자가 원하는 페이지를 요청 번호에 맞춰 반환한다.
-    function req_page(requested_page) {
+    function search_result() {
         $.ajax({
             type: 'GET',
-            url: "http://localhost:8080/board/list/" + type + "?page=" + requested_page,
+            url: "http://localhost:8080/board/list/searched/" + type + "?searchedWord=" + keyword + "&page=" + page,
             dataType: 'json',
             success: function (result) {
+
 
                 // 게시판 리스트를 초기화 한다..
                 $('#blog_list').empty();
@@ -210,7 +114,8 @@
 
                 // 페이지 리스트를 초기화 한다.
                 $('#pageNation').empty();
-                set_page(total, requested_page);
+                set_page(total, page);
+
 
                 for (var i = 0; i < board_list.length; i++) {
 
@@ -229,10 +134,8 @@
                         '<p>' + content + '</p></div></div>');
                 }
                 window.scrollTo(0, 0);
-            },
-            error: function () {
-                //TODO 에러 페이지 제작 해야 함
-                alert("존재하지 않는 페이지 입니다.");
+            }, error: function () {
+                //    TODO : 에러 페이지 제작해야 함
             }
         });
     }
@@ -264,7 +167,7 @@
             if (i == requested_page) {
                 li_tag = li_tag + "<li class='active'><a >" + i + "</a></li>";
             } else {
-                li_tag = li_tag + "<li><a href='/board/list?type=" + type + "&page=" + i + "'>" + i + "</a></li>";
+                li_tag = li_tag + "<li><a href='/board/search?type=" + type + "&page=" + i + "&searchedWord=" + keyword + "'>" + i + "</a></li>";
                 // li_tag = li_tag + "<li><a onclick= 'req_page(" + i + ")'>" + i + "</a></li>";
             }
         }
@@ -287,16 +190,11 @@
         } else {
             // 다음 버튼 활성화
             var nextCount = startNum + stand;
-            $('#nextArrowAnc').attr('href', '/board/list?type=' + type + '&page=' + nextCount);
+            $('#nextArrowAnc').attr('href', '/board/list?type=' + type + '&page=' + nextCount + "&searchedWord" + keyword);
         }
 
     }
 
-    <!--검색하기 기능-->
-    function search_result() {
-        var keyword = $('#search_text').val();
-        location.href = "/board/search?page=1&searchedWord=" + keyword + "&type=" + type;
-    }
 </script>
 </body>
 </html>

@@ -23,19 +23,26 @@ public class PageController {
         return "login";
     }
 
-    // tech 작성화면 화면 리턴
-    @ApiOperation(value = "IT 게시판 글 작성")
-    @GetMapping("/boardlist")
-    public String boardList() {
-        return "boardlist";
-    }
-
-    // blog 리스트 화면 리턴
+    // 게시판 리스트 화면 리턴
     @ApiOperation(value = "게시판 리스트 반환한다. IT 게시판은 type=it, Dev 게시판은 type = dev")
     @GetMapping("/board/list")
-    public String itBoardList() {
+    public String boardList() {
         return "board";
     }
+
+    //게시판 검색 결과 화면 리스트
+    @ApiOperation(value = "게시판별 검색 화면 리스트를 리턴한다")
+    @GetMapping("/board/search")
+    public String boardSearchResult() {
+        return "searchResult";
+    }
+
+//    // tech 작성화면 화면 리턴
+//    @ApiOperation(value = "IT 게시판 글 작성")
+//    @GetMapping("/boardlist")
+//    public String boardList() {
+//        return "boardlist";
+//    }
 
 
 //    @RequestMapping("/")
