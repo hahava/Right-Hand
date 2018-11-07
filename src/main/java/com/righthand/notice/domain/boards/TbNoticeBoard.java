@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Entity
 @Table(name = "TB_NOTICE_BOARD")
-public class TbNoticeBoard {
+public class TbNoticeBoard extends BaseTimeEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
