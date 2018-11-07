@@ -31,10 +31,10 @@ public class PageController {
     }
 
     // blog 리스트 화면 리턴
-    @ApiOperation(value = "IT 게시판 리스트 반환")
-    @GetMapping("/it/board")
+    @ApiOperation(value = "게시판 리스트 반환한다. IT 게시판은 type=it, Dev 게시판은 type = dev")
+    @GetMapping("/board/list")
     public String itBoardList() {
-        return "itboard";
+        return "board";
     }
 
 
