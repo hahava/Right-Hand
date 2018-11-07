@@ -85,13 +85,13 @@
 <navbar th:replace="fragment/navbar"></navbar>
 <!--///END Navigation///-->
 
+<!--SUBPAGE HEAD-->
 <div class="subpage-head has-margin-bottom">
     <div class="container">
-        <h3>Dev. Story</h3>
-        <p class="lead">개발 중 어려운 점이 있다면, 언제든지 무엇이든 질문하세요! 만약, 원하는 답변을 찾았다면 RHT로 고마움을 표현하세요.</p>
+        <h3 id="board_title"></h3>
+        <p id="board_info" class="lead"></p>
     </div>
 </div>
-
 <!-- // END SUBPAGE HEAD -->
 
 <div class="container">
@@ -99,9 +99,10 @@
     <div class="row">
         <div class="col-md-offset-8 col-md-4 blog-search has-margin-bottom">
             <div class="input-group input-group-lg">
-                <input type="text" class="form-control" placeholder="Search..">
+                <input id="search_text" type="text" class="form-control" placeholder="Search..">
                 <span class="input-group-btn">
-          <button class="btn btn-default" type="button"><i class="glyphicon glyphicon-search glyphicon-lg"></i></button>
+          <a class="btn btn-default" type="button" href="javascript:search_result()"><i
+                  class="glyphicon glyphicon-search glyphicon-lg"></i></a>
           </span></div>
         </div>
     </div>
@@ -144,53 +145,47 @@
 <script th:src="@{../js/script.js}"></script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script>
-    $(document).ready(function () {
-
-        var page = 1;
-        $.ajax({
-            type: 'GET',
-            url: "http://localhost:8080/board/list/tech?page=" + page,
-            dataType: 'json',
-            success: function (result) {
-
-                var data = result.data;
-                var board_list = data.data;
-
-                var total = data.total;
-                console.log(total);
-
-                for (var i = 0; i < board_list.length; i++) {
-
-                    var title = board_list[i].BOARD_TITLE;
-                    var content = board_list[i].BOARD_CONTENT;
-                    var nick_name = board_list[i].NICK_NAME;
-                    var date = board_list[i].BOARD_DATE.substring(0, 10);
-
-                    $('#blog_list').append('  <div class="row has-margin-bottom">' +
-                        '<div class="col-md-4 col-sm-4">' +
-                        '<img class="img-responsive center-block"  alt="bulletin blog"src="http://localhost:8080/images/blog-thumb-1.jpg"> </div>' +
-                        '<div class="col-md-8 col-sm-8 bulletin">' +
-                        '<a href="blog-single.html"><h4 class="media-heading" id="title">' + title + ' </h4></a>' +
-                        '<p>' + date + ' <a href="#" class="link-reverse">' + nick_name + '</a></p>' +
-                        '<p>' + content + '</p></div></div>');
-                }
-            },
-            error: function () {
-                alert("존재하지 않는 페이지 입니다.");
-            }
-        });
-    });
-</script>
-
 
 <!--Board List-->
 <script>
+
+    // 요청 주소 뒤에 get 파라미터를 매핑한다.
+    function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+
+    // 기본은 dev 게시판
+    var type = getParameterByName('type') != null ? getParameterByName('type') : 'dev';
+
     // 현재 페이지 정보
-    var page;
+    var page = getParameterByName('page');
 
     $(document).ready(function () {
-        //최초 요청시 게시글 1페이지를 호출한다.
+        var board_title;
+        var board_info;
+
+        switch (type) {
+            case 'dev':
+                $('#dev_story_nav').attr('class', 'active');
+                board_title = "Dev. Story";
+                board_info = "개발 중 어려운 점이 있다면, 언제든지 무엇이든 질문하세요! 만약, 원하는 답변을 찾았다면 RHT로 고마움을 표현하세요.";
+                break;
+            case 'tech':
+                $('#it_story_nav').attr('class', 'active');
+                board_title = "IT. Story";
+                board_info = "공유하고싶은 지식과 정보를 작성해보세요. 또한, 소개하고 싶은 IT 제품에 대한 글을 남겨보세요.";
+                break;
+        }
+
+        $('#board_title').text(board_title);
+        $('#board_info').text(board_info);
+
         if (page == null) {
             req_page(1);
         } else {
@@ -200,10 +195,9 @@
 
     // 사용자가 원하는 페이지를 요청 번호에 맞춰 반환한다.
     function req_page(requested_page) {
-        var board_type = 'tech';
         $.ajax({
             type: 'GET',
-            url: "http://localhost:8080/board/list/" + board_type + "?page=" + requested_page,
+            url: "http://localhost:8080/board/list/" + type + "?page=" + requested_page,
             dataType: 'json',
             success: function (result) {
 
@@ -220,6 +214,7 @@
 
                 for (var i = 0; i < board_list.length; i++) {
 
+                    var seq = board_list[i].BOARD_SEQ;
                     var title = board_list[i].BOARD_TITLE;
                     var content = board_list[i].BOARD_CONTENT;
                     var nick_name = board_list[i].NICK_NAME;
@@ -229,7 +224,7 @@
                         '<div class="col-md-4 col-sm-4">' +
                         '<img class="img-responsive center-block"  th:src="@{../images/blog-thumb-1.jpg}" alt="bulletin blog"src="images/blog-thumb-1.jpg"> </div>' +
                         '<div class="col-md-8 col-sm-8 bulletin">' +
-                        '<a href="blog-single.html"><h4 class="media-heading" id="title">' + title + ' </h4></a>' +
+                        '<a href="blog-single.html"><h4 class="media-heading" id="title">' + seq + ' </h4></a>' +
                         '<p>' + date + ' <a href="#" class="link-reverse">' + nick_name + '</a></p>' +
                         '<p>' + content + '</p></div></div>');
                 }
@@ -241,10 +236,7 @@
             }
         });
     }
-</script>
 
-<!--PageNation-->
-<script>
     function set_page(total, requested_page) {
         /*
         *   totalpage= 전체 페이지 개수
@@ -272,7 +264,8 @@
             if (i == requested_page) {
                 li_tag = li_tag + "<li class='active'><a >" + i + "</a></li>";
             } else {
-                li_tag = li_tag + "<li><a onclick= 'req_page(" + i + ")'>" + i + "</a></li>";
+                li_tag = li_tag + "<li><a href='/board/list?type=" + type + "&page=" + i + "'>" + i + "</a></li>";
+                // li_tag = li_tag + "<li><a onclick= 'req_page(" + i + ")'>" + i + "</a></li>";
             }
         }
 
@@ -285,22 +278,25 @@
         } else {
             //5 이상일 경우 이전 버튼 활성화
             var prevCount = startNum - stand;
-            $('#prevArrow').attr('onclick', 'req_page(' + prevCount + ')');
+            $('#prevArrowAnc').attr('onclick', 'req_page(' + prevCount + ')');
         }
 
         // 마지막 페이지와 전체 페이지가 같으면 다음 버튼 비활성화
         if (endNum == totalPage) {
             $('#nextArrow').attr('class', 'disabled');
         } else {
-            // 다음 버트 활성화
+            // 다음 버튼 활성화
             var nextCount = startNum + stand;
-            $('#nextArrow').attr('onclick', 'req_page(' + nextCount + ')');
+            $('#nextArrowAnc').attr('href', '/board/list?type=' + type + '&page=' + nextCount);
         }
 
+    }
 
+    <!--검색하기 기능-->
+    function search_result() {
+        var keyword = $('#search_text').val();
+        location.href = "/board/search?page=1&searchedWord=" + keyword + "&type=" + type;
     }
 </script>
-
-
 </body>
 </html>
