@@ -208,6 +208,13 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- querydsl (DANNY ADD)-->
+		<dependency>
+			<groupId>com.querydsl</groupId>
+			<artifactId>querydsl-jpa</artifactId>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>
