@@ -10,31 +10,42 @@
 <!--SUBPAGE HEAD-->
 <div class="subpage-head has-margin-bottom">
     <div class="container">
-        <h3 id="board_title">Dev. Story</h3>
-        <p class="lead" id="board_info">개발 중 어려운 점이 있다면, 언제든지 무엇이든 질문하세요! 만약, 원하는 답변을 찾았다면 RHT로 고마움을 표현하세요.</p>
+        <h3 id="board_title"></h3>
+        <p class="lead" id="board_info"></p>
     </div>
 </div>
 <!-- // END SUBPAGE HEAD -->
 
-<div class="container" style="height: 100%">
-    <div class="row">
-        <div class="col-md-12 has-margin-bottom" id="blog_list">
-            <!--Blog list-->
+<!--result information-->
+<section>
+    <div class="container" style="height: 100%">
+        <div class="row">
+            <div class="col-md-12 has-margin-bottom">
+                <h4><span id="keyword_info"></span> 에 대한 검색 결과 입니다.</h4>
+                <p>총 <span id="total_info" style="font-weight: bold"></span> 건이 검색 되었습니다.</p>
+                <hr>
+            </div>
         </div>
-    </div>
+        <div class="row">
 
+            <div class="col-md-12 has-margin-bottom" id="blog_list">
+                <!--Blog list-->
+            </div>
+        </div>
+        <!-- PAGINATION -->
+        <div class="pull-right">
+            <a class="btn btn-info">글작성</a>
+        </div>
+        <div class="text-center center-block">
+            <ul class="pagination" id="pageNation">
+                <!--pagenation-->
+            </ul>
+        </div>
+        <!--///END PAGINATION///-->
 
-    <!-- PAGINATION -->
-    <div class="pull-right">
-        <a class="btn btn-info">글작성</a>
     </div>
-    <div class="text-center center-block">
-        <ul class="pagination" id="pageNation">
-            <!--pagenation-->
-        </ul>
-    </div>
-    <!--///END PAGINATION///-->
-</div>
+</section>
+<!--///END result information///-->
 
 
 <footer th:replace="fragment/footer"></footer>
@@ -90,7 +101,7 @@
                 break;
         }
 
-        $('#board_info').text(board_title);
+        $('#board_title').text(board_title);
         $('#board_info').text(board_info);
 
         search_result();
@@ -115,6 +126,9 @@
                 // 페이지 리스트를 초기화 한다.
                 $('#pageNation').empty();
                 set_page(total, page);
+
+                $('#keyword_info').text(keyword);
+                $('#total_info').text(total);
 
 
                 for (var i = 0; i < board_list.length; i++) {
@@ -190,7 +204,7 @@
         } else {
             // 다음 버튼 활성화
             var nextCount = startNum + stand;
-            $('#nextArrowAnc').attr('href', '/board/list?type=' + type + '&page=' + nextCount + "&searchedWord" + keyword);
+            $('#nextArrowAnc').attr('href', '/board/search?type=' + type + '&page=' + nextCount + "&searchedWord=" + keyword);
         }
 
     }
