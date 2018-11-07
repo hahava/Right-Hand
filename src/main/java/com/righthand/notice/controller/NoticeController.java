@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 @RestController
 @AllArgsConstructor
@@ -21,14 +22,24 @@ public class NoticeController {
 
     @GetMapping("/notice/list")
     public ResponseHandler<?> showNoticeList(){
-        return null;
+        final ResponseHandler<List<TbNoticeBoard>> result = new ResponseHandler<>();
+        List<TbNoticeBoard> tbNoticeBoardList = tbNoticeBoardRepository.findAll();
+        if(tbNoticeBoardList.isEmpty()) {
+            result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST);
+            result.setMessage("Board is not exist.");
+        }
+        else {
+            result.setData(tbNoticeBoardList);
+            result.setReturnCode(ReturnType.RTN_TYPE_OK);
+            result.setMessage("Success");
+        }
+        return result;
     }
 
     @PostMapping("/board/notice")
     public ResponseHandler<?> writeBoard(@RequestBody BoardReq boardReq){
         final ResponseHandler<TbNoticeBoard> result = new ResponseHandler<>();
-        TbNoticeBoard tbNoticeBoard = null;
-        tbNoticeBoard = tbNoticeBoardRepository.save(boardReq.toEntity());
+        TbNoticeBoard tbNoticeBoard = tbNoticeBoardRepository.save(boardReq.toEntity());
         result.setReturnCode(ReturnType.RTN_TYPE_OK);
         result.setData(tbNoticeBoard);
         result.setMessage("Success");

@@ -27,7 +27,7 @@ public class MembershipController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private ConfigMembership configMembership ;
+    private ConfigMembership configMembership;
 
     @Autowired
     MembershipService membershipService;

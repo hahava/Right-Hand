@@ -16,6 +16,7 @@ import javax.validation.constraints.NotNull;
 public class TbNoticeBoard {
 
     @Id
+    @Column(name = "BOARD_SEQ")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long boardSeq;
 
