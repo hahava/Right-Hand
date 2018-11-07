@@ -23,8 +23,15 @@ public class NoticeController {
     @GetMapping("/notice/list")
     public ResponseHandler<?> showNoticeList(){
         final ResponseHandler<List<TbNoticeBoard>> result = new ResponseHandler<>();
-        List<TbNoticeBoard> tbNoticeBoardList = tbNoticeBoardRepository.findAll();
-        if(tbNoticeBoardList.isEmpty()) {
+        List<TbNoticeBoard> tbNoticeBoardList = null;
+        try {
+            tbNoticeBoardList = tbNoticeBoardRepository.findAll();
+        }
+        catch (Exception e) {
+            result.setReturnCode(ReturnType.RTN_TYPE_NG);
+            return result;
+        }
+        if(tbNoticeBoardList.isEmpty() || tbNoticeBoardList == null) {
             result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST);
             result.setMessage("Board is not exist.");
         }
@@ -33,6 +40,7 @@ public class NoticeController {
             result.setReturnCode(ReturnType.RTN_TYPE_OK);
             result.setMessage("Success");
         }
+
         return result;
     }
 
