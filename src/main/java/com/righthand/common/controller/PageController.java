@@ -38,6 +38,13 @@ public class PageController {
         return "boardWriter";
     }
 
+    //게시글 상세화면
+    @ApiOperation(value = "게시글 상세 화면")
+    @GetMapping("/board/content")
+    public String boardContent() {
+        return "boardContent";
+    }
+
 
 //    @RequestMapping("/")
 //    public String index(HttpServletRequest request) {
