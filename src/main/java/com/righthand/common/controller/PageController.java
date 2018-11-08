@@ -17,12 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class PageController {
 
-    @ApiOperation(value = "로그인")
-    @GetMapping("/login")
-    public String customLogin() {
-        return "login";
-    }
-
     // 게시판 리스트 화면 리턴
     @ApiOperation(value = "게시판 리스트 반환한다. IT 게시판은 type=it, Dev 게시판은 type = dev")
     @GetMapping("/board/list")

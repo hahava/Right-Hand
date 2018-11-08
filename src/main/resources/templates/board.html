@@ -5,82 +5,6 @@
 <head th:replace="fragment/head">
 </head>
 <body>
-<!--Login  Modal -->
-<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-                <form>
-                    <div class="form-group">
-                        <label for="user_login_email">이메일 주소</label>
-                        <input type="email" class="form-control" id="user_login_email" placeholder="Email">
-                    </div>
-                    <div class="form-group">
-                        <label for="user_login_pw">비밀번호</label>
-                        <input type="password" class="form-control" id="user_login_pw" placeholder="Password">
-                    </div>
-                    <div class="form-group">
-                        <!--반드시 a 타입으로 해야 모달이 안 닫힌다.-->
-                        <a style="width: 100%;" class="btn btn-primary " id="submitBtn" type="submit"
-                           onclick="return login();">
-                            Login
-                        </a>
-                    </div>
-                    <div class="form-group">
-                        <button style="width: 100%;" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                    </div>
-                </form>
-
-            </div>
-        </div>
-    </div>
-</div>
-
-<!--Register  Modal -->
-<div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-                <form>
-                    <div class="form-group">
-                        <label for="register_email">이메일 주소</label>
-                        <input type="email" class="form-control" id="register_email" placeholder="Email">
-                    </div>
-                    <div class="form-group">
-                        <button class="btn btn-primary">중복확인</button>
-                    </div>
-                    <div class="form-group">
-                        <label for="register_nickname">닉네임</label>
-                        <input type="text" class="form-control" id="register_nickname" placeholder="닉네임">
-                    </div>
-                    <div class="form-group">
-                        <button class="btn btn-primary">중복확인</button>
-                    </div>
-                    <div class="form-group">
-                        <label for="register_pw">비밀번호</label>
-                        <input type="password" class="form-control" id="register_pw" placeholder="Password">
-                    </div>
-                    <div class="form-group">
-                        <label for="register_pw_check">비밀번호 확인</label>
-                        <input type="password" class="form-control" id="register_pw_check" placeholder="Password">
-                    </div>
-                    <div class="form-group">
-                        <a style="width: 100%;" class="btn btn-primary " id="register_submit"
-                           onclick="return register()">
-                            회원가입
-                        </a>
-                    </div>
-                    <div class="form-group">
-                        <button style="width: 100%;" class="btn btn-danger" data-dismiss="modal">취소</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-<!--/////// modal-->
-
-
 <!--Navigation-->
 <navbar th:replace="fragment/navbar"></navbar>
 <!--///END Navigation///-->
@@ -134,15 +58,6 @@
 </footer>
 <!-- END FOOTER -->
 
-<!-- Bootstrap core JavaScript
-  ================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
-<script th:src="@{../js/jquery.js}"></script>
-<script th:src="@{../js/bootstrap.min.js}"></script>
-<script th:src="@{../js/owl.carousel.min.js}"></script>
-<script th:src="@{../js/ketchup.all.js}"></script>
-<script th:src="@{../js/fancybox.js}"></script>
-<script th:src="@{../js/script.js}"></script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
