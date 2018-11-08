@@ -2,6 +2,8 @@ package com.righthand.notice.controller;
 
 import com.righthand.common.dto.res.ResponseHandler;
 import com.righthand.common.type.ReturnType;
+import com.righthand.membership.service.MembershipInfo;
+import com.righthand.membership.service.MembershipService;
 import com.righthand.notice.domain.boards.TbNoticeBoard;
 import com.righthand.notice.domain.boards.TbNoticeBoardRepository;
 import com.righthand.notice.dto.req.BoardReq;
@@ -28,9 +30,12 @@ public class NoticeController{
     @Autowired
     private TbNoticeBoardRepository tbNoticeBoardRepository;
 
+    @Autowired
+    MembershipService membershipService;
+
     @ApiOperation("공지사항 리스트")
     @GetMapping("/notice/list")
-    public ResponseHandler<?> showNoticeList(@ApiParam(value = "페이지 번호")@RequestParam int page){
+    public ResponseHandler<?> showNoticeList(@ApiParam(value = "페이지 번호")@RequestParam int page) {
         final ResponseHandler<Map<String,Object>> result = new ResponseHandler<>();
         List<TbNoticeBoard> tbNoticeBoardList = null;
         Map<String, Object> res = new HashMap<>();
@@ -48,13 +53,24 @@ public class NoticeController{
             result.setMessage("Board is not exist.");
         }
         else {
-            res.put("total", tbNoticeBoardRepository.count());
-            res.put("data", tbNoticeBoardList);
-            result.setData(res);
-            result.setReturnCode(ReturnType.RTN_TYPE_OK);
-            result.setMessage("Success");
+            MembershipInfo membershipInfo = null;
+            try {
+                membershipInfo = membershipService.currentSessionUserInfo();
+                res.put("total", tbNoticeBoardRepository.count());
+                res.put("authority", membershipInfo.getAuthoritiesLevel());
+                res.put("data", tbNoticeBoardList);
+                result.setData(res);
+                result.setReturnCode(ReturnType.RTN_TYPE_OK);
+                result.setMessage("Success");
+            } catch (Exception e) {
+                res.put("total", tbNoticeBoardRepository.count());
+                res.put("authority", 0);
+                res.put("data", tbNoticeBoardList);
+                result.setData(res);
+                result.setReturnCode(ReturnType.RTN_TYPE_OK);
+                result.setMessage("Success");
+            }
         }
-
         return result;
     }
 
