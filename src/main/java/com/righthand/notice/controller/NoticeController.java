@@ -7,10 +7,12 @@ import com.righthand.notice.domain.boards.TbNoticeBoardRepository;
 import com.righthand.notice.dto.req.BoardReq;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.Column;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
@@ -27,7 +29,7 @@ public class NoticeController{
         final ResponseHandler<List<TbNoticeBoard>> result = new ResponseHandler<>();
         List<TbNoticeBoard> tbNoticeBoardList = null;
         try {
-            tbNoticeBoardList = tbNoticeBoardRepository.findAll();
+            tbNoticeBoardList = tbNoticeBoardRepository.findAllBoardDateDesc();
         }
         catch (Exception e) {
             result.setReturnCode(ReturnType.RTN_TYPE_NG);
@@ -46,8 +48,26 @@ public class NoticeController{
         return result;
     }
 
+    @GetMapping("/notice/searched")
+    public ResponseHandler<?> searchedNoticeList(@RequestParam String searchedWord){
+        final ResponseHandler<Object> result = new ResponseHandler<>();
+        System.out.println("[Service][searchNotice]");
+        try {
+            List<TbNoticeBoard> tbNoticeBoardList = tbNoticeBoardRepository.findAllBySearchedWord(searchedWord);
+            if(tbNoticeBoardList.isEmpty() || tbNoticeBoardList == null){
+                result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST);
+                return result;
+            }
+            result.setReturnCode(ReturnType.RTN_TYPE_OK);
+            result.setData(tbNoticeBoardList);
+        }catch (Exception e){
+            result.setReturnCode(ReturnType.RTN_TYPE_NG);
+        }
+        return result;
+    }
+
     @PostMapping("/notice/board")
-    public ResponseHandler<?> writeBoard(@RequestBody BoardReq boardReq){
+    public ResponseHandler<?> writeNotice(@RequestBody BoardReq boardReq){
         final ResponseHandler<TbNoticeBoard> result = new ResponseHandler<>();
         System.out.println("[Service][boardNotice]");
         try{
@@ -64,7 +84,7 @@ public class NoticeController{
     @GetMapping("/notice/detail")
     public ResponseHandler<?> showNoticeDetail(@RequestParam long boardSeq){
         final ResponseHandler<Object> result = new ResponseHandler<>();
-        System.out.println("[Service][searchNotice]");
+        System.out.println("[Service][detailNotice]");
         try {
             List<TbNoticeBoard> tbNoticeBoardList = tbNoticeBoardRepository.findByBoardSeq(boardSeq);
             if(tbNoticeBoardList.isEmpty() || tbNoticeBoardList == null){
