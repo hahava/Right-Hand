@@ -17,6 +17,7 @@ public class MembershipInfo implements  UserDetails{
     private String username;
     private String password;
     private String name;
+    private String nickname;
     private int userSeq;
     private SimpleDateFormat loginTime;
 
@@ -120,4 +121,11 @@ public class MembershipInfo implements  UserDetails{
     public int getAuthoritiesLevel() { return authoritiesLevel; }
     public void setAuthoritiesLevel(int authoritiesLevel) { this.authoritiesLevel = authoritiesLevel; }
 
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
 }
