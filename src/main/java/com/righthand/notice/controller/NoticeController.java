@@ -1,5 +1,6 @@
 package com.righthand.notice.controller;
 
+import com.righthand.common.GetClientProfile;
 import com.righthand.common.dto.res.ResponseHandler;
 import com.righthand.common.type.ReturnType;
 import com.righthand.membership.service.MembershipInfo;
@@ -35,12 +36,15 @@ public class NoticeController{
     @Autowired
     MembershipService membershipService;
 
+
     @ApiOperation("공지사항 리스트")
     @GetMapping("/notice/list")
     public ResponseHandler<?> showNoticeList(@ApiParam(value = "페이지 번호")@RequestParam int page) {
         final ResponseHandler<Map<String,Object>> result = new ResponseHandler<>();
         List<TbNoticeBoard> tbNoticeBoardList = null;
         Map<String, Object> res = new HashMap<>();
+        //유저 Profile 가져옴
+        Map<String, Object> userInfo = GetClientProfile.getUserInfo(membershipService);
         final int offset = 5;
         int start = (page - 1) * offset;
         long total;
@@ -58,23 +62,13 @@ public class NoticeController{
             result.setMessage("Board is not exist.");
         }
         else {
-            MembershipInfo membershipInfo = null;
-            try {
-                membershipInfo = membershipService.currentSessionUserInfo();
-                res.put("total", total);
-                res.put("authority", membershipInfo.getAuthoritiesLevel());
-                res.put("data", tbNoticeBoardList);
-                result.setData(res);
-                result.setReturnCode(ReturnType.RTN_TYPE_OK);
-                result.setMessage("Success");
-            } catch (Exception e) {
-                res.put("total", total);
-                res.put("authority", 0);
-                res.put("data", tbNoticeBoardList);
-                result.setData(res);
-                result.setReturnCode(ReturnType.RTN_TYPE_OK);
-                result.setMessage("Success");
-            }
+            res.put("total", total);
+            res.put("data", tbNoticeBoardList);
+            res.put("authority", userInfo.get("authority"));
+            res.put("nickname", userInfo.get("nickname"));
+            result.setData(res);
+            result.setReturnCode(ReturnType.RTN_TYPE_OK);
+            result.setMessage("Success");
         }
         return result;
     }
@@ -88,6 +82,8 @@ public class NoticeController{
         final int offset = 5;
         int start = (page - 1) * offset;
         Map<String, Object> res = new HashMap<>();
+        //유저 Profile 가져옴
+        Map<String, Object> userInfo = GetClientProfile.getUserInfo(membershipService);
         try {
             Map<String, Object> map = tbNoticeService.findAllBySearchedWord(searchedWord, start, offset);
             List<TbNoticeBoard> tbNoticeBoardList = (List<TbNoticeBoard>) map.get("data");
@@ -98,6 +94,8 @@ public class NoticeController{
             result.setReturnCode(ReturnType.RTN_TYPE_OK);
             res.put("total", map.get("total"));
             res.put("data", tbNoticeBoardList);
+            res.put("authority", userInfo.get("authority"));
+            res.put("nickname", userInfo.get("nickname"));
             result.setData(res);
         }catch (Exception e){
             result.setReturnCode(ReturnType.RTN_TYPE_NG);
@@ -125,6 +123,9 @@ public class NoticeController{
     @GetMapping("/notice/detail")
     public ResponseHandler<?> showNoticeDetail(@ApiParam(value = "글 번호")@RequestParam long boardSeq){
         final ResponseHandler<Object> result = new ResponseHandler<>();
+        //유저 Profile 가져옴
+        Map<String, Object> userInfo = GetClientProfile.getUserInfo(membershipService);
+        Map<String, Object > res = new HashMap<>();
         System.out.println("[Service][detailNotice]");
         try {
             List<TbNoticeBoard> tbNoticeBoardList = tbNoticeService.findByBoardSeq(boardSeq);
@@ -132,8 +133,11 @@ public class NoticeController{
                 result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST);
                 return result;
             }
+            res.put("data", tbNoticeBoardList.get(0));
+            res.put("authority", userInfo.get("authority"));
+            res.put("nickname", userInfo.get("nickname"));
             result.setReturnCode(ReturnType.RTN_TYPE_OK);
-            result.setData(tbNoticeBoardList.get(0));
+            result.setData(res);
         }catch (Exception e){
             result.setReturnCode(ReturnType.RTN_TYPE_NG);
         }
