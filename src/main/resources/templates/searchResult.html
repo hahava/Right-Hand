@@ -51,15 +51,6 @@
 <footer th:replace="fragment/footer"></footer>
 
 
-<!-- Bootstrap core JavaScript
-  ================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
-<script th:src="@{../js/jquery.js}"></script>
-<script th:src="@{../js/bootstrap.min.js}"></script>
-<script th:src="@{../js/owl.carousel.min.js}"></script>
-<script th:src="@{../js/ketchup.all.js}"></script>
-<script th:src="@{../js/fancybox.js}"></script>
-<script th:src="@{../js/script.js}"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>
 
@@ -209,7 +200,7 @@
 
     }
 
-
+    // 검색결과 하이라팅 기능
     function highlight(replace_word, original_word) {
         var reg = new RegExp(replace_word, 'gi');
         var final_str = original_word.replace(reg, function (str) {

@@ -2,88 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ko">
 <!--thymeleaf added-->
 
-<head th:replace="fragment/head">
+<head>
+    <init th:replace="fragment/head"/>
+    <title>Hoi</title>
 </head>
+
 <body>
 
-<!--Login  Modal -->
-<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-                <form>
-                    <div class="form-group">
-                        <label for="user_login_email">이메일 주소</label>
-                        <input type="email" class="form-control" id="user_login_email" placeholder="Email">
-                    </div>
-                    <div class="form-group">
-                        <label for="user_login_pw">비밀번호</label>
-                        <input type="password" class="form-control" id="user_login_pw" placeholder="Password">
-                    </div>
-                    <div class="form-group">
-                        <!--반드시 a 타입으로 해야 모달이 안 닫힌다.-->
-                        <a style="width: 100%;" class="btn btn-primary " id="submitBtn" type="submit"
-                           onclick="return login();">
-                            Login
-                        </a>
-                    </div>
-                    <div class="form-group">
-                        <button style="width: 100%;" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-<!--///END Login Modal///-->
-
-<!--Register  Modal -->
-<div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-                <form>
-                    <div class="form-group">
-                        <label for="register_email">이메일 주소</label>
-                        <input type="email" class="form-control" id="register_email" placeholder="Email">
-                    </div>
-                    <div class="form-group">
-                        <button class="btn btn-primary">중복확인</button>
-                    </div>
-                    <div class="form-group">
-                        <label for="register_nickname">닉네임</label>
-                        <input type="text" class="form-control" id="register_nickname" placeholder="닉네임">
-                    </div>
-                    <div class="form-group">
-                        <button class="btn btn-primary">중복확인</button>
-                    </div>
-                    <div class="form-group">
-                        <label for="register_pw">비밀번호</label>
-                        <input type="password" class="form-control" id="register_pw" placeholder="Password">
-                    </div>
-                    <div class="form-group">
-                        <label for="register_pw_check">비밀번호 확인</label>
-                        <input type="password" class="form-control" id="register_pw_check" placeholder="Password">
-                    </div>
-                    <div class="form-group">
-                        <a style="width: 100%;" class="btn btn-primary " id="register_submit"
-                           onclick="return register()">
-                            회원가입
-                        </a>
-                    </div>
-                    <div class="form-group">
-                        <button style="width: 100%;" class="btn btn-danger" data-dismiss="modal">취소</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-<!--///END Register Modal///-->
 
 <!-- Navigation Bar -->
-<navbar th:replace="fragment/navbar"></navbar>
-<!--///END Navigation Bar///s-->
+<navbar th:replace="fragment/navbar"/>
 
 <!-- BANNER SLIDER-->
 <div id="myCarousel" class="carousel slide" data-ride="carousel">
@@ -121,12 +49,12 @@
         </div>
     </div>
     <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
-        <span class="glyphicon glyphicon-chevron-left"></span></a>
+        <i class="glyphicon glyphicon-chevron-left"></i></a>
     <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
-        <span class="glyphicon glyphicon-chevron-right"></span></a>
+        <i class="glyphicon glyphicon-chevron-right"></i></a>
 </div>
 <!-- ///END Banner Slider/// -->
-<hr>
+<Br/>
 <!--/// Board LIST /// -->
 <div class="container has-margin-bottom">
     <div class="row">
@@ -134,44 +62,13 @@
             <div class="section-title left-align-desktop">
                 <h4> 최신글 </h4>
             </div>
-            <!--Blog list-->
-            <div class="row has-margin-bottom">
-                <div class="col-md-4 col-sm-4">
-                    <img class="img-responsive center-block" th:src="@{images/blog-thumb-1.jpg}" alt="bulletin blog">
-                </div>
-                <div class="col-md-8 col-sm-8 bulletin">
-                    <a href="blog-single.html"><h4 class="media-heading">java와 javscript의 차이 및 역사 </h4></a>
-                    <p>2018-10-15 <a href="#" class="link-reverse">Danny Lee</a></p>
-                    <p> 선거에 있어서 최고득표자가 2인 이상인 때에는 국회의 재적의원 과반수가 출석한 공개회의에서 다수표를 얻은 자를 당선자로 한다. 모든 국민은 주거의 자유를 침해받지 아니한다.
-                        주거에 대한 압수나 수색을 할 때에는 검사의 신청에 의하여 법관이 발부한 영장을 제시하여야 한다. 대한민국은 통일을 지향하며, 자유민주적 기본질서에 입각한 평화적 통일
-                        정책을 수립하고 이를 추진한다. ...</p>
-                </div>
-            </div>
-            <!--Board list-->
-            <div class="row has-margin-bottom">
-                <div class="col-md-4 col-sm-4">
-                    <img class="img-responsive center-block" th:src="@{images/blog-thumb-2.jpg}" alt="bulletin blog">
-                </div>
-                <div class="col-md-8 col-sm-8 bulletin">
-                    <a href="blog-single.html"><h4 class="media-heading">Node js 에서 MongoDB 사용하기</h4>
-                    </a>
-                    <p>2018-10-15 <a href="#" class="link-reverse">Danny Lee</a></p>
-
-                    <p class="media-content">국가유공자·상이군경 및 전몰군경의 유가족은 법률이 정하는 바에 의하여 우선적으로 근로의 기회를 부여받는다. 대한민국의 주권은 국민에게
-                        있고, 모든 권력은 국민으로부터 나온다.
-                    </p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-4 col-sm-4"></div>
-                <div class="col-md-8 col-sm-8 bulletin">
-                    <a href="blog-single.html"><h4 class="media-heading">블록체인에 대한 고찰</h4></a>
-                    <p>2018-10-15 <a href="#" class="link-reverse">Danny Lee</a></p>
-                    <p class="media-content">감사원의 조직·직무범위·감사위원의 자격·감사대상공무원의 범위 기타 필요한 사항은 법률로 정한다.
-                </div>
-            </div>
         </div>
     </div>
+
+    <div class="row" id="board_list">
+        <!--Blog list-->
+    </div>
+
 </div>
 <!-- ///END Board LIST /// -->
 <hr>
@@ -213,54 +110,53 @@
 <!--///END Board info///-->
 <footer th:replace="fragment/footer">
 </footer>
-<!-- Bootstrap core JavaScript
-================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
-<script th:src="@{../js/jquery.js}"></script>
-<script th:src="@{../js/bootstrap.min.js}"></script>
-<script th:src="@{../js/owl.carousel.min.js}"></script>
-<script th:src="@{../js/ketchup.all.js}"></script>
-<script th:src="@{../js/fancybox.js}"></script>
-<script th:src="@{../js/script.js}"></script>
 
-<!--Ajax-->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<!--로그인 스크립트-->
+<!--init script-->
 <script>
-    /*로그인 성공 여부 확인*/
-    var loginOk = false;
-
-    /*비동기 로그인 기능*/
-    function login() {
+    $(document).ready(function () {
         $.ajax({
-            type: 'POST',
-            url: "http://localhost:8080/api/login",
-            async: false,
-            data: {
-                userId: $('#user_login_email').val(),
-                userPwd: $('#user_login_pw').val()
-            },
-            success: function (data) {
-                alert(data.toString());
-                loginOk = true;
-                $('#submitBtn').attr('data-dismiss', 'modal');
-                location.reload();
-                return true;
-            },
-            error: function () {
-                loginOk = false;
-                alert("id 또는 password 가 틀렸습니다.");
-                return false;
+            type: 'GET',
+            url: "http://localhost:8080/board/new",
+            dataType: 'json',
+            success: function (result) {
+                var data = result.data;
+                var authority = result.data.authority;
+
+                switch (authority) {
+                    case 1:
+                        login_user();
+                        break;
+                }
+
+                var board_list = data.data;
+                var total = data.total;
+
+                for (var i = 0; i < board_list.length; i++) {
+                    var seq = board_list[i].BOARD_SEQ;
+                    var title = board_list[i].BOARD_TITLE;
+                    var content = board_list[i].BOARD_CONTENT;
+                    var nick_name = board_list[i].NICK_NAME;
+                    var board_type = board_list[i].BOARD_TYPE;
+                    var date = board_list[i].BOARD_DATE.substring(0, 10);
+
+                    $('#board_list').append('  <div class="row has-margin-bottom">' +
+                        '<div class="col-md-4 col-sm-4">' +
+                        '<img class="img-responsive center-block"  th:src="@{../images/blog-thumb-1.jpg}" alt="bulletin blog"src="images/blog-thumb-1.jpg"> </div>' +
+                        '<div class="col-md-8 col-sm-8 bulletin">' +
+                        '<a href="blog-single.html"><h4 class="media-heading" id="title">' + title + ' </h4></a>' +
+                        '<p>' + date + ' <a href="#" class="link-reverse">' + nick_name + '</a></p>' +
+                        '<p>' + content + '</p></div></div>');
+                }
+
+            }, error: function () {
+                //    TODO : 에러 페이지 제작해야 함
             }
         });
-        return loginOk;
-    };
+    });
 </script>
-
-
 <!--회원가입 스크립트-->
-<script>
 
+<script>
     function register() {
         var pw = $('#register_pw').val();
         var check_pw = $('#register_pw_check').val();
