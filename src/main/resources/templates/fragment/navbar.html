@@ -1,3 +1,78 @@
+<!--Login  Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="user_login_email">이메일 주소</label>
+                        <input type="email" class="form-control" id="user_login_email" placeholder="Email">
+                    </div>
+                    <div class="form-group">
+                        <label for="user_login_pw">비밀번호</label>
+                        <input type="password" class="form-control" id="user_login_pw" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                        <!--반드시 a 타입으로 해야 모달이 안 닫힌다.-->
+                        <a style="width: 100%;" class="btn btn-primary " id="submitBtn" type="submit"
+                           onclick="return login();">
+                            Login
+                        </a>
+                    </div>
+                    <div class="form-group">
+                        <button style="width: 100%;" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--///END Login Modal///-->
+
+<!--Register  Modal -->
+<div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="register_email">이메일 주소</label>
+                        <input type="email" class="form-control" id="register_email" placeholder="Email">
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-primary">중복확인</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="register_nickname">닉네임</label>
+                        <input type="text" class="form-control" id="register_nickname" placeholder="닉네임">
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-primary">중복확인</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="register_pw">비밀번호</label>
+                        <input type="password" class="form-control" id="register_pw" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                        <label for="register_pw_check">비밀번호 확인</label>
+                        <input type="password" class="form-control" id="register_pw_check" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                        <a style="width: 100%;" class="btn btn-primary " id="register_submit"
+                           onclick="return register()">
+                            회원가입
+                        </a>
+                    </div>
+                    <div class="form-group">
+                        <button style="width: 100%;" class="btn btn-danger" data-dismiss="modal">취소</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--///END Register Modal///-->
+
 <!-- Navigation Bar -->
 <div class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container">
@@ -12,13 +87,15 @@
         </div>
         <!--Navigation 메뉴-->
         <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav navbar-right">
+            <ul class="nav navbar-nav navbar-right" id="navbar">
                 <li id="dev_story_nav"><a href="/board/list?type=dev&page=1">Dev. Story</a></li>
                 <li id="it_story_nav"><a href="/board/list?type=tech&page=1">IT. Story</a></li>
                 <li><a href="#none">공지사항</a></li>
                 <li><a href="#none">고객센터</a></li>
-                <li><a href="#" data-toggle="modal" data-target="#loginModal" id="modalOpener">Login</a></li>
-                <li><a href="#" data-toggle="modal" data-target="#registerModal" id="registerOpener">Register</a></li>
+                <li id="login_li"><a href="#" data-toggle="modal" data-target="#loginModal" id="modalOpener">Login</a>
+                </li>
+                <li id="register_li"><a href="#" data-toggle="modal" data-target="#registerModal" id="registerOpener">Register</a>
+                </li>
             </ul>
         </div>
     </div>

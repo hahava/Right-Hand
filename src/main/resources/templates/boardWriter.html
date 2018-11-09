@@ -1,0 +1,31 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head th:replace="fragment/head"></head>
+<body>
+<div id="editSection" style="height: 500px; width: 500px;"></div>
+<br>
+<button id="submit" onclick="submit_text()">제출</button>
+<hr>
+
+<div id="viewSection"></div>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+<script>
+
+    var editor = new tui.Editor({
+        el: document.querySelector('#editSection'),
+        initialEditType: 'wysiwyg',
+        previewStyle: 'vertical',
+        height: '400px',
+        hideModeSwitch: true
+    });
+
+    function submit_text() {
+        alert(editor.getValue());
+        $('#result').text(editor.getValue());
+    };
+
+</script>
+</body>
+</html>
