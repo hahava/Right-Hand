@@ -28,4 +28,6 @@ public interface BoardService {
     List<Map<String, Object>> showReplyBoardTech(int boardSeq) throws Exception;
     List<Map<String, Object>> showReplyBoardDev(int boardSeq) throws Exception;
 
+    List<Map<String, Object>> showNewBoard() throws Exception;
+
 }

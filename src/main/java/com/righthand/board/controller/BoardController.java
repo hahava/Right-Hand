@@ -251,4 +251,27 @@ public class BoardController {
 
         return result;
     }
+
+    @ApiOperation("최근 게시물")
+    @GetMapping("/board/new")
+    public ResponseHandler<?> showNewBoard() throws Exception {
+        final ResponseHandler<Object> result = new ResponseHandler<>();
+        List<Map<String, Object>> newBoards = null;
+        try {
+            newBoards = boardService.showNewBoard();
+            if(newBoards.isEmpty() || newBoards == null) {
+                result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST);
+            }
+            else {
+                result.setData(newBoards);
+                result.setReturnCode(ReturnType.RTN_TYPE_OK);
+            }
+        }
+        catch (Exception e) {
+            logger.error("[NewBoard][Exception] " + e.toString());
+            result.setReturnCode(ReturnType.RTN_TYPE_NG);
+        }
+        return result;
+    }
+
 }

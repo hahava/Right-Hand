@@ -178,6 +178,18 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    public List<Map<String, Object>> showNewBoard() throws Exception {
+        List<Map<String, Object>> newBoards;
+        try {
+            newBoards = boardDao.showNewBoard();
+        }
+        catch (Exception e) {
+            throw new Exception(e);
+        }
+        return newBoards;
+    }
+
+    @Override
     public ReturnType insertBoardListTech(Map input_data) throws Exception {
         logger.info("[Service][boardTech]");
         boardSemaphore.acquire();
