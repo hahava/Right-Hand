@@ -6,6 +6,10 @@ import com.righthand.membership.service.MembershipService;
 import java.util.HashMap;
 import java.util.Map;
 
+/*
+*  생성자 : DANNY
+* */
+
 public class GetClientProfile {
 
     public static Map<String, Object> getUserInfo(MembershipService membershipService){
