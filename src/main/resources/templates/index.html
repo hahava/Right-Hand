@@ -2,14 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ko">
 <!--thymeleaf added-->
 
-<head th:replace="fragment/head">
+<head>
+    <init th:replace="fragment/head"/>
+    <title>Hoi</title>
 </head>
+
 <body>
 
 
 <!-- Navigation Bar -->
-<navbar th:replace="fragment/navbar"></navbar>
-<!--///END Navigation Bar///s-->
+<navbar th:replace="fragment/navbar"/>
 
 <!-- BANNER SLIDER-->
 <div id="myCarousel" class="carousel slide" data-ride="carousel">
@@ -47,11 +49,12 @@
         </div>
     </div>
     <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
-        <span class="glyphicon glyphicon-chevron-left"></span></a>
+        <i class="glyphicon glyphicon-chevron-left"></i></a>
     <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
-        <span class="glyphicon glyphicon-chevron-right"></span></a>
+        <i class="glyphicon glyphicon-chevron-right"></i></a>
 </div>
 <!-- ///END Banner Slider/// -->
+<Br/>
 <!--/// Board LIST /// -->
 <div class="container has-margin-bottom">
     <div class="row">
@@ -62,7 +65,7 @@
             <!--Blog list-->
             <div class="row has-margin-bottom">
                 <div class="col-md-4 col-sm-4">
-                    <img class="img-responsive center-block" th:src="@{images/blog-thumb-1.jpg}" alt="bulletin blog">
+                    <img class="img-responsive center-block" th:src="@{../images/blog-thumb-1.jpg}" alt="bulletin blog">
                 </div>
                 <div class="col-md-8 col-sm-8 bulletin">
                     <a href="blog-single.html"><h4 class="media-heading">java와 javscript의 차이 및 역사 </h4></a>
@@ -75,7 +78,7 @@
             <!--Board list-->
             <div class="row has-margin-bottom">
                 <div class="col-md-4 col-sm-4">
-                    <img class="img-responsive center-block" th:src="@{images/blog-thumb-2.jpg}" alt="bulletin blog">
+                    <img class="img-responsive center-block" th:src="@{../images/blog-thumb-2.jpg}" alt="bulletin blog">
                 </div>
                 <div class="col-md-8 col-sm-8 bulletin">
                     <a href="blog-single.html"><h4 class="media-heading">Node js 에서 MongoDB 사용하기</h4>
@@ -160,7 +163,7 @@
                 alert(data.toString());
                 loginOk = true;
                 $('#submitBtn').attr('data-dismiss', 'modal');
-                location.reload();
+                login_user();
                 return true;
             },
             error: function () {
@@ -171,6 +174,34 @@
         });
         return loginOk;
     };
+
+
+    function login_user() {
+        $('#login_li').remove();
+        $('#register_li').remove();
+        $('#navbar').append('<li class="dropdown"><a href="#none" class="dropdown-toggle" data-toggle="dropdown">MyPage <span class="caret"></span></a>  ' +
+            '<ul class="dropdown-menu dropdown-menu-left" role="menu">\n' +
+            '<li><a href="image-gallery.html">회원정보</a></li>\n' +
+            '<li><a href="image-gallery.html">회원정보수정</a></li>\n' +
+            '<li><a href="image-gallery.html">토큰내역</a></li>\n' +
+            '<li><a href="image-gallery.html">활동내역</a></li>\n' +
+            '<li class="divider"></li>\n' +
+            '<li><a href="javascript:logout();">LogOut</a></li>\n' +
+            '</ul></li>');
+    }
+
+    function logout() {
+        $.ajax({
+            type: 'GET',
+            url: "/api/logout",
+            success: function (data) {
+                alert("logout 되었습니다.");
+                location.reload();
+            },
+            error: function () {
+            }
+        });
+    }
 </script>
 
 

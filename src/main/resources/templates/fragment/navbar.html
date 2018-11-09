@@ -87,13 +87,15 @@
         </div>
         <!--Navigation 메뉴-->
         <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav navbar-right">
+            <ul class="nav navbar-nav navbar-right" id="navbar">
                 <li id="dev_story_nav"><a href="/board/list?type=dev&page=1">Dev. Story</a></li>
                 <li id="it_story_nav"><a href="/board/list?type=tech&page=1">IT. Story</a></li>
                 <li><a href="#none">공지사항</a></li>
                 <li><a href="#none">고객센터</a></li>
-                <li><a href="#" data-toggle="modal" data-target="#loginModal" id="modalOpener">Login</a></li>
-                <li><a href="#" data-toggle="modal" data-target="#registerModal" id="registerOpener">Register</a></li>
+                <li id="login_li"><a href="#" data-toggle="modal" data-target="#loginModal" id="modalOpener">Login</a>
+                </li>
+                <li id="register_li"><a href="#" data-toggle="modal" data-target="#registerModal" id="registerOpener">Register</a>
+                </li>
             </ul>
         </div>
     </div>
