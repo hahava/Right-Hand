@@ -29,4 +29,7 @@ public interface MembershipService extends UserDetailsService {
     PasswordEncoder passwordEncoder();
 
     int getProfileSeq(int userSeq);
+
+    String getProfileNickname(int userSeq);
+
 }

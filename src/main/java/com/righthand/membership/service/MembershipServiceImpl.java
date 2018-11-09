@@ -443,5 +443,10 @@ public class MembershipServiceImpl implements MembershipService {
         return membershipDao.getProfileSeq(userSeq);
     }
 
+    @Override
+    public String getProfileNickname(int userSeq) {
+        return membershipDao.getProfileNickname(userSeq);
+    }
+
 }
 

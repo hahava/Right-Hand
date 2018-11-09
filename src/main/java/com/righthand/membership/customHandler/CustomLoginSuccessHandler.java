@@ -51,6 +51,7 @@ public class CustomLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
         try {
             MembershipInfo membershipInfo = (MembershipInfo)authentication.getPrincipal();
             membershipInfo.setProfileSeq(membershipService.getProfileSeq(membershipInfo.getUserSeq()));
+            membershipInfo.setNickname(membershipService.getProfileNickname(membershipInfo.getUserSeq()));
             System.out.println("profseq : " + membershipInfo.getProfileSeq());
             int authoritiesLevel = membershipInfo.getAuthoritiesLevel();
             writer.write(getAuthoritiesString(authoritiesLevel, configMembership));

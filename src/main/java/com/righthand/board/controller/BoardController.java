@@ -4,6 +4,7 @@ import com.righthand.board.dao.BoardDao;
 import com.righthand.board.dto.model.BoardSearchVO;
 import com.righthand.board.dto.req.BoardReq;
 import com.righthand.board.service.BoardService;
+import com.righthand.common.GetClientProfile;
 import com.righthand.common.dto.res.ResponseHandler;
 import com.righthand.common.type.ReturnType;
 
@@ -45,9 +46,13 @@ public class BoardController {
         final ResponseHandler<Object> result = new ResponseHandler<>();
         Map<String, Object> tempBoardData = new HashMap<>();
         List<Map<String, Object>> tempBoardList;
+        // 사용자 정보 가져옴
+        Map<String, Object> userInfo = GetClientProfile.getUserInfo(membershipService);
         if(btype.equals("tech")){
             try {
                 tempBoardData.put("total", boardDao.selectCountListTech());
+                tempBoardData.put("authority", userInfo.get("authority"));
+                tempBoardData.put("nickname", userInfo.get("nickname"));
                 tempBoardList = boardService.selectBoardListTech(page);
                 tempBoardData.put("data", tempBoardList);
                 if(!(tempBoardList.isEmpty() || tempBoardList == null)) {
@@ -63,6 +68,8 @@ public class BoardController {
         }else if(btype.equals("dev")){
             try {
                 tempBoardData.put("total", boardDao.selectCountListDev());
+                tempBoardData.put("authority", userInfo.get("authority"));
+                tempBoardData.put("nickname", userInfo.get("nickname"));
                 tempBoardList = boardService.selectBoardListDev(page);
                 tempBoardData.put("data", tempBoardList);
                 if(!(tempBoardList.isEmpty() || tempBoardList == null)) {
@@ -82,18 +89,22 @@ public class BoardController {
     @ApiOperation("게시판 검색")
     @GetMapping("/board/list/searched/{btype}")
     public ResponseHandler<?> searchedBoardList(
-            @ApiParam(value = "검색어")@RequestParam String searchedWord,
-            @ApiParam(value = "페이지 번호")@RequestParam int page,
-            @ApiParam(value = "게시판 종류")@PathVariable String btype
+            @ApiParam(value = "검색어") @RequestParam String searchedWord,
+            @ApiParam(value = "페이지 번호") @RequestParam int page,
+            @ApiParam(value = "게시판 종류") @PathVariable String btype
     ) {
         final ResponseHandler<Object> result = new ResponseHandler<>();
         Map<String, Object> tempBoardData = new HashMap<>();
         List<Map<String, Object>> tempBoardList;
+        // 사용자 정보 가져옴
+        Map<String, Object> userInfo = GetClientProfile.getUserInfo(membershipService);
         BoardSearchVO vo = new BoardSearchVO();
         vo.setSearchedWord(searchedWord);
         if(btype.equals("tech")) {
             try {
                 tempBoardData.put("total", boardDao.selectSearchedCountListTech(vo));
+                tempBoardData.put("authority", userInfo.get("authority"));
+                tempBoardData.put("nickname", userInfo.get("nickname"));
                 tempBoardList = boardService.searchedBoardListTech(searchedWord, page);
                 tempBoardData.put("data", tempBoardList);
                 if (!(tempBoardList.isEmpty() || tempBoardList == null)) {
@@ -168,7 +179,9 @@ public class BoardController {
         final ResponseHandler<Object> result = new ResponseHandler<>();
         Map<String, Object> boardDetailData = null;
         List<Map<String, Object>> replyDetilData = null;
-        Map<String, Object> resultData = new HashMap<>();
+        // 사용자 정보 가져옴
+        Map<String, Object> userInfo = GetClientProfile.getUserInfo(membershipService);
+        Map<String, Object> tempBoardData = new HashMap<>();
         try {
             if(btype.equals("tech")){
                 boardDetailData = boardService.showBoardDetailTech(boardSeq);
@@ -179,14 +192,18 @@ public class BoardController {
             }
             if(!(boardDetailData.isEmpty() || boardDetailData == null)) {
                 if(replyDetilData.isEmpty() || replyDetilData == null) {
-                    resultData.put("boardDetailData", boardDetailData);
-                    result.setData(resultData);
+                    tempBoardData.put("authority", userInfo.get("authority"));
+                    tempBoardData.put("nickname", userInfo.get("nickname"));
+                    tempBoardData.put("boardDetailData", boardDetailData);
+                    result.setData(tempBoardData);
                     result.setReturnCode(ReturnType.RTN_TYPE_OK);
                 }
                 else {
-                    resultData.put("boardDetailData", boardDetailData);
-                    resultData.put("replyDetailData", replyDetilData);
-                    result.setData(resultData);
+                    tempBoardData.put("authority", userInfo.get("authority"));
+                    tempBoardData.put("nickname", userInfo.get("nickname"));
+                    tempBoardData.put("boardDetailData", boardDetailData);
+                    tempBoardData.put("replyDetailData", replyDetilData);
+                    result.setData(tempBoardData);
                     result.setReturnCode(ReturnType.RTN_TYPE_OK);
                 }
             }
