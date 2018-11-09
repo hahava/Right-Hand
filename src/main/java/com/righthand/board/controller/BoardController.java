@@ -256,6 +256,8 @@ public class BoardController {
     @GetMapping("/board/new")
     public ResponseHandler<?> showNewBoard() throws Exception {
         final ResponseHandler<Object> result = new ResponseHandler<>();
+        Map<String, Object> res = new HashMap<>();
+        Map<String, Object> userInfo = GetClientProfile.getUserInfo(membershipService);
         List<Map<String, Object>> newBoards = null;
         try {
             newBoards = boardService.showNewBoard();
@@ -263,7 +265,10 @@ public class BoardController {
                 result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST);
             }
             else {
-                result.setData(newBoards);
+                res.put("authority", userInfo.get("authority"));
+                res.put("nickname", userInfo.get("nickname"));
+                res.put("data", newBoards);
+                result.setData(res);
                 result.setReturnCode(ReturnType.RTN_TYPE_OK);
             }
         }
