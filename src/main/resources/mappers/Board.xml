@@ -61,6 +61,22 @@
         LIMIT #{start}, #{offset}
     </select>
 
+    <select id="showNewBoard" resultType="hashMap">
+        SELECT BOARD_TYPE, BOARD_SEQ, BOARD_TITLE, BOARD_CONTENT, BOARD_DATE
+        FROM TB_PROFILE
+        JOIN
+        (SELECT BOARD_PROFILE_SEQ, BOARD_TYPE, BOARD_SEQ, BOARD_TITLE, BOARD_CONTENT, BOARD_DATE
+        FROM TB_IT_TECH_BOARD
+        UNION
+        SELECT BOARD_PROFILE_SEQ, BOARD_TYPE, BOARD_SEQ, BOARD_TITLE, BOARD_CONTENT, BOARD_DATE
+        FROM TB_DEVELOP_STORY_BOARD)
+        AS BOARD ON BOARD.BOARD_PROFILE_SEQ = TB_PROFILE.PROFILE_SEQ
+        ORDER BY BOARD_DATE DESC
+        LIMIT 3
+    </select>
+
+
+
     <insert id="insertBoardListTech" parameterType="map" useGeneratedKeys="true" keyProperty="BOARD_SEQ">
         INSERT INTO TB_IT_TECH_BOARD(BOARD_TITLE, BOARD_CONTENT, BOARD_DATE, BOARD_PROFILE_SEQ)
         VALUES (#{boardTitle}, #{boardContent}, CURRENT_TIMESTAMP(6) , #{boardProfileSeq})
