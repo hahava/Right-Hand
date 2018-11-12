@@ -13,6 +13,7 @@ import com.righthand.membership.dto.res.SessionRes;
 import com.righthand.membership.service.MembershipInfo;
 import com.righthand.membership.service.MembershipService;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,7 +115,7 @@ public class MembershipController {
 
     @ApiOperation("회원탈퇴")
     @PutMapping("/resign")
-    public ResponseHandler<?> resign(@Valid @RequestBody(required=false) final ResignReq _params) {
+    public ResponseHandler<?> resign(@ApiParam("탈퇴사유") @Valid @RequestBody(required=false) final ResignReq _params) {
         final ResponseHandler<?> res = new ResponseHandler<>();
         Map<String, Object> params = ConvertUtil.convertObjectToMap(_params);
         ReturnType rtn;
