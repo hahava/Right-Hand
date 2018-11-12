@@ -1,10 +1,9 @@
-package com.righthand.notice.domain.boards;
+package com.righthand.notice.boards;
 
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Subselect;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

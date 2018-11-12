@@ -3,28 +3,18 @@ package com.righthand.notice.controller;
 import com.righthand.common.GetClientProfile;
 import com.righthand.common.dto.res.ResponseHandler;
 import com.righthand.common.type.ReturnType;
-import com.righthand.membership.service.MembershipInfo;
 import com.righthand.membership.service.MembershipService;
-import com.righthand.notice.domain.boards.TbNoticeBoard;
-import com.righthand.notice.domain.boards.TbNoticeBoardRepository;
+import com.righthand.notice.boards.TbNoticeBoard;
 import com.righthand.notice.dto.req.BoardReq;
 import com.righthand.notice.service.TbNoticeService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.Column;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 //@AllArgsConstructor
