@@ -1,8 +1,7 @@
 package com.righthand.notice.service;
 
-import com.righthand.common.type.ReturnType;
-import com.righthand.notice.domain.boards.TbNoticeBoard;
-import com.righthand.notice.domain.boards.TbNoticeBoardRepository;
+import com.righthand.notice.boards.TbNoticeBoard;
+import com.righthand.notice.boards.TbNoticeBoardRepository;
 import com.righthand.notice.dto.req.BoardReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

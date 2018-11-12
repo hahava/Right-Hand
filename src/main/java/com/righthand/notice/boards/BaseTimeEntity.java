@@ -1,4 +1,4 @@
-package com.righthand.notice.domain.boards;
+package com.righthand.notice.boards;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
