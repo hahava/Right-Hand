@@ -6,6 +6,7 @@ import com.righthand.common.type.ReturnType;
 import com.righthand.common.util.ConvertUtil;
 import com.righthand.membership.config.ConfigMembership;
 import com.righthand.membership.dto.req.EmailReq;
+import com.righthand.membership.dto.req.ResignReq;
 import com.righthand.membership.dto.req.SignupReq;
 import com.righthand.membership.dto.res.EmailRes;
 import com.righthand.membership.dto.res.SessionRes;
@@ -109,5 +110,25 @@ public class MembershipController {
         }
 
         return result;
+    }
+
+    @ApiOperation("회원탈퇴")
+    @PutMapping("/resign")
+    public ResponseHandler<?> resign(@Valid @RequestBody(required=false) final ResignReq _params) {
+        final ResponseHandler<?> res = new ResponseHandler<>();
+        Map<String, Object> params = ConvertUtil.convertObjectToMap(_params);
+        ReturnType rtn;
+        try{
+            MembershipInfo sessionInfo = membershipService.currentSessionUserInfo();
+            int userSeq = sessionInfo.getUserSeq();
+            params.put("userSeq", userSeq);
+            rtn = membershipService.resign(params);
+            res.setReturnCode(rtn);
+        } catch(Exception e) {
+            logger.error("[SignUp][Exception] " + e.toString());
+            res.setReturnCode(ReturnType.RTN_TYPE_NG);
+        }
+
+        return  res;
     }
 }

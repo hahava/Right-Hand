@@ -15,6 +15,12 @@
         VALUES(  #{fileGrpSeq}, #{introduction}, #{nickName}, #{userName}, #{gender}, #{tel}, #{birthYear}, #{childrenYn}, #{department},  #{dutyPosition}, #{role}, #{marketingAdvYn}, #{actAlertYn}, #{workingAlertYn}, #{lang}, 'N',  #{userSeq}, UTC_TIMESTAMP(), #{userSeq}, UTC_TIMESTAMP(), #{userSeq} )
     </insert>
 
+    <update id="resign" parameterType="map">
+        UPDATE TB_USER
+        SET RESIGN_YN = "Y", RESIGN_REASON = #{reason}, RESIGN_DT = CURRENT_TIMESTAMP(6)
+        WHERE USER_SEQ = #{userSeq}
+    </update>
+
     <select id="selectUser" resultType="map" parameterType="map">
         SELECT USER_SEQ
         ,LOGIN_TYPE
