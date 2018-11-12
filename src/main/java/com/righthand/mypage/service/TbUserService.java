@@ -29,4 +29,10 @@ public class TbUserService {
         map.put("nickname", membershipInfo.getNickname());
         return map;
     }
+
+    @Transactional
+    public void updateUserProfile(String nickname) throws Exception{
+        MembershipInfo membershipInfo = membershipService.currentSessionUserInfo();
+        tbProfileRepository.updateUserProfile(nickname, membershipInfo.getProfileSeq());
+    }
 }
