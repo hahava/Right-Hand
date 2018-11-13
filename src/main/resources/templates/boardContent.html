@@ -46,7 +46,7 @@
                     </div>
                     <div class="row">
                         <div class="pull-right">
-                            <button type="submit" class="btn btn-primary" onclick="send_reply()">댓글작성</button>
+                            <a class="btn btn-primary" href="javascript:send_reply()">댓글작성</a>
                         </div>
                     </div>
                 </form>
@@ -86,24 +86,13 @@
 
     });
 
-    <!--Editor-->
 
     function view_detail() {
         $.ajax({
             type: 'GET',
-            url: "http://localhost:8080/board/detail/" + type + "?boardSeq=" + board_seq,
+            url: "http://localhost:8080/board/detail/" + type + "?boardSeq=" + Number(board_seq),
             dataType: 'json',
             success: function (result) {
-
-                // 로그인 여부와 종류를 확인한다.
-                var login_authority = result.data.authority;
-
-                switch (login_authority) {
-                    case 1:
-                        login_user();
-                        break;
-                    default :
-                }
 
                 var data = result.data;
                 var board_detail = data.boardDetailData;
@@ -158,21 +147,34 @@
 
     // 댓글 작성
     function send_reply() {
+
+        var reply_success = false;
         $.ajax({
-            url: "",
+            async: false,
+            url: "http://localhost:8080/reply/" + type + "?boardSeq=" + Number(board_seq),
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            data: "",
+            data: $('#reply_content').val(),
             success: function (result) {
-                //댓글 작성 성공시 새로고침 한다.
-                location.reload();
+                switch (result.code) {
+                    case 0 :
+                        reply_success = true;
+                        break;
+                    default :
+                        reply_success = false;
+                }
             }, error: function (e) {
 
             }
-        })
+        });
+
+        if (reply_success) {
+            window.location.href = "http://localhost:8080/board/content?boardSeq=" + board_seq + "&type=" + type;
+        }
+
     };
 
 
