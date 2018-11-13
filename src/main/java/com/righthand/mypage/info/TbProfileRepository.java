@@ -10,6 +10,6 @@ public interface TbProfileRepository extends JpaRepository<TbProfile, Long> {
     TbProfile findUserSeq(int profileSeq);
 
     @Modifying
-    @Query(value = "UPDATE TB_PROFILE SET t.NICK_NAME = ?1 WHERE PROFILE_SEQ = ?2", nativeQuery = true)
-    int updateUserProfile(String nickname, int profileSeq);
+    @Query(value = "UPDATE TB_PROFILE SET NICK_NAME = ?1, TEL = ?2 WHERE PROFILE_SEQ = ?3", nativeQuery = true)
+    int updateUserProfile(String nickname, String tel, int profileSeq);
 }

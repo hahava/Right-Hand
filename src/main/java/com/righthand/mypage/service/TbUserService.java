@@ -37,8 +37,8 @@ public class TbUserService {
     }
 
     @Transactional
-    public void updateUserProfile(String nickname) throws Exception{
+    public void updateUserProfile(String nickname, String tel) throws Exception{
         MembershipInfo membershipInfo = membershipService.currentSessionUserInfo();
-        tbProfileRepository.updateUserProfile(nickname, membershipInfo.getProfileSeq());
+        tbProfileRepository.updateUserProfile(nickname, tel, membershipInfo.getProfileSeq());
     }
 }
