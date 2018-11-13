@@ -55,17 +55,6 @@
 
 <script>
 
-    // 요청 주소 뒤에 get 파라미터를 매핑한다.
-    function getParameterByName(name, url) {
-        if (!url) url = window.location.href;
-        name = name.replace(/[\[\]]/g, '\\$&');
-        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-            results = regex.exec(url);
-        if (!results) return null;
-        if (!results[2]) return '';
-        return decodeURIComponent(results[2].replace(/\+/g, ' '));
-    }
-
     // 기본은 dev 게시판
     var type = getParameterByName('type') != null ? getParameterByName('type') : 'dev';
 
@@ -136,7 +125,9 @@
 
                     var seq = board_list[i].BOARD_SEQ;
                     var title = highlight(keyword, board_list[i].BOARD_TITLE);
-                    var content = highlight(keyword, board_list[i].BOARD_CONTENT);
+                    var content = board_list[i].BOARD_CONTENT;
+                    content = regex_content(content);
+                    content = highlight(keyword, content);
                     var nick_name = board_list[i].NICK_NAME;
                     var date = board_list[i].BOARD_DATE.substring(0, 10);
 

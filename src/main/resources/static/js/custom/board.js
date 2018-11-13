@@ -1,5 +1,3 @@
-<!--Board List-->
-
 // 요청 주소 뒤에 get 파라미터를 매핑한다.
 $(document).ready(function () {
     var board_title;
@@ -22,7 +20,7 @@ $(document).ready(function () {
     $('#board_info').text(board_info);
 
     // 해당 페이지 게시글 요청
-    req_page(page);
+    req_page(type, page);
 });
 /*현재 페이지 정보*/
 
@@ -32,22 +30,12 @@ var type = getParameterByName('type') != null ? getParameterByName('type') : 'de
 // 기본 1 페이지 요청
 var page = getParameterByName('page') != null ? getParameterByName('page') : 1;
 
-function getParameterByName(name, url) {
-    if (!url) url = window.location.href;
-    name = name.replace(/[\[\]]/g, '\\$&');
-    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-        results = regex.exec(url);
-    if (!results) return null;
-    if (!results[2]) return '';
-    return decodeURIComponent(results[2].replace(/\+/g, ' '));
-}
-
 
 // 사용자가 원하는 페이지를 요청 번호에 맞춰 반환한다.
-function req_page(requested_page) {
+function req_page(requested_type, requested_page) {
     $.ajax({
         type: 'GET',
-        url: "http://localhost:8080/board/list/" + type + "?page=" + requested_page,
+        url: "http://localhost:8080/board/list/" + requested_type + "?page=" + requested_page,
         dataType: 'json',
         success: function (result) {
 
@@ -70,7 +58,7 @@ function req_page(requested_page) {
 
             // 페이지 리스트를 초기화 한다.
             $('#pageNation').empty();
-            set_page(total, requested_page, type);
+            set_page(total, requested_page, requested_type);
 
             for (var i = 0; i < board_list.length; i++) {
 
@@ -85,7 +73,7 @@ function req_page(requested_page) {
                     '<div class="col-md-4 col-sm-4">' +
                     '<img class="img-responsive center-block"  th:src="@{../images/blog-thumb-1.jpg}" alt="bulletin blog"src="images/blog-thumb-1.jpg"> </div>' +
                     '<div class="col-md-8 col-sm-8 bulletin">' +
-                    '<a href="/board/content?boardSeq=' + seq + '&type=' + type + ' "><h4 class="media-heading" id="title">' + title + ' </h4></a>' +
+                    '<a href="/board/content?boardSeq=' + seq + '&type=' + requested_type + ' "><h4 class="media-heading" id="title">' + title + ' </h4></a>' +
                     '<p>' + date + ' <a href="#" class="link-reverse">' + nick_name + '</a></p>' +
                     '<p>' + content + '</p></div></div>');
             }
@@ -97,19 +85,13 @@ function req_page(requested_page) {
         }
     });
 
-    function regex_content(text) {
-        var regex_text = text.replace(/\!\[.*?\)/gi, '(사진)');
-        regex_text = regex_text.replace(/\#|\*|~|_|-|>/gi, '');
-        return regex_text;
-    };
-
 }
 
 
 <!--검색하기 기능-->
 function search_result() {
     var keyword = $('#search_text').val();
-    location.href = "/board/search?page=1&searchedWord=" + keyword + "&type=" + type;
+    location.href = "/board/search?type=" + type + "&page=1&searchedWord=" + keyword;
 }
 
 /*글작성*/
