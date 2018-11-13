@@ -38,7 +38,7 @@
 
 
             <section class="post-comment-form">
-                <h3 class="comments-head">Add your comment</h3>
+                <h3 class="comments-head">댓글을 작성해 주세요</h3>
                 <form class="form" role="form">
                     <div class="row">
                         <div class="form-group col-md-12">
@@ -122,6 +122,16 @@
                 var data = result.data;
                 var board_detail = data.boardDetailData;
                 var board_content = board_detail.BOARD_CONTENT;
+
+                var editor = new tui.Editor.factory({
+                    el: document.querySelector('#viewerSection'),
+                    initialEditType: 'wysiwyg',
+                    previewStyle: 'vertical',
+                    viewer: true,
+                    hideModeSwitch: true,
+                    initialValue: board_content
+                });
+
                 var board_title = board_detail.BOARD_TITLE;
                 var nick_name = board_detail.NICK_NAME;
                 var board_date = board_detail.BOARD_DATE.substr(0, 10);
@@ -162,50 +172,6 @@
 
 
     /*editor*/
-
-    var content = [
-        '![image](https://cloud.githubusercontent.com/assets/389021/16107646/9729e556-33d8-11e6-933f-5b09fa3a53bb.png)',
-        '# Heading 1',
-        '## Heading 2',
-        '### Heading 3',
-        '#### Heading 4',
-        '##### Heading 5',
-        '###### Heading 6',
-        '    code block',
-        '```js',
-        'console.log("fenced code block");',
-        '```',
-        '<pre>**HTML block**</pre>',
-        '* list',
-        '    * list indented',
-        '1. ordered',
-        '2. list',
-        '    1. ordered list',
-        '    2. indented',
-        '',
-        '- [ ] task',
-        '- [x] list completed',
-        '',
-        '[link](https://nhnent.github.io/tui.editor/)',
-        '> block quote',
-        '---',
-        'horizontal line',
-        '***',
-        '`code`, *italic*, **bold**, ~~strikethrough~~, <span style="color:#e11d21">Red color</span>',
-        '|table|head|',
-        '|---|---|',
-        '|table|body|'
-    ].join('\n');
-
-    var editor = new tui.Editor.factory({
-        el: document.querySelector('#viewerSection'),
-        initialEditType: 'wysiwyg',
-        previewStyle: 'vertical',
-        viewer: true,
-        height: '400px',
-        hideModeSwitch: true,
-        initialValue: content
-    });
 
     function submit_text() {
         alert(editor.getValue());

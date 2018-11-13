@@ -9,7 +9,34 @@
 <script th:src="@{../js/script.js}"></script>
 
 <!--Ajax-->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js" crossorigin="anonymous"></script>
+
+<!--Toast UI-->
+<script src="./bower_components/jquery/dist/jquery.js" th:src="@{../bower_components/jquery/dist/jquery.js}"
+        type="text/javascript"></script>
+<script src='./bower_components/markdown-it/dist/markdown-it.js'
+        th:src="@{../bower_components/markdown-it/dist/markdown-it.js}" type="text/javascript"></script>
+<script src="./bower_components/to-mark/dist/to-mark.js"
+        th:src="@{../bower_components/to-mark/dist/to-mark.js}" type="text/javascript"></script>
+<script src="./bower_components/tui-code-snippet/dist/tui-code-snippet.js"
+        th:src="@{../bower_components/tui-code-snippet/dist/tui-code-snippet.js}" type="text/javascript"></script>
+<script src="./bower_components/codemirror/lib/codemirror.js"
+        th:src="@{../bower_components/codemirror/lib/codemirror.js}" type="text/javascript"></script>
+<script src="./bower_components/highlightjs/highlight.pack.js"
+        th:src="@{../bower_components/highlightjs/highlight.pack.js}" type="text/javascript"></script>
+<script src="./bower_components/squire-rte/build/squire-raw.js"
+        th:src="@{../bower_components/squire-rte/build/squire-raw.js}" type="text/javascript"></script>
+<script src="./bower_components/tui-editor/dist/tui-editor-Editor.js"
+        th:src="@{../bower_components/tui-editor/dist/tui-editor-Editor.js}" type="text/javascript"></script>
+<link rel="stylesheet" href="./bower_components/codemirror/lib/codemirror.css"
+      th:href="@{../bower_components/codemirror/lib/codemirror.css}" type="text/css">
+<link rel="stylesheet" href="./bower_components/highlightjs/styles/github.css"
+      th:href="@{../bower_components/highlightjs/styles/github.css}" type="text/css">
+<link rel="stylesheet" href="./bower_components/tui-editor/dist/tui-editor.css"
+      th:href="@{../bower_components/tui-editor/dist/tui-editor.css}" type="text/css">
+<link rel="stylesheet" href="./bower_components/tui-editor/dist/tui-editor-contents.css"
+      th:href="@{../bower_components/tui-editor/dist/tui-editor-contents.css}" type="text/css">
+
 
 <!--로그인 스크립트-->
 <script th:src="@{../js/custom/login.js}" type="text/javascript"></script>

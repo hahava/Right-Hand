@@ -1,8 +1,6 @@
 <!--Board List-->
 
 // 요청 주소 뒤에 get 파라미터를 매핑한다.
-
-
 $(document).ready(function () {
     var board_title;
     var board_info;
@@ -23,18 +21,16 @@ $(document).ready(function () {
     $('#board_title').text(board_title);
     $('#board_info').text(board_info);
 
-    if (page == null) {
-        req_page(1);
-    } else {
-        req_page(page);
-    }
+    // 해당 페이지 게시글 요청
+    req_page(page);
 });
+/*현재 페이지 정보*/
 
-// 기본은 dev 게시판
+// 기본 dev 게시판 요청
 var type = getParameterByName('type') != null ? getParameterByName('type') : 'dev';
 
-// 현재 페이지 정보
-var page = getParameterByName('page');
+// 기본 1 페이지 요청
+var page = getParameterByName('page') != null ? getParameterByName('page') : 1;
 
 function getParameterByName(name, url) {
     if (!url) url = window.location.href;
@@ -81,6 +77,7 @@ function req_page(requested_page) {
                 var seq = board_list[i].BOARD_SEQ;
                 var title = board_list[i].BOARD_TITLE;
                 var content = board_list[i].BOARD_CONTENT;
+                content = regex_content(content);
                 var nick_name = board_list[i].NICK_NAME;
                 var date = board_list[i].BOARD_DATE.substring(0, 10);
 
@@ -99,6 +96,13 @@ function req_page(requested_page) {
             alert("존재하지 않는 페이지 입니다.");
         }
     });
+
+    function regex_content(text) {
+        var regex_text = text.replace(/\!\[.*?\)/gi, '(사진)');
+        regex_text = regex_text.replace(/\#|\*|~|_|-|>/gi, '');
+        return regex_text;
+    };
+
 }
 
 
@@ -106,4 +110,9 @@ function req_page(requested_page) {
 function search_result() {
     var keyword = $('#search_text').val();
     location.href = "/board/search?page=1&searchedWord=" + keyword + "&type=" + type;
+}
+
+/*글작성*/
+function board_writer() {
+    location.href = "/board/writer?type=" + type;
 }
