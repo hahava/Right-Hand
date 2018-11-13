@@ -43,7 +43,7 @@ public class MypageController {
         final ResponseHandler<Object> result = new ResponseHandler<>();
         Map<String, Object> params = ConvertUtil.convertObjectToMap(_params);
         try {
-            tbUserService.updateUserProfile((String)params.get("nickname"));
+            tbUserService.updateUserProfile((String)params.get("nickname"), (String)params.get("tel"));
             result.setReturnCode(ReturnType.RTN_TYPE_OK);
         } catch (Exception e) {
             System.out.println("[EditProfile][Exception] " + e.toString());

@@ -25,20 +25,20 @@ public class TbUserService {
     public Map<String, Object> findUserAndProfile() throws Exception{
         MembershipInfo membershipInfo = membershipService.currentSessionUserInfo();
         Map<String, Object> map = new HashMap<>();
-        List<TbProfile> tbProfile = tbProfileRepository.findUserSeq(membershipInfo.getProfileSeq());
-        String email = tbUserRepository.findEmail(tbProfile.get(0).getProfileSeq().intValue());
+        TbProfile tbProfile = tbProfileRepository.findUserSeq(membershipInfo.getProfileSeq());
+        String email = tbUserRepository.findEmail(tbProfile.getProfileSeq().intValue());
         map.put("email", email);
         map.put("nickname", membershipInfo.getNickname());
-        map.put("userName", tbProfile.get(0).getUserName());
-        map.put("gender", tbProfile.get(0).getGender());
-        map.put("tel", tbProfile.get(0).getTel());
-        map.put("birthYear", tbProfile.get(0).getBirthYear());
+        map.put("userName", tbProfile.getUserName());
+        map.put("gender", tbProfile.getGender());
+        map.put("tel", tbProfile.getTel());
+        map.put("birthYear", tbProfile.getBirthYear());
         return map;
     }
 
     @Transactional
-    public void updateUserProfile(String nickname) throws Exception{
+    public void updateUserProfile(String nickname, String tel) throws Exception{
         MembershipInfo membershipInfo = membershipService.currentSessionUserInfo();
-        tbProfileRepository.updateUserProfile(nickname, membershipInfo.getProfileSeq());
+        tbProfileRepository.updateUserProfile(nickname, tel, membershipInfo.getProfileSeq());
     }
 }
