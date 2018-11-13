@@ -10,6 +10,7 @@ import com.righthand.notice.service.TbNoticeService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -31,34 +32,32 @@ public class NoticeController{
     @GetMapping("/notice/list")
     public ResponseHandler<?> showNoticeList(@ApiParam(value = "페이지 번호")@RequestParam int page) {
         final ResponseHandler<Map<String,Object>> result = new ResponseHandler<>();
-        List<TbNoticeBoard> tbNoticeBoardList = null;
+        final int size = 5;
+
+        // RESPONSE
         Map<String, Object> res = new HashMap<>();
+        Page<TbNoticeBoard> allBoardDateDesc;
+
         //유저 Profile 가져옴
         Map<String, Object> userInfo = GetClientProfile.getUserInfo(membershipService);
-        final int offset = 5;
-        int start = (page - 1) * offset;
-        long total;
         try {
-            Map<String, Object> map = tbNoticeService.findAllBoardDateDesc(start, offset);
-            tbNoticeBoardList = (List<TbNoticeBoard>) map.get("data");
-            total = (long) map.get("total");
+            allBoardDateDesc = tbNoticeService.findAllBoardDateDesc(page - 1, size);
         }
         catch (Exception e) {
             result.setReturnCode(ReturnType.RTN_TYPE_NG);
             return result;
         }
-        if(tbNoticeBoardList.isEmpty() || tbNoticeBoardList == null) {
+        if(allBoardDateDesc.getTotalElements() == 0) {
             result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST);
             result.setMessage("Board is not exist.");
         }
         else {
-            res.put("total", total);
-            res.put("data", tbNoticeBoardList);
+            res.put("total", allBoardDateDesc.getTotalElements());
+            res.put("data", allBoardDateDesc.getContent());
             res.put("authority", userInfo.get("authority"));
             res.put("nickname", userInfo.get("nickname"));
             result.setData(res);
             result.setReturnCode(ReturnType.RTN_TYPE_OK);
-            result.setMessage("Success");
         }
         return result;
     }
@@ -67,23 +66,21 @@ public class NoticeController{
     @GetMapping("/notice/searched")
     public ResponseHandler<?> searchedNoticeList(@ApiParam(value = "검색어")@RequestParam String searchedWord,
                                                  @ApiParam(value = "페이지 번호")@RequestParam int page){
-        final ResponseHandler<Object> result = new ResponseHandler<>();
-        System.out.println("[Service][searchNotice]");
-        final int offset = 5;
-        int start = (page - 1) * offset;
         Map<String, Object> res = new HashMap<>();
+        final ResponseHandler<Object> result = new ResponseHandler<>();
+        final int size = 5;
+        System.out.println("[Service][searchNotice]");
         //유저 Profile 가져옴
         Map<String, Object> userInfo = GetClientProfile.getUserInfo(membershipService);
         try {
-            Map<String, Object> map = tbNoticeService.findAllBySearchedWord(searchedWord, start, offset);
-            List<TbNoticeBoard> tbNoticeBoardList = (List<TbNoticeBoard>) map.get("data");
-            if(tbNoticeBoardList.isEmpty() || tbNoticeBoardList == null){
+            Page<TbNoticeBoard> allBySearchedWord = tbNoticeService.findAllBySearchedWord(searchedWord, page - 1, size);
+            if(allBySearchedWord.getTotalElements() == 0){
                 result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST);
                 return result;
             }
             result.setReturnCode(ReturnType.RTN_TYPE_OK);
-            res.put("total", map.get("total"));
-            res.put("data", tbNoticeBoardList);
+            res.put("total", allBySearchedWord.getTotalElements());
+            res.put("data", allBySearchedWord.getContent());
             res.put("authority", userInfo.get("authority"));
             res.put("nickname", userInfo.get("nickname"));
             result.setData(res);
@@ -118,12 +115,12 @@ public class NoticeController{
         Map<String, Object > res = new HashMap<>();
         System.out.println("[Service][detailNotice]");
         try {
-            List<TbNoticeBoard> tbNoticeBoardList = tbNoticeService.findByBoardSeq(boardSeq);
-            if(tbNoticeBoardList.isEmpty() || tbNoticeBoardList == null){
+            TbNoticeBoard tbNoticeBoard = tbNoticeService.findByBoardSeq(boardSeq);
+            if(tbNoticeBoard == null){
                 result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST);
                 return result;
             }
-            res.put("data", tbNoticeBoardList.get(0));
+            res.put("data", tbNoticeBoard);
             res.put("authority", userInfo.get("authority"));
             res.put("nickname", userInfo.get("nickname"));
             result.setReturnCode(ReturnType.RTN_TYPE_OK);

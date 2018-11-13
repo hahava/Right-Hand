@@ -4,6 +4,7 @@ import com.righthand.membership.service.MembershipInfo;
 import com.righthand.membership.service.MembershipService;
 import com.righthand.mypage.info.TbProfile;
 import com.righthand.mypage.info.TbProfileRepository;
+import com.righthand.mypage.info.TbUser;
 import com.righthand.mypage.info.TbUserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,9 +26,9 @@ public class TbUserService {
     public Map<String, Object> findUserAndProfile() throws Exception{
         MembershipInfo membershipInfo = membershipService.currentSessionUserInfo();
         Map<String, Object> map = new HashMap<>();
-        TbProfile tbProfile = tbProfileRepository.findUserSeq(membershipInfo.getProfileSeq());
-        String email = tbUserRepository.findEmail(tbProfile.getProfileSeq().intValue());
-        map.put("email", email);
+        TbProfile tbProfile = tbProfileRepository.findByUserSeq((long) membershipInfo.getProfileSeq());
+        TbUser tbUser = tbUserRepository.getOne(tbProfile.getProfileSeq());
+        map.put("email", tbUser.getEmail());
         map.put("nickname", membershipInfo.getNickname());
         map.put("userName", tbProfile.getUserName());
         map.put("gender", tbProfile.getGender());

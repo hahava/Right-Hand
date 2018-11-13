@@ -4,6 +4,10 @@ import com.righthand.notice.boards.TbNoticeBoard;
 import com.righthand.notice.boards.TbNoticeBoardRepository;
 import com.righthand.notice.dto.req.BoardReq;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,19 +22,15 @@ public class TbNoticeService {
     private TbNoticeBoardRepository tbNoticeBoardRepository;
 
     @Transactional
-    public Map<String, Object> findAllBoardDateDesc(int start, int offset) throws Exception{
-        Map<String, Object> map = new HashMap<>();
-        map.put("data", tbNoticeBoardRepository.findAllBoardDateDesc(start, offset));
-        map.put("total", tbNoticeBoardRepository.count());
-        return map;
+    public Page<TbNoticeBoard> findAllBoardDateDesc(int page, int size) throws Exception{
+        Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.DESC, "boardDate"));
+        return tbNoticeBoardRepository.findAll(pageable);
     }
 
     @Transactional
-    public Map<String, Object> findAllBySearchedWord(String searchedWord, int start, int offset) throws Exception{
-        Map<String, Object> map = new HashMap<>();
-        map.put("data", tbNoticeBoardRepository.findAllBySearchedWord(searchedWord, start, offset));
-        map.put("total", tbNoticeBoardRepository.countSearchedBoard(searchedWord));
-        return map;
+    public Page<TbNoticeBoard> findAllBySearchedWord(String searchedWord, int page, int size) throws Exception{
+        Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.DESC, "BOARD_DATE"));
+        return tbNoticeBoardRepository.findByBoardTitleOrBoardContent(searchedWord, pageable);
     }
 
     @Transactional
@@ -39,7 +39,7 @@ public class TbNoticeService {
     }
 
     @Transactional
-    public List<TbNoticeBoard> findByBoardSeq(long boardSeq) throws Exception{
+    public TbNoticeBoard findByBoardSeq(long boardSeq) throws Exception{
         return tbNoticeBoardRepository.findByBoardSeq(boardSeq);
     }
 }
