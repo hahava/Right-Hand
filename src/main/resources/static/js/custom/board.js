@@ -1,8 +1,4 @@
-<!--Board List-->
-
 // 요청 주소 뒤에 get 파라미터를 매핑한다.
-
-
 $(document).ready(function () {
     var board_title;
     var board_info;
@@ -23,35 +19,23 @@ $(document).ready(function () {
     $('#board_title').text(board_title);
     $('#board_info').text(board_info);
 
-    if (page == null) {
-        req_page(1);
-    } else {
-        req_page(page);
-    }
+    // 해당 페이지 게시글 요청
+    req_page(type, page);
 });
+/*현재 페이지 정보*/
 
-// 기본은 dev 게시판
+// 기본 dev 게시판 요청
 var type = getParameterByName('type') != null ? getParameterByName('type') : 'dev';
 
-// 현재 페이지 정보
-var page = getParameterByName('page');
-
-function getParameterByName(name, url) {
-    if (!url) url = window.location.href;
-    name = name.replace(/[\[\]]/g, '\\$&');
-    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-        results = regex.exec(url);
-    if (!results) return null;
-    if (!results[2]) return '';
-    return decodeURIComponent(results[2].replace(/\+/g, ' '));
-}
+// 기본 1 페이지 요청
+var page = getParameterByName('page') != null ? getParameterByName('page') : 1;
 
 
 // 사용자가 원하는 페이지를 요청 번호에 맞춰 반환한다.
-function req_page(requested_page) {
+function req_page(requested_type, requested_page) {
     $.ajax({
         type: 'GET',
-        url: "http://localhost:8080/board/list/" + type + "?page=" + requested_page,
+        url: "http://localhost:8080/board/list/" + requested_type + "?page=" + requested_page,
         dataType: 'json',
         success: function (result) {
 
@@ -74,13 +58,14 @@ function req_page(requested_page) {
 
             // 페이지 리스트를 초기화 한다.
             $('#pageNation').empty();
-            set_page(total, requested_page, type);
+            set_page(total, requested_page, requested_type);
 
             for (var i = 0; i < board_list.length; i++) {
 
                 var seq = board_list[i].BOARD_SEQ;
                 var title = board_list[i].BOARD_TITLE;
                 var content = board_list[i].BOARD_CONTENT;
+                content = regex_content(content);
                 var nick_name = board_list[i].NICK_NAME;
                 var date = board_list[i].BOARD_DATE.substring(0, 10);
 
@@ -88,7 +73,7 @@ function req_page(requested_page) {
                     '<div class="col-md-4 col-sm-4">' +
                     '<img class="img-responsive center-block"  th:src="@{../images/blog-thumb-1.jpg}" alt="bulletin blog"src="images/blog-thumb-1.jpg"> </div>' +
                     '<div class="col-md-8 col-sm-8 bulletin">' +
-                    '<a href="/board/content?boardSeq=' + seq + '&type=' + type + ' "><h4 class="media-heading" id="title">' + title + ' </h4></a>' +
+                    '<a href="/board/content?boardSeq=' + seq + '&type=' + requested_type + ' "><h4 class="media-heading" id="title">' + title + ' </h4></a>' +
                     '<p>' + date + ' <a href="#" class="link-reverse">' + nick_name + '</a></p>' +
                     '<p>' + content + '</p></div></div>');
             }
@@ -99,11 +84,17 @@ function req_page(requested_page) {
             alert("존재하지 않는 페이지 입니다.");
         }
     });
+
 }
 
 
 <!--검색하기 기능-->
 function search_result() {
     var keyword = $('#search_text').val();
-    location.href = "/board/search?page=1&searchedWord=" + keyword + "&type=" + type;
+    location.href = "/board/search?type=" + type + "&page=1&searchedWord=" + keyword;
+}
+
+/*글작성*/
+function board_writer() {
+    location.href = "/board/writer?type=" + type;
 }

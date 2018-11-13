@@ -30,25 +30,23 @@
             <section class="comments-block">
                 <h3 class="comments-head" id="reply_count"></h3>
                 <div id="reply_list">
-
                 </div>
-
             </section>
             <!--///END Reply///-->
 
 
             <section class="post-comment-form">
-                <h3 class="comments-head">Add your comment</h3>
+                <h3 class="comments-head">댓글을 작성해 주세요</h3>
                 <form class="form" role="form">
                     <div class="row">
                         <div class="form-group col-md-12">
                             <textarea cols="8" rows="4" class="form-control input-lg"
-                                      placeholder="Your comment"></textarea>
+                                      placeholder="Your comment" id="reply_content"></textarea>
                         </div>
                     </div>
                     <div class="row">
                         <div class="pull-right">
-                            <button type="submit" class="btn btn-primary">댓글작성</button>
+                            <a class="btn btn-primary" href="javascript:send_reply()">댓글작성</a>
                         </div>
                     </div>
                 </form>
@@ -63,20 +61,8 @@
 
 <script>
 
-    // 요청 주소 뒤에 get 파라미터를 매핑한다.
-    function getParameterByName(name, url) {
-        if (!url) url = window.location.href;
-        name = name.replace(/[\[\]]/g, '\\$&');
-        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-            results = regex.exec(url);
-        if (!results) return null;
-        if (!results[2]) return '';
-        return decodeURIComponent(results[2].replace(/\+/g, ' '));
-    }
-
     // 기본은 dev 게시판
     var type = getParameterByName('type') != null ? getParameterByName('type') : 'dev';
-
 
     // 게시글 번호
     var board_seq = getParameterByName('boardSeq');
@@ -100,28 +86,27 @@
 
     });
 
-    <!--Editor-->
 
     function view_detail() {
         $.ajax({
             type: 'GET',
-            url: "http://localhost:8080/board/detail/" + type + "?boardSeq=" + board_seq,
+            url: "http://localhost:8080/board/detail/" + type + "?boardSeq=" + Number(board_seq),
             dataType: 'json',
             success: function (result) {
-
-                // 로그인 여부와 종류를 확인한다.
-                var login_authority = result.data.authority;
-
-                switch (login_authority) {
-                    case 1:
-                        login_user();
-                        break;
-                    default :
-                }
 
                 var data = result.data;
                 var board_detail = data.boardDetailData;
                 var board_content = board_detail.BOARD_CONTENT;
+
+                var editor = new tui.Editor.factory({
+                    el: document.querySelector('#viewerSection'),
+                    initialEditType: 'wysiwyg',
+                    previewStyle: 'vertical',
+                    viewer: true,
+                    hideModeSwitch: true,
+                    initialValue: board_content
+                });
+
                 var board_title = board_detail.BOARD_TITLE;
                 var nick_name = board_detail.NICK_NAME;
                 var board_date = board_detail.BOARD_DATE.substr(0, 10);
@@ -150,7 +135,7 @@
             var reply_date = reply_list[temp].REPLY_DATE;
             var reply_nickName = reply_list[temp].NICK_NAME;
 
-            $('#reply_list').append('<div class="media"><a class="pull-left" href="#">' +
+            $('#reply_list').append('<div class="media has-margin-bottom"><a class="pull-left" href="#">' +
                 ' <img class="media-object" alt="avatar" src="images/avatar-1.jpg"> </a>' +
                 '<div class="media-body"><h6 class="media-heading">' + reply_nickName + '</h6>' +
                 ' <p class="text-muted" id="reply_date">' + reply_date.substr(0, 10) + '</p>' +
@@ -160,87 +145,37 @@
         }
     }
 
-
-    /*editor*/
-
-    var content = [
-        '![image](https://cloud.githubusercontent.com/assets/389021/16107646/9729e556-33d8-11e6-933f-5b09fa3a53bb.png)',
-        '# Heading 1',
-        '## Heading 2',
-        '### Heading 3',
-        '#### Heading 4',
-        '##### Heading 5',
-        '###### Heading 6',
-        '    code block',
-        '```js',
-        'console.log("fenced code block");',
-        '```',
-        '<pre>**HTML block**</pre>',
-        '* list',
-        '    * list indented',
-        '1. ordered',
-        '2. list',
-        '    1. ordered list',
-        '    2. indented',
-        '',
-        '- [ ] task',
-        '- [x] list completed',
-        '',
-        '[link](https://nhnent.github.io/tui.editor/)',
-        '> block quote',
-        '---',
-        'horizontal line',
-        '***',
-        '`code`, *italic*, **bold**, ~~strikethrough~~, <span style="color:#e11d21">Red color</span>',
-        '|table|head|',
-        '|---|---|',
-        '|table|body|'
-    ].join('\n');
-
-    var editor = new tui.Editor.factory({
-        el: document.querySelector('#viewerSection'),
-        initialEditType: 'wysiwyg',
-        previewStyle: 'vertical',
-        viewer: true,
-        height: '400px',
-        hideModeSwitch: true,
-        initialValue: content
-    });
-
-    function submit_text() {
-        alert(editor.getValue());
-        $('#result').text(editor.getValue());
-    };
-
+    // 댓글 작성
     function send_reply() {
+
+        var reply_success = false;
         $.ajax({
-            type: 'GET',
-            url: "http://localhost:8080/board/detail/" + type + "?boardSeq=" + board_seq,
-            dataType: 'json',
+            async: false,
+            url: "http://localhost:8080/reply/" + type + "?boardSeq=" + Number(board_seq),
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            data: $('#reply_content').val(),
             success: function (result) {
+                switch (result.code) {
+                    case 0 :
+                        reply_success = true;
+                        break;
+                    default :
+                        reply_success = false;
+                }
+            }, error: function (e) {
 
-
-                var data = result.data;
-                var board_detail = data.boardDetailData;
-                var board_content = board_detail.BOARD_CONTENT;
-                var board_title = board_detail.BOARD_TITLE;
-                var nick_name = board_detail.NICK_NAME;
-                var board_date = board_detail.BOARD_DATE.substr(0, 10);
-
-                $('#board_title').text(board_title);
-                $('#board_date').text(board_date);
-                $('#nick_name').text(nick_name);
-
-                /*reply*/
-                var reply_list = data.replyDetailData;
-                $('#reply_count').text(reply_list.length + " 개의 댓글");
-                view_reply(reply_list);
-
-            }, error: function () {
-                //    TODO : 에러 페이지 제작해야 함
             }
         });
-    }
+
+        if (reply_success) {
+            window.location.href = "http://localhost:8080/board/content?boardSeq=" + board_seq + "&type=" + type;
+        }
+
+    };
 
 
 </script>
