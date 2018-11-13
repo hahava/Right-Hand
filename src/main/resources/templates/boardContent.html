@@ -30,9 +30,7 @@
             <section class="comments-block">
                 <h3 class="comments-head" id="reply_count"></h3>
                 <div id="reply_list">
-
                 </div>
-
             </section>
             <!--///END Reply///-->
 
@@ -43,12 +41,12 @@
                     <div class="row">
                         <div class="form-group col-md-12">
                             <textarea cols="8" rows="4" class="form-control input-lg"
-                                      placeholder="Your comment"></textarea>
+                                      placeholder="Your comment" id="reply_content"></textarea>
                         </div>
                     </div>
                     <div class="row">
                         <div class="pull-right">
-                            <button type="submit" class="btn btn-primary">댓글작성</button>
+                            <button type="submit" class="btn btn-primary" onclick="send_reply()">댓글작성</button>
                         </div>
                     </div>
                 </form>
@@ -148,7 +146,7 @@
             var reply_date = reply_list[temp].REPLY_DATE;
             var reply_nickName = reply_list[temp].NICK_NAME;
 
-            $('#reply_list').append('<div class="media"><a class="pull-left" href="#">' +
+            $('#reply_list').append('<div class="media has-margin-bottom"><a class="pull-left" href="#">' +
                 ' <img class="media-object" alt="avatar" src="images/avatar-1.jpg"> </a>' +
                 '<div class="media-body"><h6 class="media-heading">' + reply_nickName + '</h6>' +
                 ' <p class="text-muted" id="reply_date">' + reply_date.substr(0, 10) + '</p>' +
@@ -158,43 +156,24 @@
         }
     }
 
-
-    /*editor*/
-
-    function submit_text() {
-        alert(editor.getValue());
-        $('#result').text(editor.getValue());
-    };
-
+    // 댓글 작성
     function send_reply() {
         $.ajax({
-            type: 'GET',
-            url: "http://localhost:8080/board/detail/" + type + "?boardSeq=" + board_seq,
-            dataType: 'json',
+            url: "",
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            data: "",
             success: function (result) {
+                //댓글 작성 성공시 새로고침 한다.
+                location.reload();
+            }, error: function (e) {
 
-
-                var data = result.data;
-                var board_detail = data.boardDetailData;
-                var board_content = board_detail.BOARD_CONTENT;
-                var board_title = board_detail.BOARD_TITLE;
-                var nick_name = board_detail.NICK_NAME;
-                var board_date = board_detail.BOARD_DATE.substr(0, 10);
-
-                $('#board_title').text(board_title);
-                $('#board_date').text(board_date);
-                $('#nick_name').text(nick_name);
-
-                /*reply*/
-                var reply_list = data.replyDetailData;
-                $('#reply_count').text(reply_list.length + " 개의 댓글");
-                view_reply(reply_list);
-
-            }, error: function () {
-                //    TODO : 에러 페이지 제작해야 함
             }
-        });
-    }
+        })
+    };
 
 
 </script>
