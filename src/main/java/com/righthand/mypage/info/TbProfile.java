@@ -20,5 +20,17 @@ public class TbProfile {
     @Column(name = "USER_SEQ")
     private Long userSeq;
 
+    @Column(name = "USER_NAME")
+    private String userName;
+
+    @Column(name = "GENDER")
+    private String gender;
+
+    @Column(name = "TEL")
+    private String tel;
+
+    @Column(name = "BIRTH_YEAR")
+    private Long birthYear;
+
 
 }
