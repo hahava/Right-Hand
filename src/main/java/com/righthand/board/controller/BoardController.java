@@ -223,7 +223,7 @@ public class BoardController {
     @PostMapping("/reply/{btype}")
     public ResponseHandler<?> writeReply(@ApiParam(value = "게시판 종류")@PathVariable String btype,
                                              @ApiParam(value = "게시물 번호")@RequestParam int boardSeq,
-                                             @ApiParam(value = "댓글 내용")@RequestParam String replyContent){
+                                             @ApiParam(value = "댓글 내용")@RequestBody String replyContent){
         final ResponseHandler<?> result = new ResponseHandler<>();
         Map<String, Object> params = new HashMap<String, Object>();
         try {
