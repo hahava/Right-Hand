@@ -1,5 +1,9 @@
 package com.righthand.notice.boards;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -7,16 +11,15 @@ import java.util.List;
 
 public interface TbNoticeBoardRepository extends JpaRepository <TbNoticeBoard, Long>{
 
-    @Query(value = "SELECT * FROM TB_NOTICE_BOARD t ORDER BY t.BOARD_DATE DESC LIMIT ?1, ?2", nativeQuery = true)
-    List<TbNoticeBoard> findAllBoardDateDesc(int start, int offset);
+    // JPA Paging 사용
+    Page<TbNoticeBoard> findAll(Pageable pageable);
 
-    @Query(value = "SELECT * FROM TB_NOTICE_BOARD t WHERE t.BOARD_SEQ = ?1", nativeQuery = true)
-    List<TbNoticeBoard> findByBoardSeq(long boardSeq);
+    // 상세 검색
+    TbNoticeBoard findByBoardSeq(long boardSeq);
 
-    @Query(value = "SELECT * FROM TB_NOTICE_BOARD t WHERE t.BOARD_TITLE LIKE CONCAT('%', ?1, '%') OR t.BOARD_CONTENT LIKE CONCAT('%', ?1, '%') ORDER BY t.BOARD_DATE DESC LIMIT ?2, ?3", nativeQuery = true)
-    List<TbNoticeBoard> findAllBySearchedWord(String searchedWord, int start, int offset);
-
-    @Query(value = "SELECT COUNT(*) FROM TB_NOTICE_BOARD t WHERE t.BOARD_TITLE LIKE CONCAT('%', ?1, '%') OR t.BOARD_CONTENT LIKE CONCAT('%', ?1, '%')", nativeQuery = true)
-    int countSearchedBoard(String searchedWord);
-
+    // 검색어
+    @Query(value = "SELECT * FROM TB_NOTICE_BOARD t WHERE t.BOARD_TITLE LIKE CONCAT('%', ?1, '%') OR t.BOARD_CONTENT LIKE CONCAT('%', ?1, '%') ",
+            countQuery = "SELECT COUNT(*) FROM TB_NOTICE_BOARD t WHERE t.BOARD_TITLE LIKE CONCAT('%', ?1, '%') OR t.BOARD_CONTENT LIKE CONCAT('%', ?1, '%')",
+            nativeQuery = true)
+    Page<TbNoticeBoard> findByBoardTitleOrBoardContent(String searchedWord, Pageable pageable);
 }
