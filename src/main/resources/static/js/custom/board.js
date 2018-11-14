@@ -1,4 +1,9 @@
-// 요청 주소 뒤에 get 파라미터를 매핑한다.
+// 기본 dev 게시판 요청
+var type = getParameterByName('type') != null ? getParameterByName('type') : 'dev';
+
+// 기본 1 페이지 요청
+var page = getParameterByName('page') != null ? getParameterByName('page') : 1;
+
 $(document).ready(function () {
     var board_title;
     var board_info;
@@ -23,12 +28,6 @@ $(document).ready(function () {
     req_page(type, page);
 });
 /*현재 페이지 정보*/
-
-// 기본 dev 게시판 요청
-var type = getParameterByName('type') != null ? getParameterByName('type') : 'dev';
-
-// 기본 1 페이지 요청
-var page = getParameterByName('page') != null ? getParameterByName('page') : 1;
 
 
 // 사용자가 원하는 페이지를 요청 번호에 맞춰 반환한다.
@@ -58,6 +57,7 @@ function req_page(requested_type, requested_page) {
 
             // 페이지 리스트를 초기화 한다.
             $('#pageNation').empty();
+
             set_page(total, requested_page, requested_type);
 
             for (var i = 0; i < board_list.length; i++) {
@@ -87,8 +87,7 @@ function req_page(requested_type, requested_page) {
 
 }
 
-
-<!--검색하기 기능-->
+/*검색하기 기능*/
 function search_result() {
     var keyword = $('#search_text').val();
     location.href = "/board/search?type=" + type + "&page=1&searchedWord=" + keyword;
