@@ -34,7 +34,7 @@ function login_user() {
     $('#register_li').remove();
     $('#navbar').append('<li class="dropdown"><a href="#none" class="dropdown-toggle" data-toggle="dropdown">MyPage <span class="caret"></span></a>  ' +
         '<ul class="dropdown-menu dropdown-menu-left" role="menu">\n' +
-        '<li><a href="image-gallery.html">회원정보</a></li>\n' +
+        '<li><a href="/user/info">회원정보</a></li>\n' +
         '<li><a href="image-gallery.html">회원정보수정</a></li>\n' +
         '<li><a href="image-gallery.html">토큰내역</a></li>\n' +
         '<li><a href="image-gallery.html">활동내역</a></li>\n' +
