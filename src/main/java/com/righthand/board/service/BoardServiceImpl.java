@@ -39,7 +39,6 @@ public class BoardServiceImpl implements BoardService {
         boardSemaphore.acquire();
         try{
             resBoardData = boardDao.selectBoardListTech(vo);
-            System.out.println("resBoard : " + resBoardData);
             boardSemaphore.release();
         }catch (Exception e) {
             boardSemaphore.release();
