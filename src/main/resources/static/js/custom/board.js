@@ -74,7 +74,7 @@ function req_page(requested_type, requested_page) {
 
                 $('#blog_list').append('  <div class="row has-margin-bottom">' +
                     '<div class="col-md-4 col-sm-4 title_image">' +
-                    first_image + ' </div>' +
+                    first_image + '</div>' +
                     '<div class="col-md-8 col-sm-8 bulletin">' +
                     '<a href="/board/content?boardSeq=' + seq + '&type=' + requested_type + ' "><h4 class="media-heading" id="title">' + title + ' </h4></a>' +
                     '<p>' + date + ' <a href="#" class="link-reverse">' + nick_name + '</a></p>' +
