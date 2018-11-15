@@ -1,10 +1,14 @@
-// 기본 dev 게시판 요청
+// 기본은 dev 게시판
 var type = getParameterByName('type') != null ? getParameterByName('type') : 'dev';
 
-// 기본 1 페이지 요청
-var page = getParameterByName('page') != null ? getParameterByName('page') : 1;
+// 현재 페이지 정보
+var page = getParameterByName('page');
+
+// 검색 키워드
+var keyword = getParameterByName('searchedWord');
 
 $(document).ready(function () {
+
     var board_title;
     var board_info;
 
@@ -24,29 +28,26 @@ $(document).ready(function () {
     $('#board_title').text(board_title);
     $('#board_info').text(board_info);
 
-    // 해당 페이지 게시글 요청
-    req_page(type, page);
+    search_result();
+
 });
-/*현재 페이지 정보*/
 
+// 검색결과 하이라팅 기능
+function highlight(replace_word, original_word) {
+    var reg = new RegExp(replace_word, 'gi');
+    var final_str = original_word.replace(reg, function (str) {
+        return '<span  style="background:yellow">' + str + '</span>'
+    });
+    return final_str;
+}
 
-// 사용자가 원하는 페이지를 요청 번호에 맞춰 반환한다.
-function req_page(requested_type, requested_page) {
+function search_result() {
     $.ajax({
         type: 'GET',
-        url: "http://localhost:8080/board/list/" + requested_type + "?page=" + requested_page,
+        url: "http://localhost:8080/board/list/searched/" + type + "?searchedWord=" + keyword + "&page=" + page,
         dataType: 'json',
         success: function (result) {
 
-            // 로그인 여부와 종류를 확인한다.
-            var login_authority = result.data.authority;
-
-            switch (login_authority) {
-                case 1:
-                    login_user();
-                    break;
-                default :
-            }
 
             // 게시판 리스트를 초기화 한다..
             $('#blog_list').empty();
@@ -57,15 +58,19 @@ function req_page(requested_type, requested_page) {
 
             // 페이지 리스트를 초기화 한다.
             $('#pageNation').empty();
+            search_page(total, page, type, keyword);
 
-            set_page(total, requested_page, requested_type);
+            $('#keyword_info').text(keyword);
+            $('#total_info').text(total);
+
 
             for (var i = 0; i < board_list.length; i++) {
 
                 var seq = board_list[i].BOARD_SEQ;
-                var title = board_list[i].BOARD_TITLE;
+                var title = highlight(keyword, board_list[i].BOARD_TITLE);
                 var content = board_list[i].BOARD_CONTENT;
                 content = regex_content(content);
+                content = highlight(keyword, content);
                 var nick_name = board_list[i].NICK_NAME;
                 var date = board_list[i].BOARD_DATE.substring(0, 10);
 
@@ -73,27 +78,13 @@ function req_page(requested_type, requested_page) {
                     '<div class="col-md-4 col-sm-4">' +
                     '<img class="img-responsive center-block"  th:src="@{../images/blog-thumb-1.jpg}" alt="bulletin blog"src="images/blog-thumb-1.jpg"> </div>' +
                     '<div class="col-md-8 col-sm-8 bulletin">' +
-                    '<a href="/board/content?boardSeq=' + seq + '&type=' + requested_type + ' "><h4 class="media-heading" id="title">' + title + ' </h4></a>' +
+                    '<a href="/board/content?boardSeq=' + seq + '&type=' + type + ' "><h4 class="media-heading" id="title">' + title + ' </h4></a>' +
                     '<p>' + date + ' <a href="#" class="link-reverse">' + nick_name + '</a></p>' +
                     '<p>' + content + '</p></div></div>');
             }
             window.scrollTo(0, 0);
-        },
-        error: function () {
-            //TODO 에러 페이지 제작 해야 함
-            alert("존재하지 않는 페이지 입니다.");
+        }, error: function () {
+            //    TODO : 에러 페이지 제작해야 함
         }
     });
-
-}
-
-/*검색하기 기능*/
-function search_result() {
-    var keyword = $('#search_text').val();
-    location.href = "/board/search?type=" + type + "&page=1&searchedWord=" + keyword;
-}
-
-/*글작성*/
-function board_writer() {
-    location.href = "/board/writer?type=" + type;
 }
