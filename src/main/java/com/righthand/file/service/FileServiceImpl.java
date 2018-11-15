@@ -263,9 +263,9 @@ public class FileServiceImpl implements FileService{
                     break;
 
                 case 2:
-                    System.out.println(configFile.getStroageLoc()+"/"+subUrl);
                     rtn = storigeHandler.store(file,configFile.getStroageLoc()+"/"+subUrl,fileName);
-                    fileUrl =  configFile.getUrlStorage() + "/" + subUrl +  "/" + fileName;
+//                    fileUrl =  configFile.getUrlStorage()+ "/" + subUrl +  "/" + fileName;
+                    fileUrl =  configFile.getStroageLoc() + "/" + subUrl +  "/" + fileName;
                     subFileUrl = "/" + subUrl + "/" + fileName;
                     break;
 

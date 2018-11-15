@@ -4,11 +4,13 @@ import com.righthand.board.dao.BoardDao;
 import com.righthand.board.dto.model.BoardSearchVO;
 import com.righthand.board.dto.req.BoardReq;
 import com.righthand.board.service.BoardService;
+import com.righthand.common.BASE64DecodedMultipartFile;
 import com.righthand.common.GetClientProfile;
 import com.righthand.common.dto.res.ResponseHandler;
 import com.righthand.common.type.ReturnType;
 
 import com.righthand.common.util.ConvertUtil;
+import com.righthand.file.service.FileService;
 import com.righthand.membership.service.MembershipInfo;
 import com.righthand.membership.service.MembershipService;
 
@@ -18,11 +20,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RestController
 public class BoardController {
@@ -34,10 +39,57 @@ public class BoardController {
     MembershipService membershipService;
 
     @Autowired
+    FileService fileService;
+
+    @Autowired
     BoardDao boardDao;
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    private String storeImgsAndGetChangedText(Map<String, Object> params) {
+        final String regex = "\\!\\[.*?\\)";
+        final String[] srcTag = {"<img src=\"", "\" data=todos/>"};
+        String text = (String) params.get("boardContent");
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(text);
+        ArrayList<String> imgTexts = new ArrayList<>();
+        int total = 0;
+        while (matcher.find()) {
+            imgTexts.add(matcher.group());
+            total++;
+        }
+        for (int i = 0; i < total; i++) {
+            StringTokenizer firstSt = new StringTokenizer(imgTexts.get(i),",");
+            firstSt.nextToken();
+            String transformText = firstSt.nextToken();
+            StringBuilder base64 = new StringBuilder();
+            for (int j = 0; j < transformText.length() - 1; j++) {
+                base64.append(transformText.charAt(j));
+            }
+            byte[] decodedBytes = Base64.getDecoder().decode(String.valueOf(base64));
+            MultipartFile[] files = new MultipartFile[1];
+
+            // Base64 -> Multipart 커스터마이징
+            BASE64DecodedMultipartFile base64DecodedMultipartFile = new BASE64DecodedMultipartFile(decodedBytes);
+
+            files[0] = base64DecodedMultipartFile;
+            Map<String, Object> param = new HashMap<>();
+            ArrayList<HashMap<String,Object>> urlMap = null;
+            try {
+                System.out.println("[StoreFile]");
+                urlMap = fileService.storeFile(files, param);
+                /**
+                * Right-Hand-Imgs가 resource Root 디렉토리이기 때문에 subFileUrl 적용
+                */
+                String newText = srcTag[0] + (String) urlMap.get(0).get("subFileUrl") + srcTag[1];
+//                String newText = srcTag[0] + (String) urlMap.get(0).get("fileUrl") + srcTag[1];
+                text = text.replace(imgTexts.get(i), newText);
+            } catch (Exception e) {
+                System.out.println("[StoreFile][Exception] " + e.toString());
+            }
+        }
+        return text;
+    }
 
     @ApiOperation("게시물 리스트")
     @GetMapping("/board/list/{btype}")
@@ -143,9 +195,10 @@ public class BoardController {
                                              @ApiParam(value = "게시판 종류")@PathVariable String btype) {
         final ResponseHandler<?> result = new ResponseHandler<>();
         Map<String, Object> params = ConvertUtil.convertObjectToMap(_params);
+        String changedText = storeImgsAndGetChangedText(params);
+        params.replace("boardContent", changedText);
         try {
             MembershipInfo membershipInfo = membershipService.currentSessionUserInfo();
-            System.out.println("profile seq : " + membershipInfo.getProfileSeq());
             params.put("boardProfileSeq", membershipInfo.getProfileSeq());
             ReturnType rtn;
             if(btype.equals("tech")){
