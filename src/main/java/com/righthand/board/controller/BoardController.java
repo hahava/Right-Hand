@@ -106,6 +106,9 @@ public class BoardController {
                 tempBoardData.put("authority", userInfo.get("authority"));
                 tempBoardData.put("nickname", userInfo.get("nickname"));
                 tempBoardList = boardService.selectBoardListTech(page);
+                for (int i = 0; i < tempBoardList.size(); i++) {
+                    tempBoardList.get(i).put("BOARD_TYPE", btype);
+                }
                 tempBoardData.put("data", tempBoardList);
                 if(!(tempBoardList.isEmpty() || tempBoardList == null)) {
                     result.setData(tempBoardData);
@@ -157,8 +160,13 @@ public class BoardController {
                 tempBoardData.put("total", boardDao.selectSearchedCountListTech(vo));
                 tempBoardData.put("authority", userInfo.get("authority"));
                 tempBoardData.put("nickname", userInfo.get("nickname"));
+                tempBoardData.put("searchedWord", searchedWord);
                 tempBoardList = boardService.searchedBoardListTech(searchedWord, page);
                 tempBoardData.put("data", tempBoardList);
+                for (int i = 0; i < tempBoardList.size(); i++) {
+                    tempBoardList.get(i).put("BOARD_TYPE", btype);
+                }
+
                 if (!(tempBoardList.isEmpty() || tempBoardList == null)) {
                     result.setData(tempBoardData);
                     result.setReturnCode(ReturnType.RTN_TYPE_OK);
