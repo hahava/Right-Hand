@@ -5,10 +5,10 @@ import com.righthand.common.dto.res.ResponseHandler;
 import com.righthand.common.type.ReturnType;
 import com.righthand.common.util.ConvertUtil;
 import com.righthand.membership.config.ConfigMembership;
-import com.righthand.membership.dto.req.EmailReq;
+import com.righthand.membership.dto.req.UserIdReq;
 import com.righthand.membership.dto.req.ResignReq;
 import com.righthand.membership.dto.req.SignupReq;
-import com.righthand.membership.dto.res.EmailRes;
+import com.righthand.membership.dto.res.UserIdRes;
 import com.righthand.membership.dto.res.SessionRes;
 import com.righthand.membership.service.MembershipInfo;
 import com.righthand.membership.service.MembershipService;
@@ -45,18 +45,18 @@ public class MembershipController {
      * @return : ReturnType
      */
 
-    @ApiOperation(value="이메일 중복확인")
-    @PostMapping(value = "/check/email/dup")
-    public ResponseHandler<EmailRes> checkEmailDup(@Valid @RequestBody final EmailReq _params){
-        final ResponseHandler<EmailRes> result = new ResponseHandler<>();
+    @ApiOperation(value="아이디 중복확인")
+    @PostMapping(value = "/check/id/dup")
+    public ResponseHandler<UserIdRes> checkIdDup(@Valid @RequestBody final UserIdReq _params){
+        final ResponseHandler<UserIdRes> result = new ResponseHandler<>();
         Map<String, Object> params = ConvertUtil.convertObjectToMap(_params);
         ReturnType rtn;
         try{
-            EmailRes emailRes = new EmailRes();
+            UserIdRes userIdRes = new UserIdRes();
             rtn = membershipService.canUseEmail(params);
-            if(rtn.equals(ReturnType.RTN_TYPE_OK)) emailRes.setIsExist(false);
-            else emailRes.setIsExist(true);
-            result.setData(emailRes);
+            if(rtn.equals(ReturnType.RTN_TYPE_OK)) userIdRes.setIsExist(false);
+            else userIdRes.setIsExist(true);
+            result.setData(userIdRes);
             result.setReturnCode(rtn);
         } catch(Exception e) {
             logger.error("[EmailDUP][Exception] " + e.toString());
@@ -126,7 +126,7 @@ public class MembershipController {
             rtn = membershipService.resign(params);
             res.setReturnCode(rtn);
         } catch(Exception e) {
-            logger.error("[SignUp][Exception] " + e.toString());
+            logger.error("[Resign][Exception] " + e.toString());
             res.setReturnCode(ReturnType.RTN_TYPE_NG);
         }
 
