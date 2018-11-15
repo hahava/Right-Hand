@@ -97,7 +97,7 @@
         </if>
     </select>
     <select id="countEmail" resultType="int" parameterType="map">
-        SELECT COUNT(*) FROM TB_USER WHERE EMAIL = #{email}
+        SELECT COUNT(*) FROM TB_USER WHERE USER_ID = #{userId}
     </select>
     <select id="getProfileSeq" resultType="int" parameterType="int">
         SELECT PROFILE_SEQ FROM TB_PROFILE WHERE USER_SEQ = #{userSeq}
