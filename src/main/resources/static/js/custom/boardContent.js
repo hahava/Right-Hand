@@ -31,6 +31,16 @@ function view_detail() {
         dataType: 'json',
         success: function (result) {
 
+            // 로그인 여부와 종류를 확인한다.
+            var login_authority = result.data.authority;
+
+            switch (login_authority) {
+                case 1:
+                    login_user();
+                    break;
+                default :
+            }
+
             var data = result.data;
             var board_detail = data.boardDetailData;
             var board_content = board_detail.BOARD_CONTENT;

@@ -14,8 +14,3 @@ function getParameterByName(name, url) {
 }
 
 
-function regex_content(text) {
-    var regex_text = text.replace(/\!\[.*?\)/gi, '(사진)');
-    regex_text = regex_text.replace(/\#|\*|~|_|-|>/gi, '');
-    return regex_text;
-};
