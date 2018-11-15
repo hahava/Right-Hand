@@ -26,9 +26,10 @@ public class TbUserService {
     public Map<String, Object> findUserAndProfile() throws Exception{
         MembershipInfo membershipInfo = membershipService.currentSessionUserInfo();
         Map<String, Object> map = new HashMap<>();
-        TbProfile tbProfile = tbProfileRepository.findByUserSeq((long) membershipInfo.getProfileSeq());
-        TbUser tbUser = tbUserRepository.getOne(tbProfile.getProfileSeq());
-        map.put("email", tbUser.getEmail());
+        TbProfile tbProfile = tbProfileRepository.findByProfileSeq((long) membershipInfo.getProfileSeq());
+        System.out.println("profileSeq : " + tbProfile.getProfileSeq());
+        TbUser tbUser = tbUserRepository.getOne(tbProfile.getUserSeq());
+        map.put("userId", tbUser.getUserId());
         map.put("nickname", membershipInfo.getNickname());
         map.put("userName", tbProfile.getUserName());
         map.put("gender", tbProfile.getGender());
