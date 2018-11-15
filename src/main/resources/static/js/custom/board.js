@@ -51,37 +51,14 @@ function req_page(requested_type, requested_page) {
             // 게시판 리스트를 초기화 한다..
             $('#blog_list').empty();
 
-            var data = result.data;
-            var board_list = data.data;
-            var total = data.total;
-
             // 페이지 리스트를 초기화 한다.
             $('#pageNation').empty();
 
+            var data = result.data;
+            var total = data.total;
             set_page(total, requested_page, requested_type);
 
-            for (var i = 0; i < board_list.length; i++) {
-
-                var seq = board_list[i].BOARD_SEQ;
-                var title = board_list[i].BOARD_TITLE;
-                var content = board_list[i].BOARD_CONTENT;
-                var first_image = content.match(/\<img[^\<]*?(data=todos)*[^\<]\/\>/i) != null ? content.match(/\<img[^\<]*?(data=todos)*[^\<]\/\>/i) : ' ';
-                content = regex_content(content);
-                var nick_name = board_list[i].NICK_NAME;
-                var date = board_list[i].BOARD_DATE.substring(0, 10);
-
-                console.log(first_image[0]);
-
-                $('#blog_list').append('  <div class="row has-margin-bottom">' +
-                    '<div class="col-md-4 col-sm-4 title_image">' + first_image[0] + '</div>' +
-                    '<div class="col-md-8 col-sm-8 bulletin">' +
-                    '<a href="/board/content?boardSeq=' + seq + '&type=' + requested_type + ' "><h4 class="media-heading" id="title">' + title + ' </h4></a>' +
-                    '<p>' + date + ' <a href="#" class="link-reverse">' + nick_name + '</a></p>' +
-                    '<p>' + content + '</p></div></div>');
-            }
-
-            $('.title_image').children('img').attr('class', 'img-responsive center-block');
-
+            get_board_list(data);
             window.scrollTo(0, 0);
         },
         error: function () {
