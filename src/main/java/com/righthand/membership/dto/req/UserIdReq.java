@@ -9,9 +9,9 @@ import java.io.Serializable;
 
 @Data
 @ApiModel(value = "이메일 중복 체크 파라미터")
-public class EmailReq implements Serializable {
+public class UserIdReq implements Serializable {
 
     @ApiParam(value = "이메일", required = true)
     @NotNull
-    private String email;
+    private String userId;
 }

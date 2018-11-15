@@ -18,6 +18,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -93,7 +95,15 @@ public class MembershipServiceImpl implements MembershipService {
      * @param
      * @return
      * @throws Exception
+     *
+     * @Transactional(rollbackFor = Exception.class)
+     * try, catch -> TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+     * 설명) Exception이 발생하면 Rollback 시킨다.
+     *
+     * By Danny
+     *
      */
+    @Transactional(rollbackFor = Exception.class)
     public ReturnType signUp(Map input_data) throws Exception{
 
         String userId = null;
@@ -126,7 +136,7 @@ public class MembershipServiceImpl implements MembershipService {
                 input_data.put("loginType", configMembership.getLoginTypeEmail());
                 input_data.put("email", userId);
             }
-//            System.out.println("email : " + input_data.get("email"));
+
             // 2) email의 pattern
             if (configValidationCheck.checkEmail((String) input_data.get("email")) != 0) {
                 membershipSemaphore.release();
@@ -181,29 +191,31 @@ public class MembershipServiceImpl implements MembershipService {
                 input_data.put("workingAlertYn", "Y");
             }
 
-            ///////////////////////////////////////////////////////////////////////////////////////////////
-
-            ///////////////////////////////////////////////////////////////////////////////////////////////
-            // 4. 데이터 저장
-            ///////////////////////////////////////////////////////////////////////////////////////////////
-            membershipDao.insertUser(input_data);
-
-            if(input_data.get("lang") != null) {
+            if (input_data.get("lang") != null) {
                 String settingLang = input_data.get("lang").toString();
-                if(settingLang.contains("en")) {
+                if (settingLang.contains("en")) {
                     input_data.put("lang", "002");
                 } else if (settingLang.contains("ko")) {
                     input_data.put("lang", "003");
                 } else {
                     input_data.put("lang", configMembership.getDefaultLangCode());
                 }
-            }
-            else {
+            } else {
                 input_data.put("lang", configMembership.getDefaultLangCode());
             }
 
-            membershipDao.insertProfile(input_data);
+            ///////////////////////////////////////////////////////////////////////////////////////////////
 
+            ///////////////////////////////////////////////////////////////////////////////////////////////
+            // 4. 데이터 저장
+            ///////////////////////////////////////////////////////////////////////////////////////////////
+            try {
+                membershipDao.insertUser(input_data);
+                membershipDao.insertProfile(input_data);
+            }catch (Exception e){
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return ReturnType.RTN_TYPE_NG;
+            }
 
 
             ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -229,91 +241,6 @@ public class MembershipServiceImpl implements MembershipService {
         membershipSemaphore.release();
         return ReturnType.RTN_TYPE_OK;
     }
-
-
-
-    /*
-    public ReturnType signUp(SignupReq signupReq) throws Exception{
-
-        String userId = null;
-        String pwd = null;
-
-        HashMap<String, Object> params = new HashMap<>();
-
-        logger.info("[Service][SignUp]");
-
-        // 로직을 다른 누군가 실행 중일 때는 대기 .
-        membershipSemaphore.acquire();
-
-        try {
-
-            ///////////////////////////////////////////////////////////////////////////////////////////////
-            // 1. User id 검증
-            ///////////////////////////////////////////////////////////////////////////////////////////////
-            params.put("userId", signupReq.getUserId());
-
-            // 이미 동일한 유저 아이디가 있을 때
-            if (this.checkExistInUser(params) == true) {
-                membershipSemaphore.release();
-                return ReturnType.RTN_TYPE_MEMBERSSHIP_USERID_EXIST_NG;
-            }
-
-            // 2) email의 pattern
-            if (configValidationCheck.checkEmail(signupReq.getEmail()) != 0) {
-                membershipSemaphore.release();
-                return ReturnType.RTN_TYPE_MEMBERSSHIP_EMAIL_PATTERN_NG;
-            }
-
-            logger.info("[Service][SignUp] USER ID OK");
-            ///////////////////////////////////////////////////////////////////////////////////////////////
-
-            ///////////////////////////////////////////////////////////////////////////////////////////////
-            // 2. Password 검증 및 암호화
-            ///////////////////////////////////////////////////////////////////////////////////////////////
-            // 2) Id의 pattern
-            if(configValidationCheck.checkPwd(signupReq.getUserPwd()) != 0)
-            {
-                membershipSemaphore.release();
-                return ReturnType.RTN_TYPE_MEMBERSSHIP_PASSWORD_PATTERN_NG;
-            }
-
-            // 3) 암호화
-            String encPassword = passwordHandler.encode(pwd);
-
-            if (!passwordHandler.matches(pwd, encPassword)) {
-                logger.error("[Service][SignUp]PWD ENC ERR");
-                membershipSemaphore.release();
-                return ReturnType.RTN_TYPE_MEMBERSSHIP_PASSWORD_ENC_NG;
-            }
-
-            signupReq.setUserPwd(encPassword);
-
-            logger.info("[Service][SignUp] USER PWD OK");
-            ///////////////////////////////////////////////////////////////////////////////////////////////
-
-            ///////////////////////////////////////////////////////////////////////////////////////////////
-            // 3. 디폴트 설정
-            ///////////////////////////////////////////////////////////////////////////////////////////////
-            // authority level
-            signupReq.setAuthority(configMembership.getSelectAuthorityLevelDefault());
-
-            ///////////////////////////////////////////////////////////////////////////////////////////////
-
-            ///////////////////////////////////////////////////////////////////////////////////////////////
-            // 4. 데이터 저장
-            ///////////////////////////////////////////////////////////////////////////////////////////////
-            membershipDao.insertUser(signupReq);
-            membershipDao.insertProfile(signupReq);
-        }
-        catch (Exception e) {
-            membershipSemaphore.release();
-            throw new Exception(e);
-        }
-
-        membershipSemaphore.release();
-        return ReturnType.RTN_TYPE_OK;
-    }
-*/
 
     /**
      * Spring Security 정보 setup 함수.

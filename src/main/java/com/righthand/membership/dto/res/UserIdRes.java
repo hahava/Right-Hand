@@ -3,6 +3,6 @@ package com.righthand.membership.dto.res;
 import lombok.Data;
 
 @Data
-public class EmailRes {
+public class UserIdRes {
     private Boolean isExist;
 }
