@@ -113,18 +113,24 @@
 <script th:src="@{../js/custom/index.js}" type="text/javascript"></script>
 <!--회원가입 스크립트-->
 <script>
-    function register() {
+
+    function register_user() {
         var pw = $('#register_pw').val();
         var check_pw = $('#register_pw_check').val();
-        var check = regex_checker(pw, check_pw);
+        var check = password_checker(pw, check_pw);
         var register_success = false;
+
 
         if (check) {
             var member = {
-                "userId": $('#register_email').val(),
-                "userPwd": $('#register_pw').val(),
+                "birthYear": $('#register_birth').val(),
+                "email": $('#register_email').val(),
+                "gender": ($('input[name="gender"]:checked').val() == '남자') ? 'M' : 'F',
                 "nickName": $('#register_nickname').val(),
-                "email": $('#register_email').val()
+                "tel": $('#register_phone').val(),
+                "userId": $('#register_email').val(),
+                "userName": $('#register_name').val(),
+                "userPwd": $('#register_pw').val()
             };
 
             $.ajax({
@@ -138,14 +144,23 @@
                 /*반드시 JSON 변환을 거쳐서 요청 보낼 것*/
                 data: JSON.stringify(member),
                 success: function (data) {
-                    loginOk = true;
-                    /*모달 속성 변경 후 Reload*/
-                    $('#register_submit').attr('data-dismiss', 'modal');
-                    register_success = true;
-                    window.reload();
-                    return true;
-                }
-                ,
+                    switch (data.code) {
+
+                        case 0 :
+                            loginOk = true;
+                            /*모달 속성 변경 후 Reload*/
+                            $('#register_submit').attr('data-dismiss', 'modal');
+                            register_success = true;
+                            window.reload();
+                            return true;
+                            break;
+
+                        default:
+                            alert("실패했습니다." + data.message + data.code);
+
+                    }
+
+                },
                 error: function (data) {
                     alert(data.toString());
                     register_success = false;
@@ -165,7 +180,7 @@
         }
     };
 
-    var regex_checker = function (pw, check_pw) {
+    var password_checker = function (pw, check_pw) {
 
         var regex = /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/;
 
@@ -188,7 +203,6 @@
             $('#register_pw_check').focus();
             return false;
         }
-        alert("성공이다!");
         return true;
     };
 
