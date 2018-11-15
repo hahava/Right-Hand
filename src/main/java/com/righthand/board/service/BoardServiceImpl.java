@@ -30,16 +30,15 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public List<Map<String, Object>> selectBoardListTech(int page) throws Exception {
-        int start, end;
+        int start;
+        final int offset = 5;
         BoardCountVO vo = new BoardCountVO();
         start = (page - 1) * 5;
-        end = start + 5;
-        vo.setStart(start); vo.setEnd(end);
+        vo.setStart(start); vo.setOffset(offset);
         List<Map<String, Object>> resBoardData;
         boardSemaphore.acquire();
         try{
             resBoardData = boardDao.selectBoardListTech(vo);
-            System.out.println("resBoard : " + resBoardData);
             boardSemaphore.release();
         }catch (Exception e) {
             boardSemaphore.release();
@@ -50,11 +49,11 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public List<Map<String, Object>> selectBoardListDev(int page) throws Exception {
-        int start, end;
+        int start;
+        final int offset = 5;
         BoardCountVO vo = new BoardCountVO();
         start = (page - 1) * 5;
-        end = start + 5;
-        vo.setStart(start); vo.setEnd(end);
+        vo.setStart(start); vo.setOffset(offset);
         List<Map<String, Object>> resBoardData;
         boardSemaphore.acquire();
         try{
@@ -69,11 +68,11 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public List<Map<String, Object>> searchedBoardListTech(String searchedWord, int page) throws Exception {
-        int start, end;
+        int start;
+        final int offset = 5;
         BoardSearchVO vo = new BoardSearchVO();
         start = (page - 1) * 5;
-        end = start + 5;
-        vo.setStart(start); vo.setEnd(end);
+        vo.setStart(start); vo.setOffset(offset);
         vo.setSearchedWord(searchedWord);
         List<Map<String, Object>> searchedBoardData;
         boardSemaphore.acquire();
@@ -90,11 +89,11 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public List<Map<String, Object>> searchedBoardListDev(String searchedWord, int page) throws Exception{
-        int start, end;
+        int start;
+        final int offset = 5;
         BoardSearchVO vo = new BoardSearchVO();
         start = (page - 1) * 5;
-        end = start + 5;
-        vo.setStart(start); vo.setEnd(end);
+        vo.setStart(start); vo.setOffset(offset);
         vo.setSearchedWord(searchedWord);
         List<Map<String, Object>> searchedBoardData;
         boardSemaphore.acquire();
@@ -175,6 +174,18 @@ public class BoardServiceImpl implements BoardService {
         }
 
         return replyDetailData;
+    }
+
+    @Override
+    public List<Map<String, Object>> showNewBoard() throws Exception {
+        List<Map<String, Object>> newBoards;
+        try {
+            newBoards = boardDao.showNewBoard();
+        }
+        catch (Exception e) {
+            throw new Exception(e);
+        }
+        return newBoards;
     }
 
     @Override

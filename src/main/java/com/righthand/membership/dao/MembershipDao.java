@@ -16,4 +16,6 @@ public interface MembershipDao
     Map selectUser(Map userData);
     int countEmail(Map userData);
     int getProfileSeq(int userSeq);
+    String getProfileNickname(int userSeq);
+    void resign(Map reason);
 }

@@ -53,7 +53,7 @@ public class MembershipServiceImpl implements MembershipService {
     @Autowired
     GetNowTime getNowTime;
 
-    static Semaphore signUpSemaphore = new Semaphore(1);
+    static Semaphore membershipSemaphore = new Semaphore(1);
 
     /**
      * DB field가 이미 존재하는 지 확인
@@ -104,7 +104,7 @@ public class MembershipServiceImpl implements MembershipService {
         logger.info("[Service][SignUp]");
 
         // 로직을 다른 누군가 실행 중일 때는 대기 .
-        signUpSemaphore.acquire();
+        membershipSemaphore.acquire();
 
         try {
 
@@ -116,7 +116,7 @@ public class MembershipServiceImpl implements MembershipService {
             params.put("userId", userId);
 
             if (this.checkExistInUser(params) == true) {
-                signUpSemaphore.release();
+                membershipSemaphore.release();
                 return ReturnType.RTN_TYPE_MEMBERSSHIP_USERID_EXIST_NG;
             }
 
@@ -129,7 +129,7 @@ public class MembershipServiceImpl implements MembershipService {
 //            System.out.println("email : " + input_data.get("email"));
             // 2) email의 pattern
             if (configValidationCheck.checkEmail((String) input_data.get("email")) != 0) {
-                signUpSemaphore.release();
+                membershipSemaphore.release();
                 return ReturnType.RTN_TYPE_MEMBERSSHIP_EMAIL_PATTERN_NG;
             }
 
@@ -144,7 +144,7 @@ public class MembershipServiceImpl implements MembershipService {
             // 2) Id의 pattern
             if(configValidationCheck.checkPwd(pwd) != 0)
             {
-                signUpSemaphore.release();
+                membershipSemaphore.release();
                 return ReturnType.RTN_TYPE_MEMBERSSHIP_PASSWORD_PATTERN_NG;
             }
 
@@ -153,7 +153,7 @@ public class MembershipServiceImpl implements MembershipService {
 
             if (!passwordHandler.matches(pwd, encPassword)) {
                 logger.error("[Service][SignUp]PWD ENC ERR");
-                signUpSemaphore.release();
+                membershipSemaphore.release();
                 return ReturnType.RTN_TYPE_MEMBERSSHIP_PASSWORD_ENC_NG;
             }
 
@@ -209,13 +209,28 @@ public class MembershipServiceImpl implements MembershipService {
             ///////////////////////////////////////////////////////////////////////////////////////////////
         }
         catch (Exception e) {
-            signUpSemaphore.release();
+            membershipSemaphore.release();
             throw new Exception(e);
         }
 
-        signUpSemaphore.release();
+        membershipSemaphore.release();
         return ReturnType.RTN_TYPE_OK;
     }
+
+    @Override
+    public ReturnType resign(Map reason) throws Exception {
+        membershipSemaphore.acquire();
+        try {
+            membershipDao.resign(reason);
+        }catch (Exception e) {
+            membershipSemaphore.release();
+            return ReturnType.RTN_TYPE_NG;
+        }
+        membershipSemaphore.release();
+        return ReturnType.RTN_TYPE_OK;
+    }
+
+
 
     /*
     public ReturnType signUp(SignupReq signupReq) throws Exception{
@@ -228,7 +243,7 @@ public class MembershipServiceImpl implements MembershipService {
         logger.info("[Service][SignUp]");
 
         // 로직을 다른 누군가 실행 중일 때는 대기 .
-        signUpSemaphore.acquire();
+        membershipSemaphore.acquire();
 
         try {
 
@@ -239,13 +254,13 @@ public class MembershipServiceImpl implements MembershipService {
 
             // 이미 동일한 유저 아이디가 있을 때
             if (this.checkExistInUser(params) == true) {
-                signUpSemaphore.release();
+                membershipSemaphore.release();
                 return ReturnType.RTN_TYPE_MEMBERSSHIP_USERID_EXIST_NG;
             }
 
             // 2) email의 pattern
             if (configValidationCheck.checkEmail(signupReq.getEmail()) != 0) {
-                signUpSemaphore.release();
+                membershipSemaphore.release();
                 return ReturnType.RTN_TYPE_MEMBERSSHIP_EMAIL_PATTERN_NG;
             }
 
@@ -258,7 +273,7 @@ public class MembershipServiceImpl implements MembershipService {
             // 2) Id의 pattern
             if(configValidationCheck.checkPwd(signupReq.getUserPwd()) != 0)
             {
-                signUpSemaphore.release();
+                membershipSemaphore.release();
                 return ReturnType.RTN_TYPE_MEMBERSSHIP_PASSWORD_PATTERN_NG;
             }
 
@@ -267,7 +282,7 @@ public class MembershipServiceImpl implements MembershipService {
 
             if (!passwordHandler.matches(pwd, encPassword)) {
                 logger.error("[Service][SignUp]PWD ENC ERR");
-                signUpSemaphore.release();
+                membershipSemaphore.release();
                 return ReturnType.RTN_TYPE_MEMBERSSHIP_PASSWORD_ENC_NG;
             }
 
@@ -291,11 +306,11 @@ public class MembershipServiceImpl implements MembershipService {
             membershipDao.insertProfile(signupReq);
         }
         catch (Exception e) {
-            signUpSemaphore.release();
+            membershipSemaphore.release();
             throw new Exception(e);
         }
 
-        signUpSemaphore.release();
+        membershipSemaphore.release();
         return ReturnType.RTN_TYPE_OK;
     }
 */
@@ -441,6 +456,11 @@ public class MembershipServiceImpl implements MembershipService {
     @Override
     public int getProfileSeq(int userSeq) {
         return membershipDao.getProfileSeq(userSeq);
+    }
+
+    @Override
+    public String getProfileNickname(int userSeq) {
+        return membershipDao.getProfileNickname(userSeq);
     }
 
 }

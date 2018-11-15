@@ -17,34 +17,32 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class PageController {
 
-    @ApiOperation(value = "로그인")
-    @GetMapping("/login")
-    public String customLogin() {
-        return "login";
-    }
-
-    // tech 작성화면 화면 리턴
-    @ApiOperation(value = "IT 게시판 글 작성")
-    @GetMapping("/boardlist")
+    // 게시판 리스트 화면 리턴
+    @ApiOperation(value = "게시판 리스트 반환한다. IT 게시판은 type=it, Dev 게시판은 type = dev")
+    @GetMapping("/board/list")
     public String boardList() {
-        return "boardlist";
+        return "board";
     }
 
-    // blog 리스트 화면 리턴
-    @ApiOperation(value = "IT 게시판 리스트 반환")
-    @GetMapping("/it/board")
-    public String itBoardList() {
-        return "itboard";
+    //게시판 검색 결과 화면 리스트
+    @ApiOperation(value = "게시판별 검색 화면 리스트를 리턴한다")
+    @GetMapping("/board/search")
+    public String boardSearchResult() {
+        return "searchResult";
     }
 
-    @GetMapping("/user")
-    public String user() {
-        return "user";
+    //게시글 작성화면
+    @ApiOperation(value = "게시글 작성을 위한 화면")
+    @GetMapping("/board/writer")
+    public String boardWriter() {
+        return "boardWriter";
     }
 
-    @GetMapping("/admin")
-    public String admin() {
-        return "admin";
+    //게시글 상세화면
+    @ApiOperation(value = "게시글 상세 화면")
+    @GetMapping("/board/content")
+    public String boardContent() {
+        return "boardContent";
     }
 
 

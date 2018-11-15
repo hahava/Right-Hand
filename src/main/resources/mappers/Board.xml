@@ -27,8 +27,8 @@
       TB_IT_TECH_BOARD AS BOARD
       , TB_PROFILE AS PROFILE
       WHERE BOARD.BOARD_PROFILE_SEQ = PROFILE.PROFILE_SEQ
-      ORDER BY BOARD_DATE DESC
-      LIMIT #{start}, #{end}
+      ORDER BY BOARD_DATE DESC, BOARD_SEQ DESC
+      LIMIT #{start}, #{offset}
     </select>
 
     <select id="selectBoardListDev" resultType="hashMap" parameterType="com.righthand.board.dto.model.BoardCountVO">
@@ -38,37 +38,53 @@
       , TB_PROFILE AS PROFILE
       WHERE BOARD.BOARD_PROFILE_SEQ = PROFILE.PROFILE_SEQ
       ORDER BY BOARD_DATE DESC
-      LIMIT #{start}, #{end}
+      LIMIT #{start}, #{offset}
     </select>
 
     <select id="searchedBoardListTech" resultType="hashMap" parameterType="com.righthand.board.dto.model.BoardSearchVO">
-        SELECT BOARD_TITLE, BOARD_CONTENT, BOARD_DATE, NICK_NAME
+        SELECT BOARD_SEQ, BOARD_TITLE, BOARD_CONTENT, BOARD_DATE, NICK_NAME
         FROM
         TB_IT_TECH_BOARD AS BOARD
         , TB_PROFILE AS PROFILE
         WHERE BOARD.BOARD_PROFILE_SEQ = PROFILE.PROFILE_SEQ AND (BOARD.BOARD_TITLE LIKE CONCAT('%',#{searchedWord},'%') OR BOARD_CONTENT LIKE CONCAT('%',#{searchedWord},'%'))
         ORDER BY BOARD_DATE DESC
-        LIMIT #{start}, #{end}
+        LIMIT #{start}, #{offset}
     </select>
 
     <select id="searchedBoardListDev" resultType="hashMap" parameterType="com.righthand.board.dto.model.BoardSearchVO">
-        SELECT BOARD_TITLE, BOARD_CONTENT, BOARD_DATE, NICK_NAME
+        SELECT BOARD_SEQ, BOARD_TITLE, BOARD_CONTENT, BOARD_DATE, NICK_NAME
         FROM
         TB_DEVELOP_STORY_BOARD AS BOARD
         , TB_PROFILE AS PROFILE
         WHERE BOARD.BOARD_PROFILE_SEQ = PROFILE.PROFILE_SEQ AND (BOARD.BOARD_TITLE LIKE CONCAT('%',#{searchedWord},'%') OR BOARD_CONTENT LIKE CONCAT('%',#{searchedWord},'%'))
         ORDER BY BOARD_DATE DESC
-        LIMIT #{start}, #{end}
+        LIMIT #{start}, #{offset}
     </select>
+
+    <select id="showNewBoard" resultType="hashMap">
+        SELECT BOARD_TYPE, BOARD_SEQ, BOARD_TITLE, BOARD_CONTENT, BOARD_DATE, NICK_NAME
+        FROM TB_PROFILE
+        JOIN
+        (SELECT BOARD_PROFILE_SEQ, BOARD_TYPE, BOARD_SEQ, BOARD_TITLE, BOARD_CONTENT, BOARD_DATE
+        FROM TB_IT_TECH_BOARD
+        UNION
+        SELECT BOARD_PROFILE_SEQ, BOARD_TYPE, BOARD_SEQ, BOARD_TITLE, BOARD_CONTENT, BOARD_DATE
+        FROM TB_DEVELOP_STORY_BOARD)
+        AS BOARD ON BOARD.BOARD_PROFILE_SEQ = TB_PROFILE.PROFILE_SEQ
+        ORDER BY BOARD_DATE DESC
+        LIMIT 3
+    </select>
+
+
 
     <insert id="insertBoardListTech" parameterType="map" useGeneratedKeys="true" keyProperty="BOARD_SEQ">
         INSERT INTO TB_IT_TECH_BOARD(BOARD_TITLE, BOARD_CONTENT, BOARD_DATE, BOARD_PROFILE_SEQ)
-        VALUES (#{boardTitle}, #{boardContent}, CURRENT_TIMESTAMP , #{boardProfileSeq})
+        VALUES (#{boardTitle}, #{boardContent}, CURRENT_TIMESTAMP(6) , #{boardProfileSeq})
     </insert>
 
     <insert id="insertBoardListDev" parameterType="map" useGeneratedKeys="true" keyProperty="BOARD_SEQ">
         INSERT INTO TB_DEVELOP_STORY_BOARD(BOARD_TITLE, BOARD_CONTENT, BOARD_DATE, BOARD_PROFILE_SEQ)
-        VALUES (#{boardTitle}, #{boardContent}, CURRENT_TIMESTAMP , #{boardProfileSeq})
+        VALUES (#{boardTitle}, #{boardContent}, CURRENT_TIMESTAMP(6) , #{boardProfileSeq})
     </insert>
 
 
@@ -93,24 +109,24 @@
         SELECT REPLY_CONTENT, REPLY_DATE, NICK_NAME
         FROM TB_PROFILE AS PROFILE, TB_IT_TECH_REPLY AS REPLY
         WHERE (REPLY.REPLY_BOARD_SEQ = #{boardSeq}) AND (REPLY.REPLY_PROFILE_SEQ = PROFILE.PROFILE_SEQ)
-        ORDER BY  REPLY.REPLY_DATE
+        ORDER BY  REPLY.REPLY_DATE DESC
     </select>
 
     <select id="showReplyBoardDev" resultType="map" parameterType="com.righthand.board.dto.model.BoardDetailVO">
         SELECT REPLY_CONTENT, REPLY_DATE, NICK_NAME
         FROM TB_PROFILE AS PROFILE, TB_DEVELOP_STORY_REPLY AS REPLY
         WHERE (REPLY.REPLY_BOARD_SEQ = #{boardSeq}) AND (REPLY.REPLY_PROFILE_SEQ = PROFILE.PROFILE_SEQ)
-        ORDER BY  REPLY.REPLY_DATE
+        ORDER BY  REPLY.REPLY_DATE DESC
     </select>
 
     <insert id="insertReplyListTech" parameterType="map" useGeneratedKeys="true" keyProperty="REPLY_SEQ">
       INSERT INTO TB_IT_TECH_REPLY(REPLY_CONTENT, REPLY_DATE, REPLY_PROFILE_SEQ, REPLY_BOARD_SEQ)
-      VALUES (#{replyContent}, CURRENT_TIMESTAMP, #{replyProfileSeq}, #{boardSeq})
+      VALUES (#{replyContent}, CURRENT_TIMESTAMP(6), #{replyProfileSeq}, #{boardSeq})
     </insert>
 
     <insert id="insertReplyListDev" parameterType="map" useGeneratedKeys="true" keyProperty="REPLY_SEQ">
       INSERT INTO TB_DEVELOP_STORY_REPLY(REPLY_CONTENT, REPLY_DATE, REPLY_PROFILE_SEQ, REPLY_BOARD_SEQ)
-      VALUES (#{replyContent}, CURRENT_TIMESTAMP, #{replyProfileSeq}, #{boardSeq})
+      VALUES (#{replyContent}, CURRENT_TIMESTAMP(6), #{replyProfileSeq}, #{boardSeq})
     </insert>
 
 

@@ -30,13 +30,21 @@ public class SignupReq implements Serializable {
 //    @ApiModelProperty(value = "로그인 타입")
 //    private String loginType;
 
-//    @ApiModelProperty(value = "성별")
-//    @NotNull
-//    private String gender; //  gender
-//
-//    @ApiModelProperty(value = "생년")
-//    @NotNull
-//    private int birthYear; //
+    @ApiModelProperty(value = "성별")
+    @NotNull
+    private String gender; //  gender
+
+    @ApiModelProperty(value = "생년")
+    @NotNull
+    private int birthYear;
+
+    @ApiModelProperty(value = "이름")
+    @NotNull
+    private String userName;
+
+    @ApiModelProperty(value = "핸드폰번호")
+    @NotNull
+    private String tel;
 //
 //    @ApiModelProperty(value = "자녀여부")
 //    @NotNull

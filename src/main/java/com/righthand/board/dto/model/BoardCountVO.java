@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class BoardCountVO {
     private int start;
-    private int end;
+    private int offset;
 }

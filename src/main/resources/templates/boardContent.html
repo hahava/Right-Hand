@@ -1,0 +1,64 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ko">
+<!--thymeleaf added-->
+
+<head>
+    <init th:replace="fragment/head"/>
+    <title>Hoi</title>
+</head>
+<body>
+
+<navbar th:replace="fragment/navbar"/>
+
+<!--SUBPAGE HEAD-->
+<div class="subpage-head has-margin-bottom">
+    <div class="container">
+        <h3 id="board_title"></h3>
+        <span id="board_date"></span>&nbsp;&nbsp;<a href="#" class="link-reverse" id="nick_name"></a>
+    </div>
+</div>
+<!-- // END SUBPAGE HEAD -->
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-9 has-margin-bottom">
+
+            <div id="viewerSection"></div>
+
+            <!--Reply-->
+
+            <section class="comments-block">
+                <h3 class="comments-head" id="reply_count"></h3>
+                <div id="reply_list">
+                </div>
+            </section>
+            <!--///END Reply///-->
+
+
+            <section class="post-comment-form">
+                <h3 class="comments-head">댓글을 작성해 주세요</h3>
+                <form class="form" role="form">
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <textarea cols="8" rows="4" class="form-control input-lg"
+                                      placeholder="Your comment" id="reply_content"></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="pull-right">
+                            <a class="btn btn-primary" href="javascript:send_reply()">댓글작성</a>
+                        </div>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </div>
+</div>
+
+<!--footer-->
+<footer th:replace="fragment/footer"/>
+<script th:replace="fragment/commonScript"/>
+<script th:src="@{../js/custom/boardContent.js}"></script>
+
+</body>
+</html>

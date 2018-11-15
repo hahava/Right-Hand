@@ -1,5 +1,7 @@
 package com.righthand.membership.customHandler;
 
+import com.righthand.common.GetClientProfile;
+import com.righthand.common.dto.res.ResponseHandler;
 import com.righthand.common.type.ReturnType;
 import com.righthand.membership.config.ConfigMembership;
 import com.righthand.membership.service.MembershipInfo;
@@ -17,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CustomLoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
@@ -31,14 +35,10 @@ public class CustomLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
     // 세션에 저장된 리퀘스트들을 가져온다.
     private RequestCache requestCache = new HttpSessionRequestCache();
 
-    private static String getAuthoritiesString(int authoritiesLevel, ConfigMembership configMembership){
-        int adminNo = configMembership.getSelectAuthorityAdminNo() +
-                configMembership.getSelectAuthorityContentsAdminNo() +
-                configMembership.getSelectAuthoritySuperAdminNo() +
-                configMembership.getSelectAuthorityUserNo();
-        System.out.println("authority : " + authoritiesLevel);
-        if((authoritiesLevel & adminNo) == 0x71) return "ADMIN";
-        else return "USER";
+    private String getUserInfoWhenSuccessLogin(){
+        Map<String, Object> userInfo = GetClientProfile.getUserInfo(membershipService);
+        String jsonText = "{ \"authority : \" : " + String.valueOf(userInfo.get("authority")) + ", \"nickname\" : \"" + userInfo.get("nickname") + "\"}";
+        return jsonText;
     }
 
     @Override
@@ -51,9 +51,8 @@ public class CustomLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
         try {
             MembershipInfo membershipInfo = (MembershipInfo)authentication.getPrincipal();
             membershipInfo.setProfileSeq(membershipService.getProfileSeq(membershipInfo.getUserSeq()));
-            System.out.println("profseq : " + membershipInfo.getProfileSeq());
-            int authoritiesLevel = membershipInfo.getAuthoritiesLevel();
-            writer.write(getAuthoritiesString(authoritiesLevel, configMembership));
+            membershipInfo.setNickname(membershipService.getProfileNickname(membershipInfo.getUserSeq()));
+            writer.write(getUserInfoWhenSuccessLogin());
             writer.flush();
         } catch (Exception e) {
             e.printStackTrace();
