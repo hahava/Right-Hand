@@ -45,6 +45,12 @@ public class PageController {
         return "boardContent";
     }
 
+    //유저 개인정보
+    @ApiOperation(value = "유저 정보")
+    @GetMapping("/user/info")
+    public String userInfo() {
+        return "userInfo";
+    }
 
 //    @RequestMapping("/")
 //    public String index(HttpServletRequest request) {
