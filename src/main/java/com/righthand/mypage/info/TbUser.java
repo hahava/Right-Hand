@@ -17,7 +17,7 @@ public class TbUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userSeq;
 
-    @Column(length = 60, name = "EMAIL")
-    private String Email;
+    @Column(length = 60, name = "USER_ID")
+    private String userId;
 
 }
