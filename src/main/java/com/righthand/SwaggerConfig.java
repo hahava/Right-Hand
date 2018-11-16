@@ -32,7 +32,7 @@ public class SwaggerConfig {
                 .globalResponseMessage(RequestMethod.GET, getArrayList());
     }
 
-    private ArrayList<ResponseMessage> getArrayList(){
+    private ArrayList<ResponseMessage> getArrayList() {
         ArrayList<ResponseMessage> lists = new ArrayList<ResponseMessage>();
 
         lists.add(new ResponseMessageBuilder().code(403).message("권한없음").responseModel(new ModelRef("Forbbiden")).build());

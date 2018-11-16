@@ -96,7 +96,7 @@
             AND UPD_DT = #{updDt}
         </if>
     </select>
-    <select id="countEmail" resultType="int" parameterType="map">
+    <select id="countID" resultType="int" parameterType="map">
         SELECT COUNT(*) FROM TB_USER WHERE USER_ID = #{userId}
     </select>
     <select id="getProfileSeq" resultType="int" parameterType="int">
@@ -105,5 +105,13 @@
 
     <select id="getProfileNickname" resultType="String" parameterType="int">
         SELECT NICK_NAME FROM TB_PROFILE WHERE USER_SEQ = #{userSeq}
+    </select>
+
+    <select id="checkNickname" parameterType="map" resultType="int">
+        SELECT COUNT(*) FROM TB_PROFILE WHERE NICK_NAME = #{nickName}
+    </select>
+
+    <select id="getUserPwd" parameterType="int" resultType="String">
+        SELECT USER_PWD FROM TB_USER WHERE USER_SEQ = #{userSeq}
     </select>
 </mapper>
