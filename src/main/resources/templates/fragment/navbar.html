@@ -36,18 +36,14 @@
             <div class="modal-body">
                 <form>
                     <div class="form-group">
-                        <label for="register_email">이메일 주소</label>
-                        <input type="email" class="form-control" id="register_email" placeholder="Email">
-                    </div>
-                    <div class="form-group">
-                        <button class="btn btn-primary">중복확인</button>
+                        <label for="register_id">아이디</label>
+                        <input type="email" class="form-control" id="register_id" placeholder="Email">
+                        <p class="text-small" id="register_id_hint">이메일 형식으로 입력해주세요</p>
                     </div>
                     <div class="form-group">
                         <label for="register_nickname">닉네임</label>
                         <input type="text" class="form-control" id="register_nickname" placeholder="닉네임">
-                    </div>
-                    <div class="form-group">
-                        <button class="btn btn-primary">중복확인</button>
+                        <p class="text-small" id="register_nickname_hint"></p>
                     </div>
                     <div class="form-group">
                         <label for="register_pw">비밀번호</label>
@@ -56,25 +52,32 @@
                     <div class="form-group">
                         <label for="register_pw_check">비밀번호 확인</label>
                         <input type="password" class="form-control" id="register_pw_check" placeholder="Password">
+                        <p class="text-small" id="register_pw_hint">비밀번호는 대소문자와 특수문자를 포함합니다.</p>
                     </div>
                     <div class="form-group">
                         <label class="radio-inline"><input type="radio" name="gender">남자</label>
                         <label class="radio-inline"><input type="radio" name="gender">여자</label>
                     </div>
-
-                    <div class="form-group">
-                        <label for="register_birth">생년월일</label>
-                        <input type="text" class="form-control" placeholder="이름" id="register_birth"/>
-                    </div>
-
                     <div class="form-group">
                         <label for="register_name">이름</label>
                         <input type="text" class="form-control" placeholder="이름" id="register_name"/>
                     </div>
 
                     <div class="form-group">
+                        <label for="register_birth">출생년도</label>
+                        <input type="number" min="1900" max="2018" value="1980"
+                               onKeyPress="if(this.value.length>=4) return false;" class=" form-control"
+                               placeholder="1999"
+                               id="register_birth"/>
+                        <p class="text-small" id="register_birth_hint">출생년도를 입력해주세요</p>
+
+                    </div>
+
+                    <div class="form-group">
                         <label for="register_phone">전화번호</label>
-                        <input type="tel" class="form-control" id="register_phone">
+                        <input type="tel" class="form-control" id="register_phone" placeholder="010-1234-5678"
+                               maxlength="13">
+                        <p class="text-small" id="register_phone_hint">전화번호를 입력해주세요</p>
                     </div>
 
                     <div class="form-group">
