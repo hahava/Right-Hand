@@ -139,6 +139,7 @@ public class MembershipController {
     }
 
     // 세라가 변경해야함!
+    // 흥 시른뒈~시른뒈시른뒈시른뒈~~~~
     @ApiOperation("닉네임 중복확인")
     @PostMapping("/check/nick/dup")
     public ResponseHandler<?>  checkNickDup(@Valid @RequestBody final NicknameReq _params){
@@ -150,7 +151,7 @@ public class MembershipController {
             if(count == 0){
                 res.setReturnCode(ReturnType.RTN_TYPE_OK);
             }else{
-                res.setReturnCode(ReturnType.RTN_TYPE_MEMBERSSHIP_USERID_EXIST_NG);
+                res.setReturnCode(ReturnType.RTN_TYPE_MEMBERSHIP_NICKNAME_EXIST_NG);
             }
         } catch (Exception e) {
             log.error("[checkNickname][Exception]" + e.toString());
