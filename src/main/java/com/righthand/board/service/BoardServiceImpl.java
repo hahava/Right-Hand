@@ -196,7 +196,7 @@ public class BoardServiceImpl implements BoardService {
             boardDao.insertBoardListTech(input_data);
         } catch (Exception e) {
             boardSemaphore.release();
-            return ReturnType.RTN_TYPE_NG;
+            return ReturnType.RTN_TYPE_INSERT_BOARD_NG;
         }
         boardSemaphore.release();
         return ReturnType.RTN_TYPE_OK;

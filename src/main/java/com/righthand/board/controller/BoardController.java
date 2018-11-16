@@ -202,36 +202,42 @@ public class BoardController {
     public ResponseHandler<?> writeBoard(@Valid @ApiParam(value = "게시물 제목, 내용")@RequestBody final BoardReq _params,
                                              @ApiParam(value = "게시판 종류")@PathVariable String btype) {
         final ResponseHandler<?> result = new ResponseHandler<>();
-        Map<String, Object> params = ConvertUtil.convertObjectToMap(_params);
-        String changedText = storeImgsAndGetChangedText(params);
-        params.replace("boardContent", changedText);
-        try {
-            MembershipInfo membershipInfo = membershipService.currentSessionUserInfo();
-            params.put("boardProfileSeq", membershipInfo.getProfileSeq());
-            ReturnType rtn;
-            if(btype.equals("tech")){
-                try {
-                    rtn = boardService.insertBoardListTech(params);
-                    result.setReturnCode(rtn);
-                } catch (Exception e) {
-                    logger.error("[TechBoard][Exception] " + e.toString());
-                    result.setReturnCode(ReturnType.RTN_TYPE_NG);
+        if(checkBoardType(btype) == true) {
+            Map<String, Object> params = ConvertUtil.convertObjectToMap(_params);
+            String changedText = storeImgsAndGetChangedText(params);
+            params.replace("boardContent", changedText);
+            try {
+                MembershipInfo membershipInfo = membershipService.currentSessionUserInfo();
+                params.put("boardProfileSeq", membershipInfo.getProfileSeq());
+                ReturnType rtn;
+                if(btype.equals("tech")){
+                    try {
+                        rtn = boardService.insertBoardListTech(params);
+                        result.setReturnCode(rtn);
+                    } catch (Exception e) {
+                        logger.error("[TechBoard][Exception] " + e.toString());
+                        result.setReturnCode(ReturnType.RTN_TYPE_INSERT_BOARD_NG);
+                    }
+                }else if(btype.equals("dev")){
+                    try {
+                        rtn = boardService.insertBoardListDev(params);
+                        result.setReturnCode(rtn);
+                    } catch (Exception e) {
+                        logger.error("[DevBoard][Exception] " + e.toString());
+                        result.setReturnCode(ReturnType.RTN_TYPE_INSERT_BOARD_NG);
+                    }
                 }
-            }else if(btype.equals("dev")){
-                try {
-                    rtn = boardService.insertBoardListDev(params);
-                    result.setReturnCode(rtn);
-                } catch (Exception e) {
-                    logger.error("[DevBoard][Exception] " + e.toString());
-                    result.setReturnCode(ReturnType.RTN_TYPE_NG);
-                }
+            } catch (Exception e) {
+                logger.error("[Board][Exception] " + e.toString());
+                result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
             }
-        } catch (Exception e) {
-            logger.error("[Board][Exception] " + e.toString());
-            result.setReturnCode(ReturnType.RTN_TYPE_NG);
-        }
 
-        return result;
+            return result;
+        }
+        else {
+            result.setReturnCode(ReturnType.RTN_TYPE_BOARD_TYPE_NG);
+            return result;
+        }
     }
 
     @ApiOperation("게시물 상세보기")
@@ -338,6 +344,15 @@ public class BoardController {
             result.setReturnCode(ReturnType.RTN_TYPE_NG);
         }
         return result;
+    }
+
+    public boolean checkBoardType(String bType) {
+        if(bType.equalsIgnoreCase("tech"))
+            return true;
+        else if(bType.equalsIgnoreCase("dev"))
+            return true;
+        else
+            return false;
     }
 
 }
