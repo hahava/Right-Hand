@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class GetClientProfile {
 
-    public static Map<String, Object> getUserInfo(MembershipService membershipService){
+    public static Map<String, Object> getUserInfo(MembershipService membershipService) throws Exception{
         Map<String, Object> map = new HashMap<>();
         try {
             MembershipInfo membershipInfo = membershipService.currentSessionUserInfo();
