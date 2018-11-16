@@ -1,6 +1,5 @@
 package com.righthand.board.service;
 
-import com.righthand.board.dto.req.BoardReq;
 import com.righthand.common.type.ReturnType;
 
 import org.springframework.stereotype.Service;
