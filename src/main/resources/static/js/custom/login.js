@@ -13,7 +13,6 @@ function login() {
             userPwd: $('#user_login_pw').val()
         },
         success: function (data) {
-            alert(data.toString());
             loginOk = true;
             $('#submitBtn').attr('data-dismiss', 'modal');
             login_user();
