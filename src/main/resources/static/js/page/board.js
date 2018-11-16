@@ -38,15 +38,6 @@ function req_page(requested_type, requested_page) {
         dataType: 'json',
         success: function (result) {
 
-            // 로그인 여부와 종류를 확인한다.
-            var login_authority = result.data.authority;
-
-            switch (login_authority) {
-                case 1:
-                    login_user();
-                    break;
-                default :
-            }
 
             // 게시판 리스트를 초기화 한다..
             $('#blog_list').empty();

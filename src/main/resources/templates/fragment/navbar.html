@@ -65,8 +65,8 @@
 
                     <div class="form-group">
                         <label for="register_birth">출생년도</label>
-                        <input type="number" min="1900" max="2018" value="1980"
-                               onKeyPress="if(this.value.length>=4) return false;" class=" form-control"
+                        <input type="number" min="1900" max="2018" onKeyPress="if(this.value.length>=4) return false;"
+                               class=" form-control"
                                placeholder="1999"
                                id="register_birth"/>
                         <p class="text-small" id="register_birth_hint">출생년도를 입력해주세요</p>
@@ -115,10 +115,55 @@
                 <li id="it_story_nav"><a href="/board/list?type=tech&page=1">IT. Story</a></li>
                 <li><a href="#none">공지사항</a></li>
                 <li><a href="#none">고객센터</a></li>
-                <li id="login_li"><a href="#" data-toggle="modal" data-target="#loginModal" id="modalOpener">Login</a>
-                </li>
-                <li id="register_li"><a href="#" data-toggle="modal" data-target="#registerModal" id="registerOpener">Register</a>
-                </li>
+
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"
+                        crossorigin="anonymous"></script>
+                <script>
+                    login_checker();
+
+                    function login_checker() {
+                        $.ajax({
+                            type: 'POST',
+                            url: 'http://localhost:8080/api/membership/check/live/session',
+                            async: false,
+                            success: function (result) {
+                                var auth = result.code;
+                                switch (auth) {
+                                    case 0:
+                                        login_user();
+                                        break;
+                                    default:
+                                        not_login();
+                                }
+                            }, error: function (e) {
+
+                            }
+                        });
+                    }
+
+                    function login_user() {
+
+                        $('#modalOpener').remove();
+                        $('#registerOpener').remove();
+
+                        $('#navbar').append('<li class="dropdown"><a href="#none" class="dropdown-toggle" data-toggle="dropdown">MyPage <span class="caret"></span></a>  ' +
+                            '<ul class="dropdown-menu dropdown-menu-left" role="menu">\n' +
+                            '<li><a href="/user/info">회원정보</a></li>\n' +
+                            '<li><a href="image-gallery.html">회원정보수정</a></li>\n' +
+                            '<li><a href="image-gallery.html">토큰내역</a></li>\n' +
+                            '<li><a href="image-gallery.html">활동내역</a></li>\n' +
+                            '<li class="divider"></li>\n' +
+                            '<li><a href="javascript:logout();">LogOut</a></li>\n' +
+                            '</ul></li>');
+                    }
+
+                    function not_login() {
+                        $('#navbar').append('<li id="login_li"><a href="#" data-toggle="modal" data-target="#loginModal" id="modalOpener">Login</a>\n' +
+                            '                </li>\n' +
+                            '                <li id="register_li"><a href="#" data-toggle="modal" data-target="#registerModal" id="registerOpener">Register</a>\n' +
+                            '                </li>');
+                    }
+                </script>
             </ul>
         </div>
     </div>

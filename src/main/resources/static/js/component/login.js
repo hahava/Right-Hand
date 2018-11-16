@@ -13,7 +13,6 @@ function login() {
             userPwd: $('#user_login_pw').val()
         },
         success: function (data) {
-            alert(data.toString());
             loginOk = true;
             $('#submitBtn').attr('data-dismiss', 'modal');
             login_user();
@@ -27,21 +26,6 @@ function login() {
     });
     return loginOk;
 };
-
-
-function login_user() {
-    $('#login_li').remove();
-    $('#register_li').remove();
-    $('#navbar').append('<li class="dropdown"><a href="#none" class="dropdown-toggle" data-toggle="dropdown">MyPage <span class="caret"></span></a>  ' +
-        '<ul class="dropdown-menu dropdown-menu-left" role="menu">\n' +
-        '<li><a href="/user/info">회원정보</a></li>\n' +
-        '<li><a href="image-gallery.html">회원정보수정</a></li>\n' +
-        '<li><a href="image-gallery.html">토큰내역</a></li>\n' +
-        '<li><a href="image-gallery.html">활동내역</a></li>\n' +
-        '<li class="divider"></li>\n' +
-        '<li><a href="javascript:logout();">LogOut</a></li>\n' +
-        '</ul></li>');
-}
 
 function logout() {
     $.ajax({
