@@ -30,9 +30,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     CustomLogoutHandler customLogoutHandler;
 
-   // @Autowired
-    //ConfigMembershipVar var;
-
     @Bean
     public AccessDeniedHandler accessDeniedHandler(){
         return new CustomAccessDeniedHandler();
@@ -64,23 +61,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             http
                     .csrf().disable()
                     .authorizeRequests()
+                    .antMatchers("/board/writer")
+                        .authenticated()
                     .and()
                     .formLogin()
-                    .loginPage("/login")
-                    .usernameParameter("userId")
-                    .passwordParameter("userPwd")
+                        .loginPage("/error")
+                        .usernameParameter("userId")
+                        .passwordParameter("userPwd")
 
                      // Post 로그인 처리 url
                     .loginProcessingUrl("/api/login")
-                    .successHandler(successHandler())
-                    .failureHandler(loginFailuredHandler())
-                    .permitAll()
+                        .successHandler(successHandler())
+                        .failureHandler(loginFailuredHandler())
+                        .permitAll()
+
                     .and()
                     .logout()
-                    .logoutUrl("/api/logout")
-                    .logoutSuccessHandler(customLogoutHandler)
-                    .invalidateHttpSession(true)
-                    .permitAll()
+                        .logoutUrl("/api/logout")
+                        .logoutSuccessHandler(customLogoutHandler)
+                        .invalidateHttpSession(true)
+                        .permitAll()
                     .and()
                     .exceptionHandling().accessDeniedHandler(accessDeniedHandler())
                     .and()
