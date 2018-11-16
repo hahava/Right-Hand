@@ -9,6 +9,7 @@ import com.righthand.notice.dto.req.BoardReq;
 import com.righthand.notice.service.TbNoticeService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+@Slf4j
 @RestController
 //@AllArgsConstructor
 public class NoticeController{
@@ -39,7 +42,13 @@ public class NoticeController{
         Page<TbNoticeBoard> allBoardDateDesc;
 
         //유저 Profile 가져옴
-        Map<String, Object> userInfo = GetClientProfile.getUserInfo(membershipService);
+        Map<String, Object> userInfo= null;
+        try {
+            userInfo = GetClientProfile.getUserInfo(membershipService);
+        } catch (Exception e) {
+            log.error("[getUserInfo][Exception]" + e.toString());
+            result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
+        }
         try {
             allBoardDateDesc = tbNoticeService.findAllBoardDateDesc(page - 1, size);
         }
@@ -71,7 +80,13 @@ public class NoticeController{
         final int size = 5;
         System.out.println("[Service][searchNotice]");
         //유저 Profile 가져옴
-        Map<String, Object> userInfo = GetClientProfile.getUserInfo(membershipService);
+        Map<String, Object> userInfo= null;
+        try {
+            userInfo = GetClientProfile.getUserInfo(membershipService);
+        } catch (Exception e) {
+            log.error("[getUserInfo][Exception]" + e.toString());
+            result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
+        }
         try {
             Page<TbNoticeBoard> allBySearchedWord = tbNoticeService.findAllBySearchedWord(searchedWord, page - 1, size);
             if(allBySearchedWord.getTotalElements() == 0){
@@ -111,7 +126,13 @@ public class NoticeController{
     public ResponseHandler<?> showNoticeDetail(@ApiParam(value = "글 번호")@RequestParam long boardSeq){
         final ResponseHandler<Object> result = new ResponseHandler<>();
         //유저 Profile 가져옴
-        Map<String, Object> userInfo = GetClientProfile.getUserInfo(membershipService);
+        Map<String, Object> userInfo= null;
+        try {
+            userInfo = GetClientProfile.getUserInfo(membershipService);
+        } catch (Exception e) {
+            log.error("[getUserInfo][Exception]" + e.toString());
+            result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
+        }
         Map<String, Object > res = new HashMap<>();
         System.out.println("[Service][detailNotice]");
         try {

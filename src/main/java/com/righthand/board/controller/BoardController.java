@@ -16,6 +16,7 @@ import com.righthand.membership.service.MembershipService;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Slf4j
 @RestController
 public class BoardController {
 
@@ -45,6 +47,19 @@ public class BoardController {
     BoardDao boardDao;
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    private void setResponseBoard(Map<String, Object> tempBoardData, List<Map<String, Object>> tempBoardList, String btype, ResponseHandler<Object> result){
+        for (int i = 0; i < tempBoardList.size(); i++) {
+            tempBoardList.get(i).put("BOARD_TYPE", btype);
+        }
+        tempBoardData.put("data", tempBoardList);
+        if(!(tempBoardList.isEmpty() || tempBoardList == null)) {
+            result.setData(tempBoardData);
+            result.setReturnCode(ReturnType.RTN_TYPE_OK);
+        }else{
+            result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST);
+        }
+    }
 
     private String storeImgsAndGetChangedText(Map<String, Object> params) {
         final String regex = "\\!\\[.*?\\)";
@@ -99,23 +114,21 @@ public class BoardController {
         Map<String, Object> tempBoardData = new HashMap<>();
         List<Map<String, Object>> tempBoardList;
         // 사용자 정보 가져옴
-        Map<String, Object> userInfo = GetClientProfile.getUserInfo(membershipService);
+        Map<String, Object> userInfo = null;
+        try {
+            userInfo = GetClientProfile.getUserInfo(membershipService);
+        } catch (Exception e) {
+            log.error("[getUserInfo][Exception]" + e.toString());
+            result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
+        }
+        tempBoardData.put("authority", userInfo.get("authority"));
+        tempBoardData.put("nickname", userInfo.get("nickname"));
         if(btype.equals("tech")){
             try {
                 tempBoardData.put("total", boardDao.selectCountListTech());
-                tempBoardData.put("authority", userInfo.get("authority"));
-                tempBoardData.put("nickname", userInfo.get("nickname"));
                 tempBoardList = boardService.selectBoardListTech(page);
-                for (int i = 0; i < tempBoardList.size(); i++) {
-                    tempBoardList.get(i).put("BOARD_TYPE", btype);
-                }
                 tempBoardData.put("data", tempBoardList);
-                if(!(tempBoardList.isEmpty() || tempBoardList == null)) {
-                    result.setData(tempBoardData);
-                    result.setReturnCode(ReturnType.RTN_TYPE_OK);
-                }else{
-                    result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST);
-                }
+                setResponseBoard(tempBoardData, tempBoardList, btype, result);
             } catch (Exception e) {
                 logger.error("[ShowTechBoardList][Exception] " + e.toString());
                 result.setReturnCode(ReturnType.RTN_TYPE_NG);
@@ -123,16 +136,9 @@ public class BoardController {
         }else if(btype.equals("dev")){
             try {
                 tempBoardData.put("total", boardDao.selectCountListDev());
-                tempBoardData.put("authority", userInfo.get("authority"));
-                tempBoardData.put("nickname", userInfo.get("nickname"));
                 tempBoardList = boardService.selectBoardListDev(page);
                 tempBoardData.put("data", tempBoardList);
-                if(!(tempBoardList.isEmpty() || tempBoardList == null)) {
-                    result.setData(tempBoardData);
-                    result.setReturnCode(ReturnType.RTN_TYPE_OK);
-                }else{
-                    result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST);
-                }
+                setResponseBoard(tempBoardData, tempBoardList, btype, result);
             } catch (Exception e) {
                 logger.error("[ShowDevBoardList][Exception] " + e.toString());
                 result.setReturnCode(ReturnType.RTN_TYPE_NG);
@@ -152,27 +158,24 @@ public class BoardController {
         Map<String, Object> tempBoardData = new HashMap<>();
         List<Map<String, Object>> tempBoardList;
         // 사용자 정보 가져옴
-        Map<String, Object> userInfo = GetClientProfile.getUserInfo(membershipService);
+        Map<String, Object> userInfo= null;
+        try {
+            userInfo = GetClientProfile.getUserInfo(membershipService);
+        } catch (Exception e) {
+            log.error("[getUserInfo][Exception]" + e.toString());
+            result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
+        }
         BoardSearchVO vo = new BoardSearchVO();
         vo.setSearchedWord(searchedWord);
+        tempBoardData.put("authority", userInfo.get("authority"));
+        tempBoardData.put("nickname", userInfo.get("nickname"));
+        tempBoardData.put("searchedWord", searchedWord);
         if(btype.equals("tech")) {
             try {
                 tempBoardData.put("total", boardDao.selectSearchedCountListTech(vo));
-                tempBoardData.put("authority", userInfo.get("authority"));
-                tempBoardData.put("nickname", userInfo.get("nickname"));
-                tempBoardData.put("searchedWord", searchedWord);
                 tempBoardList = boardService.searchedBoardListTech(searchedWord, page);
                 tempBoardData.put("data", tempBoardList);
-                for (int i = 0; i < tempBoardList.size(); i++) {
-                    tempBoardList.get(i).put("BOARD_TYPE", btype);
-                }
-
-                if (!(tempBoardList.isEmpty() || tempBoardList == null)) {
-                    result.setData(tempBoardData);
-                    result.setReturnCode(ReturnType.RTN_TYPE_OK);
-                } else {
-                    result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST);
-                }
+                setResponseBoard(tempBoardData, tempBoardList, btype, result);
             } catch (Exception e) {
                 logger.error("[SearchTechBoardList] [Exception " + e.toString());
                 result.setReturnCode(ReturnType.RTN_TYPE_NG);
@@ -182,12 +185,7 @@ public class BoardController {
                 tempBoardData.put("total", boardDao.selectSearchedCountListDev(vo));
                 tempBoardList = boardService.searchedBoardListDev(searchedWord, page);
                 tempBoardData.put("data", tempBoardList);
-                if (!(tempBoardList.isEmpty() || tempBoardList == null)) {
-                    result.setData(tempBoardData);
-                    result.setReturnCode(ReturnType.RTN_TYPE_OK);
-                } else {
-                    result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST);
-                }
+                setResponseBoard(tempBoardData, tempBoardList, btype, result);
             } catch (Exception e) {
                 logger.error("[SearchDevBoardList] [Exception " + e.toString());
                 result.setReturnCode(ReturnType.RTN_TYPE_NG);
@@ -241,7 +239,13 @@ public class BoardController {
         Map<String, Object> boardDetailData = null;
         List<Map<String, Object>> replyDetilData = null;
         // 사용자 정보 가져옴
-        Map<String, Object> userInfo = GetClientProfile.getUserInfo(membershipService);
+        Map<String, Object> userInfo= null;
+        try {
+            userInfo = GetClientProfile.getUserInfo(membershipService);
+        } catch (Exception e) {
+            log.error("[getUserInfo][Exception]" + e.toString());
+            result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
+        }
         Map<String, Object> tempBoardData = new HashMap<>();
         try {
             if(btype.equals("tech")){
