@@ -2,8 +2,8 @@ function register_user() {
 
     var check = input_checker;
     var register_success = false;
+    if (null_checker() && check) {
 
-    if (check) {
         var member = {
             "birthYear": $('#register_birth').val(),
             "gender": ($('input[name="gender"]:checked').val() == '남자') ? 'M' : 'F',
@@ -200,8 +200,10 @@ $('#register_phone').on("focusout", function () {
         console.log("focusout!")
         $('#register_phone_hint').text("전화번호를 입력해주세요");
         $('#register_phone_hint').css("color", "red");
+        input_checker = false;
+    } else if ($('#register_phone').val().length == 0) {
+        input_checker = false;
     }
-    input_checker = false;
 });
 
 //출생년도
@@ -225,7 +227,38 @@ $('#register_birth').focusout(function () {
         $('#register_birth_hint').text("출생년도를 입력하였습니다.!");
         $('#register_birth_hint').css('color', 'green');
         return true;
-
     }
-
 });
+
+function null_checker() {
+    console.log("널체커")
+    if ($('#register_id').val().length == 0) {
+        $('#register_id_hint').focus();
+        $('#register_id_hint').text("아이디를 입력해주세요!");
+        $('#register_id_hint').css('color', 'red');
+        return false;
+    } else if ($('#register_nickname').val().length == 0) {
+        $('#register_nickname_hint').focus();
+        $('#register_nickname_hint').text("닉네임을 입력해주세요");
+        $('#register_nickname_hint').css('color', 'red');
+        return false;
+    } else if ($('#register_pw_check').val().length == 0) {
+        $('#register_pw').focus();
+        $('#register_pw_hint').text("비빌번호를 입력해주세요");
+        $('#register_pw_hint').css('color', 'red');
+        return false;
+    } else if ($('#register_phone').val().length == 0) {
+        console.log('여기ㅏ여디');
+        $('#register_phone').focus();
+        $('#register_phone_hint').text("전화번호를 입력해주세요");
+        $('#register_phone_hint').css('color', 'red');
+        return false;
+    } else if ($('#register_birth').val().length == 0) {
+        $('#register_birth').focus();
+        $('#register_birth_hint').text("출생년도를 입력해주세요");
+        $('#register_birth_hint').css('color', 'red');
+        return false;
+    } else {
+        return true;
+    }
+}
