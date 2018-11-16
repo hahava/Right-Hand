@@ -81,11 +81,11 @@ public class MembershipServiceImpl implements MembershipService {
         return false;
     }
 
-    public ReturnType canUseEmail(Map input_data){
+    public ReturnType checkUserIdDup(Map input_data){
         // user 데이터에서 찾기
-        int userCount = membershipDao.countEmail(input_data);
+        int userCount = membershipDao.countID(input_data);
         if(userCount > 0) {
-            return ReturnType.RTN_TYPE_MEMBERSSHIP_EAMIL_EXIST_NG;
+            return ReturnType.RTN_TYPE_MEMBERSSHIP_USERID_EXIST_NG;
         }
         return ReturnType.RTN_TYPE_OK;
     }
@@ -236,7 +236,7 @@ public class MembershipServiceImpl implements MembershipService {
             membershipDao.resign(reason);
         }catch (Exception e) {
             membershipSemaphore.release();
-            return ReturnType.RTN_TYPE_NG;
+            return ReturnType.RTN_TYPE_MEMBERSHIP_RESIGN_NG;
         }
         membershipSemaphore.release();
         return ReturnType.RTN_TYPE_OK;

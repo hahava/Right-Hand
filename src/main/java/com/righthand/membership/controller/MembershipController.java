@@ -58,14 +58,14 @@ public class MembershipController {
         ReturnType rtn;
         try{
             UserIdRes userIdRes = new UserIdRes();
-            rtn = membershipService.canUseEmail(params);
+            rtn = membershipService.checkUserIdDup(params);
             if(rtn.equals(ReturnType.RTN_TYPE_OK)) userIdRes.setIsExist(false);
             else userIdRes.setIsExist(true);
             result.setData(userIdRes);
             result.setReturnCode(rtn);
         } catch(Exception e) {
-            logger.error("[EmailDUP][Exception] " + e.toString());
-            result.setReturnCode(ReturnType.RTN_TYPE_NG);
+            logger.error("[ID DUP][Exception] " + e.toString());
+            result.setReturnCode(ReturnType.RTN_TYPE_MEMBERSSHIP_USERID_EXIST_NG);
         }
         return  result;
     }
@@ -82,7 +82,7 @@ public class MembershipController {
             result.setReturnCode(rtn);
         } catch(Exception e) {
             logger.error("[SignUp][Exception] " + e.toString());
-            result.setReturnCode(ReturnType.RTN_TYPE_NG);
+            result.setReturnCode(ReturnType.RTN_TYPE_MEMBERSHIP_SIGNUP_NG);
         }
 
         return  result;
@@ -112,7 +112,7 @@ public class MembershipController {
         }
         catch(Exception e) {
             logger.error("[checkLiveSession][Exception] " + e.toString());
-            result.setReturnCode(ReturnType.RTN_TYPE_NG);
+            result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
         }
 
         return result;
@@ -132,7 +132,7 @@ public class MembershipController {
             res.setReturnCode(rtn);
         } catch(Exception e) {
             logger.error("[Resign][Exception] " + e.toString());
-            res.setReturnCode(ReturnType.RTN_TYPE_NG);
+            res.setReturnCode(ReturnType.RTN_TYPE_SESSION);
         }
 
         return  res;
