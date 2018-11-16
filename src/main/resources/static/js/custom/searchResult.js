@@ -32,14 +32,6 @@ $(document).ready(function () {
 
 });
 
-// 검색결과 하이라팅 기능
-function highlight(replace_word, original_word) {
-    var reg = new RegExp(replace_word, 'gi');
-    var final_str = original_word.replace(reg, function (str) {
-        return '<span  style="background:yellow">' + str + '</span>'
-    });
-    return final_str;
-}
 
 function search_result() {
     $.ajax({
@@ -53,7 +45,6 @@ function search_result() {
             $('#blog_list').empty();
 
             var data = result.data;
-            var board_list = data.data;
             var total = data.total;
 
             // 페이지 리스트를 초기화 한다.
@@ -64,35 +55,31 @@ function search_result() {
             $('#total_info').text(total);
 
 
-            for (var i = 0; i < board_list.length; i++) {
+            get_board_list(data, 'content');
 
-                var seq = board_list[i].BOARD_SEQ;
-                var title = highlight(keyword, board_list[i].BOARD_TITLE);
-                var content = board_list[i].BOARD_CONTENT;
-                var first_image = content.match(/\<img[^\<]*?(data=todos)*[^\<]\/\>/i) != null ? content.match(/\<img[^\<]*?(data=todos)*[^\<]\/\>/i) : '';
-                content = regex_content(content);
-                content = highlight(keyword, content);
-                var nick_name = board_list[i].NICK_NAME;
-                var date = board_list[i].BOARD_DATE.substring(0, 10);
-
-                $('#blog_list').append('  <div class="row has-margin-bottom">' +
-                    '<div class="col-md-4 col-sm-4">' + first_image + ' </div>' +
-                    '<div class="col-md-8 col-sm-8 bulletin">' +
-                    '<a href="/board/content?boardSeq=' + seq + '&type=' + type + ' "><h4 class="media-heading" id="title">' + title + ' </h4></a>' +
-                    '<p>' + date + ' <a href="#" class="link-reverse">' + nick_name + '</a></p>' +
-                    '<p>' + content + '</p></div></div>'
-                );
-            }
+            // for (var i = 0; i < board_list.length; i++) {
+            //
+            //     var seq = board_list[i].BOARD_SEQ;
+            //     var title = highlight(keyword, board_list[i].BOARD_TITLE);
+            //     var content = board_list[i].BOARD_CONTENT;
+            //     var first_image = content.match(/\<img[^\<]*?(data=todos)*[^\<]\/\>/i) != null ? content.match(/\<img[^\<]*?(data=todos)*[^\<]\/\>/i) : '';
+            //     content = regex_content(content);
+            //     content = highlight(keyword, content);
+            //     var nick_name = board_list[i].NICK_NAME;
+            //     var date = board_list[i].BOARD_DATE.substring(0, 10);
+            //
+            //     $('#blog_list').append('  <div class="row has-margin-bottom">' +
+            //         '<div class="col-md-4 col-sm-4">' + first_image + ' </div>' +
+            //         '<div class="col-md-8 col-sm-8 bulletin">' +
+            //         '<a href="/board/content?boardSeq=' + seq + '&type=' + type + ' "><h4 class="media-heading" id="title">' + title + ' </h4></a>' +
+            //         '<p>' + date + ' <a href="#" class="link-reverse">' + nick_name + '</a></p>' +
+            //         '<p>' + content + '</p></div></div>'
+            //     );
+            //}
             window.scrollTo(0, 0);
         }, error: function () {
             //    TODO : 에러 페이지 제작해야 함
         }
     });
 
-    /*정규식*/
-    function regex_content(text) {
-        var regex_text = text.replace(/\<img[^\<]*?(data=todos)*[^\<]\/\>/gi, '(사진)');
-        regex_text = regex_text.replace(/\#|\*|~|_|-|>/gi, '');
-        return regex_text;
-    };
 }

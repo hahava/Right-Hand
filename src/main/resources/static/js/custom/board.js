@@ -58,7 +58,7 @@ function req_page(requested_type, requested_page) {
             var total = data.total;
             set_page(total, requested_page, requested_type);
 
-            get_board_list(data);
+            get_board_list(data, 'content');
             window.scrollTo(0, 0);
         },
         error: function () {
