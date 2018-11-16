@@ -35,5 +35,7 @@ public interface MembershipService extends UserDetailsService {
 
     String getProfileNickname(int userSeq);
 
+    int checkNickname(Map input_data) throws Exception;
 
+    String getUserPwd(int userSeq) throws Exception;
 }
