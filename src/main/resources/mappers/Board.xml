@@ -129,5 +129,4 @@
       VALUES (#{replyContent}, CURRENT_TIMESTAMP(6), #{replyProfileSeq}, #{boardSeq})
     </insert>
 
-
 </mapper>

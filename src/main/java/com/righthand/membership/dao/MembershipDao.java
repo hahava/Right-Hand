@@ -18,4 +18,6 @@ public interface MembershipDao
     int getProfileSeq(int userSeq);
     String getProfileNickname(int userSeq);
     void resign(Map reason);
+    int checkNickname(Map userData);
+    String getUserPwd(int userSeq);
 }

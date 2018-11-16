@@ -390,5 +390,15 @@ public class MembershipServiceImpl implements MembershipService {
         return membershipDao.getProfileNickname(userSeq);
     }
 
+    @Override
+    public int checkNickname(Map input_data) throws Exception {
+        return membershipDao.checkNickname(input_data);
+    }
+
+    @Override
+    public String getUserPwd(int userSeq) throws Exception {
+        return membershipDao.getUserPwd(userSeq);
+    }
+
 }
 
