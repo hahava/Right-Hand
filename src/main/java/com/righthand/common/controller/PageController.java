@@ -52,6 +52,10 @@ public class PageController {
         return "userInfo";
     }
 
+    @ApiOperation(value = "에러 화면")
+    @GetMapping("/error")
+    public String error() { return "error"; }
+
 //    @RequestMapping("/")
 //    public String index(HttpServletRequest request) {
 //        return "/index.html";
