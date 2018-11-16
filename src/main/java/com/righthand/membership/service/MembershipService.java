@@ -17,7 +17,7 @@ import java.util.Map;
 @Service
 public interface MembershipService extends UserDetailsService {
 
-    ReturnType canUseEmail(Map input_data) throws Exception;
+    ReturnType checkUserIdDup(Map input_data) throws Exception;
 
     // 회원가입
     ReturnType signUp(Map input_data) throws  Exception;

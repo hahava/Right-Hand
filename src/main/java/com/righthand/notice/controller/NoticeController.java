@@ -1,8 +1,10 @@
 package com.righthand.notice.controller;
 
+import com.righthand.common.board.BoardChecker;
 import com.righthand.common.GetClientProfile;
 import com.righthand.common.dto.res.ResponseHandler;
 import com.righthand.common.type.ReturnType;
+import com.righthand.membership.service.MembershipInfo;
 import com.righthand.membership.service.MembershipService;
 import com.righthand.notice.boards.TbNoticeBoard;
 import com.righthand.notice.dto.req.BoardReq;
@@ -15,7 +17,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -53,7 +54,7 @@ public class NoticeController{
             allBoardDateDesc = tbNoticeService.findAllBoardDateDesc(page - 1, size);
         }
         catch (Exception e) {
-            result.setReturnCode(ReturnType.RTN_TYPE_NG);
+            result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST);
             return result;
         }
         if(allBoardDateDesc.getTotalElements() == 0) {
@@ -109,14 +110,29 @@ public class NoticeController{
     @PostMapping("/notice/board")
     public ResponseHandler<?> writeNotice(@ApiParam(value = "글 번호")@RequestBody BoardReq boardReq){
         final ResponseHandler<TbNoticeBoard> result = new ResponseHandler<>();
-        System.out.println("[Service][boardNotice]");
-        try{
-            TbNoticeBoard tbNoticeBoard = tbNoticeService.save(boardReq);
-            result.setReturnCode(ReturnType.RTN_TYPE_OK);
-            result.setData(tbNoticeBoard);
-            result.setMessage("Success");
-        }catch (Exception e){
-            result.setReturnCode(ReturnType.RTN_TYPE_NG);
+        try {
+            MembershipInfo membershipInfo = membershipService.currentSessionUserInfo();
+            if(membershipInfo == null) {
+                result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
+            }
+            else {
+                ReturnType returnType = BoardChecker.checkParam(boardReq);
+                if(returnType.equals(ReturnType.RTN_TYPE_OK)) {
+                    System.out.println("[Service][boardNotice]");
+                    try {
+                        TbNoticeBoard tbNoticeBoard = tbNoticeService.save(boardReq);
+                        result.setReturnCode(ReturnType.RTN_TYPE_OK);
+                        result.setData(tbNoticeBoard);
+                    } catch (Exception e) {
+                        result.setReturnCode(ReturnType.RTN_TYPE_BOARD_INSERT_NG);
+                    }
+                }
+                else {
+                    result.setReturnCode(returnType);
+                }
+            }
+        } catch (Exception e) {
+            result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
         }
         return result;
     }

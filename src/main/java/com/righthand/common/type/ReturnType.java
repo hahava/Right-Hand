@@ -37,6 +37,8 @@ public enum ReturnType {
     RTN_TYPE_MEMBERSSHIP_PASSWORD_MATCH_NG(217, "password match error"),
     RTN_TYPE_MEMBERSSHIP_AUTHORITY_NG(218, "Authroity error"),
     RTN_TYPE_MEMBERSSHIP_USER_ID_PENDING_NG(219, ""),
+    RTN_TYPE_MEMBERSHIP_SIGNUP_NG(310, "Sign Up error"),
+    RTN_TYPE_MEMBERSHIP_RESIGN_NG(311, "Resign error"),
 
     // Activate
     RTN_TYPE_MEMBERSSHIP_ACTIVATE_NO_ID(220, ""),
@@ -48,20 +50,25 @@ public enum ReturnType {
     RTN_TYPE_PROFILE_BLOCK_NG(226, "Block Profile"),
     RTN_TYPE_WORD_BLOCK_NG(227, "Block Word"),
 
+    // Mypage Error
+    RTN_TYPE_MYPAGE_PROFILE_NG(400, "프로필이 존재하지 않습니다."),
+    RTN_TYPE_MYPAGE_EDIT_PRO_NG(401, "프로필을 수정하는데 실패했습니다."),
 
 
     //3rd part
     RTN_TYPE_MEMBERSSHIP_ACCESSTOKEN_PERIOD(231, "옳바르지 않은 토큰"),
 
     // BOARD
-    RTN_TYPE_BOARD_TITLE_NO_EXIST(300, ""),
-    RTN_TYPE_BOARD_CONTENT_NO_EXIST(301, ""),
+    RTN_TYPE_BOARD_TITLE_NO_EXIST(300, "글 제목을 입력해주세요."),
+    RTN_TYPE_BOARD_CONTENT_NO_EXIST(301, "글 내용을 입력해주세요."),
     RTN_TYPE_BOARD_USER_ID_NO_EXIST(302, ""),
     RTN_TYPE_BOARD_USER_NAME_NO_EXIST(303, ""),
     RTN_TYPE_BOARD_USER_EMAIL_NO_EXIST(304, ""),
     RTN_TYPE_BOARD_LIST_NO_EXIST(305, "글이 존재하지 않습니다."),
-    RTN_TYPE_INSERT_BOARD_NG(306, "글 작성에 실패했습니다."),
-    RTN_TYPE_BOARD_TYPE_NG(307, "존재하지 않는 게시판입니다.");
+    RTN_TYPE_BOARD_INSERT_NG(306, "글 작성에 실패했습니다."),
+    RTN_TYPE_BOARD_TYPE_NG(307, "존재하지 않는 게시판입니다."),
+    RTN_TYPE_BOARD_DETAIL_NG(308, "게시물을 불러오는데 실패했습니다."),
+    RTN_TYPE_BOARD_REPLY_NG(309, "댓글 작성에 실패했습니다.");
 
     private int code;
     private String message;

@@ -196,7 +196,7 @@ public class BoardServiceImpl implements BoardService {
             boardDao.insertBoardListTech(input_data);
         } catch (Exception e) {
             boardSemaphore.release();
-            return ReturnType.RTN_TYPE_INSERT_BOARD_NG;
+            return ReturnType.RTN_TYPE_BOARD_INSERT_NG;
         }
         boardSemaphore.release();
         return ReturnType.RTN_TYPE_OK;
@@ -210,7 +210,7 @@ public class BoardServiceImpl implements BoardService {
             boardDao.insertBoardListDev(input_data);
         } catch (Exception e) {
             boardSemaphore.release();
-            return ReturnType.RTN_TYPE_NG;
+            return ReturnType.RTN_TYPE_BOARD_INSERT_NG;
         }
         boardSemaphore.release();
         return ReturnType.RTN_TYPE_OK;
@@ -224,7 +224,7 @@ public class BoardServiceImpl implements BoardService {
             boardDao.insertReplyListTech(input_data);
         } catch (Exception e) {
             boardSemaphore.release();
-            return ReturnType.RTN_TYPE_NG;
+            return ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST;
         }
         boardSemaphore.release();
         return ReturnType.RTN_TYPE_OK;
@@ -238,7 +238,7 @@ public class BoardServiceImpl implements BoardService {
             boardDao.insertReplyListDev(input_data);
         } catch (Exception e) {
             boardSemaphore.release();
-            return ReturnType.RTN_TYPE_NG;
+            return ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST;
         }
         boardSemaphore.release();
         return ReturnType.RTN_TYPE_OK;
