@@ -39,6 +39,7 @@ public enum ReturnType {
     RTN_TYPE_MEMBERSSHIP_USER_ID_PENDING_NG(219, ""),
     RTN_TYPE_MEMBERSHIP_SIGNUP_NG(310, "Sign Up error"),
     RTN_TYPE_MEMBERSHIP_RESIGN_NG(311, "Resign error"),
+    RTN_TYPE_MEMBERSHIP_NICKNAME_EXIST_NG(312, "Nickname is already exists."),
 
     // Activate
     RTN_TYPE_MEMBERSSHIP_ACTIVATE_NO_ID(220, ""),
