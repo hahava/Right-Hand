@@ -298,21 +298,14 @@ public class BoardController {
                     replyDetilData = boardService.showReplyBoardDev(boardSeq);
                 }
                 if(!(boardDetailData.isEmpty() || boardDetailData == null)) {
-                    if(replyDetilData.isEmpty() || replyDetilData == null) {
-                        tempBoardData.put("authority", userInfo.get("authority"));
-                        tempBoardData.put("nickname", userInfo.get("nickname"));
-                        tempBoardData.put("boardDetailData", boardDetailData);
-                        result.setData(tempBoardData);
-                        result.setReturnCode(ReturnType.RTN_TYPE_OK);
-                    }
-                    else {
-                        tempBoardData.put("authority", userInfo.get("authority"));
-                        tempBoardData.put("nickname", userInfo.get("nickname"));
-                        tempBoardData.put("boardDetailData", boardDetailData);
+                    tempBoardData.put("authority", userInfo.get("authority"));
+                    tempBoardData.put("nickname", userInfo.get("nickname"));
+                    tempBoardData.put("data", boardDetailData);
+                    if(!replyDetilData.isEmpty() || replyDetilData != null) {
                         tempBoardData.put("replyDetailData", replyDetilData);
-                        result.setData(tempBoardData);
-                        result.setReturnCode(ReturnType.RTN_TYPE_OK);
                     }
+                    result.setData(tempBoardData);
+                    result.setReturnCode(ReturnType.RTN_TYPE_OK);
                 }
                 else {
                     result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST);
