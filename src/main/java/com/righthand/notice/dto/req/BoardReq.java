@@ -3,7 +3,6 @@ package com.righthand.notice.dto.req;
 import com.righthand.common.board.Board;
 import com.righthand.notice.boards.TbNoticeBoard;
 import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiParam;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
