@@ -16,8 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 @Slf4j
@@ -31,6 +30,29 @@ public class NoticeController{
     @Autowired
     MembershipService membershipService;
 
+    private List<HashMap<String, Object>> transform(Page<TbNoticeBoard> params){
+        List<HashMap<String, Object>> datas = new ArrayList<HashMap<String, Object>>();
+        for (int i = 0; i < params.getTotalElements(); i++) {
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("BOARD_TITLE", params.getContent().get(i).getBoardTitle());
+            map.put("BOARD_CONTENT", params.getContent().get(i).getBoardContent());
+            map.put("BOARD_SEQ", params.getContent().get(i).getBoardSeq());
+            map.put("BOARD_DATE", params.getContent().get(i).getBoardDate());
+            map.put("BOARD_TYPE", "notice");
+            datas.add(i, map);
+        }
+        return datas;
+    }
+
+    private Map<String, Object> transform(TbNoticeBoard param){
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("BOARD_TITLE", param.getBoardTitle());
+        data.put("BOARD_CONTENT", param.getBoardContent());
+        data.put("BOARD_SEQ", param.getBoardSeq());
+        data.put("BOARD_DATE", param.getBoardDate());
+        data.put("BOARD_TYPE", "notice");
+        return data;
+    }
 
     @ApiOperation("공지사항 리스트")
     @GetMapping("/board/list/notice")
@@ -63,7 +85,7 @@ public class NoticeController{
         }
         else {
             res.put("total", allBoardDateDesc.getTotalElements());
-            res.put("data", allBoardDateDesc.getContent());
+            res.put("data", transform(allBoardDateDesc));
             res.put("authority", userInfo.get("authority"));
             res.put("nickname", userInfo.get("nickname"));
             result.setData(res);
@@ -96,7 +118,7 @@ public class NoticeController{
             }
             result.setReturnCode(ReturnType.RTN_TYPE_OK);
             res.put("total", allBySearchedWord.getTotalElements());
-            res.put("data", allBySearchedWord.getContent());
+            res.put("data", transform(allBySearchedWord));
             res.put("authority", userInfo.get("authority"));
             res.put("nickname", userInfo.get("nickname"));
             result.setData(res);
@@ -157,7 +179,7 @@ public class NoticeController{
                 result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST);
                 return result;
             }
-            res.put("data", tbNoticeBoard);
+            res.put("data", transform(tbNoticeBoard));
             res.put("authority", userInfo.get("authority"));
             res.put("nickname", userInfo.get("nickname"));
             result.setReturnCode(ReturnType.RTN_TYPE_OK);
