@@ -23,6 +23,11 @@ $(document).ready(function () {
             board_title = "IT. Story";
             board_info = "공유하고싶은 지식과 정보를 작성해보세요. 또한, 소개하고 싶은 IT 제품에 대한 글을 남겨보세요.";
             break;
+        case 'notice':
+            $('#it_story_nav').attr('class', 'active');
+            board_title = "공지사항";
+            board_info = "hello 공지사항";
+            break;
     }
 
     $('#board_title').text(board_title);

@@ -39,3 +39,22 @@ function logout() {
         }
     });
 }
+
+var session_checker = function () {
+    var authorityLevel;
+    $.ajax({
+        type: 'POST',
+        async: false,
+        url: "http://localhost:8080/api/membership/check/live/session",
+        success: function (result) {
+            if (result.code == 0) {
+                authorityLevel = result.data.authorityLevel;
+            } else if (result.code == 101) {
+                authorityLevel = 101;
+            }
+        },
+        error: function (e) {
+        }
+    });
+    return authorityLevel;
+};

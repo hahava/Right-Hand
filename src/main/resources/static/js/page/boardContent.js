@@ -16,6 +16,9 @@ $(document).ready(function () {
         case 'tech':
             $('#it_story_nav').attr('class', 'active');
             break;
+        case 'notice':
+            $('#notice_nav').attr('class', 'active');
+            break;
     }
 
 
@@ -32,7 +35,7 @@ function view_detail() {
         success: function (result) {
 
             var data = result.data;
-            var board_detail = data.boardDetailData;
+            var board_detail = data.data;
             var board_content = board_detail.BOARD_CONTENT;
 
             var editor = new tui.Editor.factory({
@@ -56,6 +59,8 @@ function view_detail() {
             var reply_list = data.replyDetailData;
             $('#reply_count').text(reply_list.length + " 개의 댓글");
             view_reply(reply_list);
+
+            console.log(type + board_seq);
 
         }, error: function () {
             //    TODO : 에러 페이지 제작해야 함

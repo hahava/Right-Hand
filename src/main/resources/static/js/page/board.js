@@ -7,8 +7,8 @@ var page = getParameterByName('page') != null ? getParameterByName('page') : 1;
 $(document).ready(function () {
     var board_title;
     var board_info;
-    var url;
-
+    var session = session_checker();
+    console.log(session + "입니다.");
     switch (type) {
         case 'dev':
             $('#dev_story_nav').attr('class', 'active');
@@ -32,6 +32,9 @@ $(document).ready(function () {
 
     // 해당 페이지 게시글 요청
     req_page(type, page);
+    if ((session == 101 || session == 0) && type == 'notice') {
+        $('#board_writer').remove();
+    }
 });
 /*현재 페이지 정보*/
 

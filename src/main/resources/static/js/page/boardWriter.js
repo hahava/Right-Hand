@@ -9,6 +9,10 @@ $(document).ready(function () {
             $('#it_story_nav').attr('class', 'active');
             $('#board_title').text("TECH. Story")
             break;
+        case 'notice':
+            $('#notice_nav').attr('class', 'active');
+            $('#board_title').text("공지사항")
+            break;
     }
 
     $('#board_info').text("글작성");
