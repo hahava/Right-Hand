@@ -65,7 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .authenticated()
                     .and()
                     .formLogin()
-                        .loginPage("/error")
+                        .loginPage("/error/login")
                         .usernameParameter("userId")
                         .passwordParameter("userPwd")
 
