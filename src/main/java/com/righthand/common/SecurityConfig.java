@@ -61,12 +61,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             http
                     .csrf().disable()
                     .authorizeRequests()
-                    .antMatchers("/board/writer")
+                    .antMatchers("/board/writer", "/user/**")
                     .authenticated()
                     .and()
-                    .antMatcher("/user/info")
                     .formLogin()
-                    .loginPage("/error/login")
+                    .loginPage("/?error=true")
                     .usernameParameter("userId")
                     .passwordParameter("userPwd")
 
