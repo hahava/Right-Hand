@@ -33,7 +33,7 @@ public class NoticeController{
 
 
     @ApiOperation("공지사항 리스트")
-    @GetMapping("/notice/list")
+    @GetMapping("/board/list/notice")
     public ResponseHandler<?> showNoticeList(@ApiParam(value = "페이지 번호")@RequestParam int page) {
         final ResponseHandler<Map<String,Object>> result = new ResponseHandler<>();
         final int size = 5;
@@ -73,7 +73,7 @@ public class NoticeController{
     }
 
     @ApiOperation("공지사항 검색")
-    @GetMapping("/notice/searched")
+    @GetMapping("/board/list/searched/notice")
     public ResponseHandler<?> searchedNoticeList(@ApiParam(value = "검색어")@RequestParam String searchedWord,
                                                  @ApiParam(value = "페이지 번호")@RequestParam int page){
         Map<String, Object> res = new HashMap<>();
@@ -107,7 +107,7 @@ public class NoticeController{
     }
 
     @ApiOperation("공지시항 작성")
-    @PostMapping("/notice/board")
+    @PostMapping("/board/notice")
     public ResponseHandler<?> writeNotice(@ApiParam(value = "글 번호")@RequestBody BoardReq boardReq){
         final ResponseHandler<TbNoticeBoard> result = new ResponseHandler<>();
         try {
@@ -138,7 +138,7 @@ public class NoticeController{
     }
 
     @ApiOperation("공지사항 글 상세보기")
-    @GetMapping("/notice/detail")
+    @GetMapping("/board/detail/notice")
     public ResponseHandler<?> showNoticeDetail(@ApiParam(value = "글 번호")@RequestParam long boardSeq){
         final ResponseHandler<Object> result = new ResponseHandler<>();
         //유저 Profile 가져옴
