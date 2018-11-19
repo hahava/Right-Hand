@@ -31,65 +31,63 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     CustomLogoutHandler customLogoutHandler;
 
     @Bean
-    public AccessDeniedHandler accessDeniedHandler(){
+    public AccessDeniedHandler accessDeniedHandler() {
         return new CustomAccessDeniedHandler();
     }
 
     @Bean
-    public AuthenticationFailureHandler loginFailuredHandler(){
+    public AuthenticationFailureHandler loginFailuredHandler() {
         return new CustomLoginFailureHandler();
     }
 
     @Bean
-    public AuthenticationSuccessHandler successHandler() { return new CustomLoginSuccessHandler(); }
+    public AuthenticationSuccessHandler successHandler() {
+        return new CustomLoginSuccessHandler();
+    }
 
     @Override
-    public void configure(WebSecurity web) throws Exception
-    {
-        if(configMembership.isUseMemberShip()) {
+    public void configure(WebSecurity web) throws Exception {
+        if (configMembership.isUseMemberShip()) {
             web.ignoring().antMatchers("/css/**", "/script/**", "/images/**", "/fonts/**", "lib/**", "/static/**", "/resources/**");
             // 파일 스토리지
-        }
-        else {
+        } else {
             web.ignoring().antMatchers("/**");
         }
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        if(configMembership.isUseMemberShip()) {
+        if (configMembership.isUseMemberShip()) {
             http
                     .csrf().disable()
                     .authorizeRequests()
-                    .antMatchers("/board/writer")
-                        .authenticated()
+                    .antMatchers("/board/writer", "/user/**")
+                    .authenticated()
                     .and()
                     .formLogin()
-                        .loginPage("/error/login")
-                        .usernameParameter("userId")
-                        .passwordParameter("userPwd")
+                    .loginPage("/?error=true")
+                    .usernameParameter("userId")
+                    .passwordParameter("userPwd")
 
-                     // Post 로그인 처리 url
+                    // Post 로그인 처리 url
                     .loginProcessingUrl("/api/login")
-                        .successHandler(successHandler())
-                        .failureHandler(loginFailuredHandler())
-                        .permitAll()
+                    .successHandler(successHandler())
+                    .failureHandler(loginFailuredHandler())
+                    .permitAll()
 
                     .and()
                     .logout()
-                        .logoutUrl("/api/logout")
-                        .logoutSuccessHandler(customLogoutHandler)
-                        .invalidateHttpSession(true)
-                        .permitAll()
+                    .logoutUrl("/api/logout")
+                    .logoutSuccessHandler(customLogoutHandler)
+                    .invalidateHttpSession(true)
+                    .permitAll()
                     .and()
                     .exceptionHandling().accessDeniedHandler(accessDeniedHandler())
                     .and()
                     .rememberMe().key("uniqueAndSecret")
                     .rememberMeParameter("rememberMe")
             ;
-        }
-        else
-        {
+        } else {
             http
                     .csrf().disable()
                     .authorizeRequests()

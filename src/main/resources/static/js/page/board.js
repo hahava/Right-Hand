@@ -7,6 +7,7 @@ var page = getParameterByName('page') != null ? getParameterByName('page') : 1;
 $(document).ready(function () {
     var board_title;
     var board_info;
+    var url;
 
     switch (type) {
         case 'dev':
@@ -18,6 +19,11 @@ $(document).ready(function () {
             $('#it_story_nav').attr('class', 'active');
             board_title = "IT. Story";
             board_info = "공유하고싶은 지식과 정보를 작성해보세요. 또한, 소개하고 싶은 IT 제품에 대한 글을 남겨보세요.";
+            break;
+        case 'notice':
+            $('#notice_nav').attr('class', 'active');
+            board_title = "공지사항";
+            board_info = "공지사항 입니다.";
             break;
     }
 

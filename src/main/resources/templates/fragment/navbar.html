@@ -29,6 +29,7 @@
 </div>
 <!--///END Login Modal///-->
 
+
 <!--Register  Modal -->
 <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel">
     <div class="modal-dialog" role="document">
@@ -113,11 +114,10 @@
             <ul class="nav navbar-nav navbar-right" id="navbar">
                 <li id="dev_story_nav"><a href="/board/list?type=dev&page=1">Dev. Story</a></li>
                 <li id="it_story_nav"><a href="/board/list?type=tech&page=1">IT. Story</a></li>
-                <li><a href="#none">공지사항</a></li>
-                <li><a href="#none">고객센터</a></li>
-
+                <li id="notice_nav"><a href="/board/list?type=notice&page=1">공지사항</a></li>
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"
                         crossorigin="anonymous"></script>
+
                 <script>
                     login_checker();
 
@@ -146,10 +146,10 @@
                         $('#modalOpener').remove();
                         $('#registerOpener').remove();
 
-                        $('#navbar').append('<li class="dropdown"><a href="#none" class="dropdown-toggle" data-toggle="dropdown">MyPage <span class="caret"></span></a>  ' +
+                        $('#navbar').append('<li class="dropdown" id="myPage"><a href="#none" class="dropdown-toggle" data-toggle="dropdown">MyPage <span class="caret"></span></a>  ' +
                             '<ul class="dropdown-menu dropdown-menu-left" role="menu">\n' +
                             '<li><a href="/user/info">회원정보</a></li>\n' +
-                            '<li><a href="image-gallery.html">회원정보수정</a></li>\n' +
+                            '<li><a href="/user/info?type=edit">회원정보수정</a></li>\n' +
                             '<li><a href="image-gallery.html">토큰내역</a></li>\n' +
                             '<li><a href="image-gallery.html">활동내역</a></li>\n' +
                             '<li class="divider"></li>\n' +
