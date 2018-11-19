@@ -53,8 +53,8 @@ public class PageController {
     }
 
     @ApiOperation(value = "에러 화면")
-    @GetMapping("/error")
-    public String error() { return "error"; }
+    @GetMapping("/error/{type}")
+    public String error(@PathVariable String type) { return "error/" + type; }
 
 //    @RequestMapping("/")
 //    public String index(HttpServletRequest request) {
