@@ -5,6 +5,7 @@ var type = getParameterByName('type') != null ? getParameterByName('type') : 'de
 var page = getParameterByName('page') != null ? getParameterByName('page') : 1;
 
 $(document).ready(function () {
+
     var board_title;
     var board_info;
     var session = session_checker();
@@ -27,8 +28,8 @@ $(document).ready(function () {
             break;
     }
 
-    $('#board_title').text(board_title);
-    $('#board_info').text(board_info);
+    $('#sub_page_header').replaceWith(set_sub_page_header(board_title, board_info));
+
 
     // 해당 페이지 게시글 요청
     req_page(type, page);
