@@ -1,5 +1,6 @@
 package com.righthand.membership.dao;
 
+import com.righthand.membership.dto.model.UserVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Repository;
@@ -20,4 +21,5 @@ public interface MembershipDao
     void resign(Map reason);
     int checkNickname(Map userData);
     String getUserPwd(int userSeq);
+    void changePwd(UserVO vo);
 }
