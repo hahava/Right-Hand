@@ -4,7 +4,7 @@ $(document).ready(function () {
 //최신 게시판 데이터를 불러온다.
 var get_new_board = function () {
     $.ajax({
-        type: "GET'",
+        type: "GET",
         url: "/board/new",
         dataType: "json",
         success: function (result) {
