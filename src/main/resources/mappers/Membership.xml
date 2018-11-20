@@ -114,4 +114,9 @@
     <select id="getUserPwd" parameterType="int" resultType="String">
         SELECT USER_PWD FROM TB_USER WHERE USER_SEQ = #{userSeq}
     </select>
+
+    <update id="changePwd" parameterType="com.righthand.membership.dto.model.UserVO">
+        UPDATE TB_USER SET USER_PWD = #{pwd} WHERE USER_ID=#{userId}
+    </update>
+
 </mapper>

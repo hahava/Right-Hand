@@ -37,6 +37,7 @@ public enum ReturnType {
     RTN_TYPE_MEMBERSSHIP_PASSWORD_MATCH_NG(217, "password match error"),
     RTN_TYPE_MEMBERSSHIP_AUTHORITY_NG(218, "Authroity error"),
     RTN_TYPE_MEMBERSSHIP_USER_ID_PENDING_NG(219, ""),
+    RTN_TYPE_MEMBERSSHIP_PASSWORD_CHANGE_NG(220, "password change error"),
     RTN_TYPE_MEMBERSHIP_SIGNUP_NG(310, "Sign Up error"),
     RTN_TYPE_MEMBERSHIP_RESIGN_NG(311, "Resign error"),
     RTN_TYPE_MEMBERSHIP_NICKNAME_EXIST_NG(312, "Nickname is already exists."),
