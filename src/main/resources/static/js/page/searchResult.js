@@ -23,11 +23,13 @@ $(document).ready(function () {
             board_title = "IT. Story";
             board_info = "공유하고싶은 지식과 정보를 작성해보세요. 또한, 소개하고 싶은 IT 제품에 대한 글을 남겨보세요.";
             break;
+        case 'notice':
+            $('#it_story_nav').attr('class', 'active');
+            board_title = "공지사항";
+            board_info = "공지사항";
+            break;
     }
-
-    $('#board_title').text(board_title);
-    $('#board_info').text(board_info);
-
+    $('#sub_page_header').replaceWith(set_sub_page_header(board_title, board_info));
     search_result();
 
 });
@@ -57,25 +59,6 @@ function search_result() {
 
             get_board_list(data, 'content');
 
-            // for (var i = 0; i < board_list.length; i++) {
-            //
-            //     var seq = board_list[i].BOARD_SEQ;
-            //     var title = highlight(keyword, board_list[i].BOARD_TITLE);
-            //     var content = board_list[i].BOARD_CONTENT;
-            //     var first_image = content.match(/\<img[^\<]*?(data=todos)*[^\<]\/\>/i) != null ? content.match(/\<img[^\<]*?(data=todos)*[^\<]\/\>/i) : '';
-            //     content = regex_content(content);
-            //     content = highlight(keyword, content);
-            //     var nick_name = board_list[i].NICK_NAME;
-            //     var date = board_list[i].BOARD_DATE.substring(0, 10);
-            //
-            //     $('#blog_list').append('  <div class="row has-margin-bottom">' +
-            //         '<div class="col-md-4 col-sm-4">' + first_image + ' </div>' +
-            //         '<div class="col-md-8 col-sm-8 bulletin">' +
-            //         '<a href="/board/content?boardSeq=' + seq + '&type=' + type + ' "><h4 class="media-heading" id="title">' + title + ' </h4></a>' +
-            //         '<p>' + date + ' <a href="#" class="link-reverse">' + nick_name + '</a></p>' +
-            //         '<p>' + content + '</p></div></div>'
-            //     );
-            //}
             window.scrollTo(0, 0);
         }, error: function () {
             //    TODO : 에러 페이지 제작해야 함

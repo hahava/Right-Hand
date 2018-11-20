@@ -54,7 +54,7 @@
 </div>
 <!-- ///END Banner Slider/// -->
 <Br/>
-<!--/// Board LIST /// -->
+<!--/// Board Section /// -->
 <div class="container has-margin-bottom">
     <div class="row">
         <div class="col-md-12 has-margin-bottom">
@@ -63,13 +63,9 @@
             </div>
         </div>
     </div>
-
-    <div class="row" id="board_list">
-        <!--Blog list-->
-    </div>
-
+    <!--board list-->
+    <div class="row" id="board_list"></div>
 </div>
-<!-- ///END Board LIST /// -->
 <hr>
 <!--Board info-->
 <div class="container has-margin-bottom">
@@ -82,7 +78,7 @@
 
         <div class="row has-margin-bottom">
             <div class="col-md-5 col-sm-5   bulletin">
-                <a href="blog-single.html"><h4 class="media-heading te">Dev. Story </h4></a>
+                <a href="/board/list?type=dev&page=1"><h4 class="media-heading te">Dev. Story </h4></a>
                 <Br>
                 <p class="media-content ">개발 중 어려운 점이 있다면, 언제든지 무엇이든 질문하세요!
                     만약, 원하는 답변을 찾았다면 RHT로 고마움을 표현하세요. </p>
@@ -98,7 +94,7 @@
             <img class="img-responsive center-block" src="images/gallery/img_gallery_8.jpg">
         </div>
         <div class="col-md-5 col-sm-5 col-md-offset-1 col-sm-offset-1   bulletin">
-            <a href="blog-single.html"><h4 class="media-heading">IT. Story </h4></a>
+            <a href="/board/list?type=tech&page=1"><h4 class="media-heading">IT. Story </h4></a>
             <Br>
             <p class="media-content">공유하고싶은 지식과 정보를 작성해보세요.
                 또한, 소개하고 싶은 IT 제품에 대한 글을 남겨보세요."</p>
@@ -106,12 +102,12 @@
     </div>
 </div>
 
-<!--///END Board info///-->
+<!--footer-->
 <footer th:replace="fragment/footer"/>
+<!--script for functions-->
 <script th:replace="fragment/commonScript"/>
 <script th:src="@{../js/component/board_component.js}" type="text/javascript"></script>
+<!--script for page-->
 <script th:src="@{../js/page/index.js}" type="text/javascript"></script>
-
-
 </body>
 </html>

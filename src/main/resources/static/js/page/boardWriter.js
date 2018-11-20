@@ -1,17 +1,22 @@
 $(document).ready(function () {
 
+    var title;
+
     switch (type) {
         case 'dev':
             $('#dev_story_nav').attr('class', 'active');
-            $('#board_title').text("DEV. Story")
+            title = 'DEV.Story';
             break;
         case 'tech':
             $('#it_story_nav').attr('class', 'active');
-            $('#board_title').text("TECH. Story")
+            title = 'TECH.Story';
+            break;
+        case 'notice':
+            $('#notice_nav').attr('class', 'active');
+            title = 'notice'
             break;
     }
-
-    $('#board_info').text("글작성");
+    $('#sub_page_header').replaceWith(set_sub_page_header(title, '게시글 작성'));
     /*초기화*/
     $('#writer_title').attr('value', '');
 });

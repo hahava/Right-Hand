@@ -52,9 +52,18 @@ public class PageController {
         return "userInfo";
     }
 
+    //유저 개인정보
+    @ApiOperation(value = "유저 정보 수정")
+    @GetMapping("/user/edit")
+    public String userInfoEdit() {
+        return "userPwCheck";
+    }
+
     @ApiOperation(value = "에러 화면")
     @GetMapping("/error/{type}")
-    public String error(@PathVariable String type) { return "error/" + type; }
+    public String error(@PathVariable String type) {
+        return "error/" + type;
+    }
 
 //    @RequestMapping("/")
 //    public String index(HttpServletRequest request) {

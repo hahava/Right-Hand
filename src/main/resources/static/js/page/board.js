@@ -1,14 +1,8 @@
-// 기본 dev 게시판 요청
-var type = getParameterByName('type') != null ? getParameterByName('type') : 'dev';
-
-// 기본 1 페이지 요청
-var page = getParameterByName('page') != null ? getParameterByName('page') : 1;
-
 $(document).ready(function () {
+
     var board_title;
     var board_info;
-    var url;
-
+    var session = session_checker();
     switch (type) {
         case 'dev':
             $('#dev_story_nav').attr('class', 'active');
@@ -27,16 +21,24 @@ $(document).ready(function () {
             break;
     }
 
-    $('#board_title').text(board_title);
-    $('#board_info').text(board_info);
+    $('#sub_page_header').replaceWith(set_sub_page_header(board_title, board_info));
+
 
     // 해당 페이지 게시글 요청
     req_page(type, page);
+    if ((session == 101 || session == 0) && type == 'notice') {
+        $('#board_writer').remove();
+    }
 });
 /*현재 페이지 정보*/
 
+var type = getParameterByName('type');
 
-// 사용자가 원하는 페이지를 요청 번호에 맞춰 반환한다.
+// 기본 1 페이지 요청
+var page = getParameterByName('page') != null ? getParameterByName('page') : 1;
+
+
+// 사용자가 원하는 페이지를 요청 번호에 맞춰 반환
 function req_page(requested_type, requested_page) {
     $.ajax({
         type: 'GET',
@@ -59,8 +61,6 @@ function req_page(requested_type, requested_page) {
             window.scrollTo(0, 0);
         },
         error: function () {
-            //TODO 에러 페이지 제작 해야 함
-            alert("존재하지 않는 페이지 입니다.");
         }
     });
 
@@ -82,4 +82,4 @@ function regex_content(text) {
     var regex_text = text.replace(/\<img[^\<]*?(data=todos)*[^\<]\/\>/gi, '(사진)');
     regex_text = regex_text.replace(/\#|\*|~|_|-|>/gi, '');
     return regex_text;
-};
+}
