@@ -32,3 +32,5 @@ mvnw
 mvnw.cmd
 target/
 hobien.iml
+
+src/main/java/com/righthand/membership/config/ConfigMail.java
