@@ -20,4 +20,6 @@ public class TbUser {
     @Column(length = 60, name = "USER_ID")
     private String userId;
 
+    @Column(name = "USER_PWD")
+    private String userPwd;
 }
