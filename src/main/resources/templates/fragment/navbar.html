@@ -117,28 +117,20 @@
                 <li id="notice_nav"><a href="/board/list?type=notice&page=1">공지사항</a></li>
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"
                         crossorigin="anonymous"></script>
-
                 <script>
-                    login_checker();
+                    /*
+                    * 로그인 여부에 따라 생성되는 태그가 다르기 때문에 해당위치에 스크립트 선언
+                    *
+                    */
 
-                    function login_checker() {
-                        $.ajax({
-                            type: 'POST',
-                            url: 'http://localhost:8080/api/membership/check/live/session',
-                            async: false,
-                            success: function (result) {
-                                var auth = result.code;
-                                switch (auth) {
-                                    case 0:
-                                        login_user();
-                                        break;
-                                    default:
-                                        not_login();
-                                }
-                            }, error: function (e) {
 
-                            }
-                        });
+                    var authority_level = session_checker();
+
+                    /* 관리자 또는 회원으로 로그인 시 */
+                    if (authority_level === 0 || authority_level === 113) {
+                        login_user();
+                    } else {
+                        not_login();
                     }
 
                     function login_user() {

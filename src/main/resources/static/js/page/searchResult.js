@@ -30,8 +30,6 @@ $(document).ready(function () {
             break;
     }
     $('#sub_page_header').replaceWith(set_sub_page_header(board_title, board_info));
-
-
     search_result();
 
 });
