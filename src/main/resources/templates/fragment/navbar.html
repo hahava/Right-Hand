@@ -28,7 +28,7 @@
     </div>
 </div>
 <!--///END Login Modal///-->
-
+4
 
 <!--Register  Modal -->
 <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel">
@@ -117,44 +117,9 @@
                 <li id="notice_nav"><a href="/board/list?type=notice&page=1">공지사항</a></li>
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"
                         crossorigin="anonymous"></script>
+                <script th:src="@{../js/component/navbar.js}" type="text/javascript"></script>
                 <script>
-                    /*
-                    * 로그인 여부에 따라 생성되는 태그가 다르기 때문에 해당위치에 스크립트 선언
-                    *
-                    */
-
-
-                    var authority_level = session_checker();
-
-                    /* 관리자 또는 회원으로 로그인 시 */
-                    if (authority_level === 0 || authority_level === 113) {
-                        login_user();
-                    } else {
-                        not_login();
-                    }
-
-                    function login_user() {
-
-                        $('#modalOpener').remove();
-                        $('#registerOpener').remove();
-
-                        $('#navbar').append('<li class="dropdown" id="myPage"><a href="#none" class="dropdown-toggle" data-toggle="dropdown">MyPage <span class="caret"></span></a>  ' +
-                            '<ul class="dropdown-menu dropdown-menu-left" role="menu">\n' +
-                            '<li><a href="/user/info">회원정보</a></li>\n' +
-                            '<li><a href="/user/info?type=edit">회원정보수정</a></li>\n' +
-                            '<li><a href="image-gallery.html">토큰내역</a></li>\n' +
-                            '<li><a href="image-gallery.html">활동내역</a></li>\n' +
-                            '<li class="divider"></li>\n' +
-                            '<li><a href="javascript:logout();">LogOut</a></li>\n' +
-                            '</ul></li>');
-                    }
-
-                    function not_login() {
-                        $('#navbar').append('<li id="login_li"><a href="#" data-toggle="modal" data-target="#loginModal" id="modalOpener">Login</a>\n' +
-                            '                </li>\n' +
-                            '                <li id="register_li"><a href="#" data-toggle="modal" data-target="#registerModal" id="registerOpener">Register</a>\n' +
-                            '                </li>');
-                    }
+                    login_checker();
                 </script>
             </ul>
         </div>

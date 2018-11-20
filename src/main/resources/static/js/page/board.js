@@ -1,15 +1,8 @@
-// 기본 dev 게시판 요청
-var type = getParameterByName('type') != null ? getParameterByName('type') : 'dev';
-
-// 기본 1 페이지 요청
-var page = getParameterByName('page') != null ? getParameterByName('page') : 1;
-
 $(document).ready(function () {
 
     var board_title;
     var board_info;
     var session = session_checker();
-    console.log(session + "입니다.");
     switch (type) {
         case 'dev':
             $('#dev_story_nav').attr('class', 'active');
@@ -39,8 +32,13 @@ $(document).ready(function () {
 });
 /*현재 페이지 정보*/
 
+var type = getParameterByName('type');
 
-// 사용자가 원하는 페이지를 요청 번호에 맞춰 반환한다.
+// 기본 1 페이지 요청
+var page = getParameterByName('page') != null ? getParameterByName('page') : 1;
+
+
+// 사용자가 원하는 페이지를 요청 번호에 맞춰 반환
 function req_page(requested_type, requested_page) {
     $.ajax({
         type: 'GET',
@@ -63,8 +61,6 @@ function req_page(requested_type, requested_page) {
             window.scrollTo(0, 0);
         },
         error: function () {
-            //TODO 에러 페이지 제작 해야 함
-            alert("존재하지 않는 페이지 입니다.");
         }
     });
 
@@ -86,4 +82,4 @@ function regex_content(text) {
     var regex_text = text.replace(/\<img[^\<]*?(data=todos)*[^\<]\/\>/gi, '(사진)');
     regex_text = regex_text.replace(/\#|\*|~|_|-|>/gi, '');
     return regex_text;
-};
+}
