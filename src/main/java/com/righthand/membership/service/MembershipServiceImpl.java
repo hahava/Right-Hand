@@ -7,6 +7,7 @@ import com.righthand.common.VaildationCheck.ConfigValidationCheck;
 import com.righthand.common.type.ReturnType;
 import com.righthand.membership.config.ConfigMembership;
 import com.righthand.membership.dao.MembershipDao;
+import com.righthand.membership.dto.model.UserVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -242,6 +243,19 @@ public class MembershipServiceImpl implements MembershipService {
         return ReturnType.RTN_TYPE_OK;
     }
 
+    @Override
+    public ReturnType changePwd(UserVO userVO) throws Exception {
+        membershipSemaphore.acquire();
+        try{
+            membershipDao.changePwd(userVO);
+        }catch (Exception e){
+            membershipSemaphore.release();
+            return ReturnType.RTN_TYPE_MEMBERSSHIP_PASSWORD_CHANGE_NG;
+        }
+        membershipSemaphore.release();
+        return ReturnType.RTN_TYPE_OK;
+    }
+
     /**
      * Spring Security 정보 setup 함수.
      *
@@ -399,6 +413,7 @@ public class MembershipServiceImpl implements MembershipService {
     public String getUserPwd(int userSeq) throws Exception {
         return membershipDao.getUserPwd(userSeq);
     }
+
 
 }
 
