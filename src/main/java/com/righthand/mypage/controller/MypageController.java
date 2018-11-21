@@ -69,6 +69,7 @@ public class MypageController {
                 Map<String, Object> params = ConvertUtil.convertObjectToMap(_params);
                 try {
                     tbUserService.updateUserProfile((String)params.get("nickname"), (String)params.get("tel"));
+                    membershipInfo.setNickname(params.get("nickname").toString());
                     result.setReturnCode(ReturnType.RTN_TYPE_OK);
                 } catch (Exception e) {
                     System.out.println("[EditProfile][Exception] " + e.toString());

@@ -34,7 +34,7 @@ public class TbUserService {
         System.out.println("profileSeq : " + tbProfile.getProfileSeq());
         TbUser tbUser = tbUserRepository.getOne(tbProfile.getUserSeq());
         map.put("userId", tbUser.getUserId());
-        map.put("nickname", membershipInfo.getNickname());
+        map.put("nickname", tbProfile.getNickName());
         map.put("userName", tbProfile.getUserName());
         map.put("gender", tbProfile.getGender());
         map.put("tel", tbProfile.getTel());

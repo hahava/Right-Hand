@@ -32,5 +32,6 @@ public class TbProfile {
     @Column(name = "BIRTH_YEAR")
     private Long birthYear;
 
-
+    @Column(name = "NICK_NAME")
+    private String nickName;
 }
