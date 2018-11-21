@@ -42,6 +42,7 @@ public enum ReturnType {
     RTN_TYPE_MEMBERSHIP_SIGNUP_NG(310, "Sign Up error"),
     RTN_TYPE_MEMBERSHIP_RESIGN_NG(311, "Resign error"),
     RTN_TYPE_MEMBERSHIP_NICKNAME_EXIST_NG(312, "Nickname is already exists."),
+    RTN_TYPE_MEMBERSHIP_DATA_INVALID_PATTERN_NG(313, "데이터가 존재하지 않거나, 형식이 올바르지 않습니다."),
 
     // Activate
     RTN_TYPE_MEMBERSSHIP_ACTIVATE_NO_ID(220, ""),
