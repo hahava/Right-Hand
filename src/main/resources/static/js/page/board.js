@@ -25,6 +25,7 @@ $(document).ready(function () {
 
 
     // 해당 페이지 게시글 요청
+    // TODO : session == 0코드 지울 것
     req_page(type, page);
     if ((session == 101 || session == 0) && type == 'notice') {
         $('#board_writer').remove();
