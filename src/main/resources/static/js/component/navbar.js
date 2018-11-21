@@ -26,7 +26,8 @@ function login_user() {
     $('#navbar').append('<li class="dropdown" id="myPage"><a href="#none" class="dropdown-toggle" data-toggle="dropdown">MyPage <span class="caret"></span></a>  ' +
         '<ul class="dropdown-menu dropdown-menu-left" role="menu">\n' +
         '<li><a href="/user/info">회원정보</a></li>\n' +
-        '<li><a href="/user/info?userdata=edit">회원정보수정</a></li>\n' +
+        '<li><a href="/user/info?userdata=editInfo">회원정보 수정</a></li>\n' +
+        '<li><a href="/user/info?userdata=editPw">비밀번호 수정</a></li>\n' +
         '<li><a href="image-gallery.html">토큰내역</a></li>\n' +
         '<li><a href="image-gallery.html">활동내역</a></li>\n' +
         '<li class="divider"></li>\n' +
