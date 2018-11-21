@@ -91,7 +91,6 @@ public class MypageController {
     @PutMapping("/pwd")
     public ResponseHandler<?> editMyPassword(@ApiParam("비밀번호 정보") @Valid @RequestBody PasswordReq _params){
         final ResponseHandler<Object> result = new ResponseHandler<>();
-        ReturnType rtn = null;
         try {
             MembershipInfo membershipInfo = membershipService.currentSessionUserInfo();
             if(membershipInfo == null) {
@@ -99,31 +98,31 @@ public class MypageController {
             }else{
                 Map<String, Object> params = ConvertUtil.convertObjectToMap(_params);
 
-                String oldPwd = (String) params.get("oldPwd");
                 String newPwd = (String) params.get("newPwd");
                 String newPwdDup = (String) params.get("newPwdDup");
 
                 // 공백 여부
-                if(oldPwd.equals("") || newPwd.equals("") || newPwdDup.equals("") ||
-                    oldPwd == null || newPwd == null || newPwdDup == null) {
+                if(newPwd.equals("") || newPwdDup.equals("") || newPwd == null || newPwdDup == null) {
                     result.setReturnCode(ReturnType.RTN_TYPE_MEMBERSSHIP_PASSWORD_EMPTY_NG);
                     return result;
                 }
-
-                try {
-                    //트랜잭션 업데이트 PWD
-                    rtn = tbUserService.updateUserPwd(oldPwd, newPwd, newPwdDup, membershipInfo);
-
-                }catch (Exception e){
-                    log.error("[UpdateUserPwd][Exception]" + e.toString());
+                if(newPwd.equals(newPwdDup)) {
+                    try {
+                        //트랜잭션 업데이트 PWD
+                        result.setReturnCode(tbUserService.updateUserPwd(newPwd, newPwdDup, membershipInfo));
+                    }catch (Exception e){
+                        log.error("[UpdateUserPwd][Exception]" + e.toString());
+                    }
+                }
+                else {
+                    result.setReturnCode(ReturnType.RTN_TYPE_MEMBERSSHIP_PASSWORD_MATCH_NG);
                 }
 
             }
         } catch (Exception e) {
             log.error("[Session][Exception]" + e.toString());
-            rtn = ReturnType.RTN_TYPE_SESSION;
+            result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
         }
-        result.setReturnCode(rtn);
         return result;
     }
 }
