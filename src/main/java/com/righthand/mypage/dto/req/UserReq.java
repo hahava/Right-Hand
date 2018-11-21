@@ -19,6 +19,6 @@ public class UserReq {
     @ApiParam(value = "전화번호", required = true)
     @NotNull
     @Size(min = 1)
-    @Pattern(regexp = "^[0-9_]*$")
+    @Pattern(regexp = "^[0-9\\-_]*$")
     private String tel;
 }
