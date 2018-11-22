@@ -13,8 +13,8 @@ public class BoardReq extends Board {
 
     public TbNoticeBoard toEntity(){
         return TbNoticeBoard.builder()
-                .boardTitle(boardTitle)
-                .boardContent(boardContent)
+                .boardTitle(super.getBoardTitle())
+                .boardContent(super.getBoardContent())
                 .build();
     }
 }

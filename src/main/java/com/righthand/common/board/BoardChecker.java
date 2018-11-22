@@ -1,5 +1,6 @@
 package com.righthand.common.board;
 
+import com.righthand.board.dto.req.BoardReq;
 import com.righthand.common.type.ReturnType;
 
 public class BoardChecker {
