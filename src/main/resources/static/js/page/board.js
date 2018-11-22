@@ -1,5 +1,6 @@
 $(document).ready(function () {
 
+
     var board_title;
     var board_info;
     var session = session_checker();
@@ -21,7 +22,7 @@ $(document).ready(function () {
             break;
     }
 
-    $('#sub_page_header').replaceWith(set_sub_page_header(board_title, board_info));
+    setSubpageParam(board_title, board_info);
 
 
     // 해당 페이지 게시글 요청
@@ -75,7 +76,12 @@ function search_result() {
 
 /*글작성*/
 function board_writer() {
-    location.href = "/board/writer?type=" + type;
+    var session = session_checker();
+    if (session == 1 || session == 103) {
+        location.href = "/board/writer?type=" + type;
+    } else {
+        alert("로그인 후 이용해 주세요!");
+    }
 }
 
 /*정규식*/

@@ -16,7 +16,7 @@ $(document).ready(function () {
             title = 'notice'
             break;
     }
-    $('#sub_page_header').replaceWith(set_sub_page_header(title, '게시글 작성'));
+    setSubpageParam(title, '게시글작성');
     /*초기화*/
     $('#writer_title').attr('value', '');
 });
@@ -65,6 +65,6 @@ var editor = new tui.Editor({
     el: document.querySelector('#editSection'),
     initialEditType: 'wysiwyg',
     previewStyle: 'vertical',
-    height: '400px',
+    height: '600px',
     hideModeSwitch: true
 });
