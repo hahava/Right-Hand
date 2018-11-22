@@ -2,15 +2,16 @@ package com.righthand.common.board;
 
 import io.swagger.annotations.ApiParam;
 import lombok.Data;
-
-import java.io.Serializable;
+import org.hibernate.validator.constraints.NotBlank;
 
 @Data
-public class Board implements Serializable {
+public class Board {
 
     @ApiParam(value = "제목", required = true)
-    protected String boardTitle;
+    @NotBlank
+    private String boardTitle;
 
     @ApiParam(value = "내용", required = true)
-    protected String boardContent;
+    @NotBlank
+    private String boardContent;
 }

@@ -10,6 +10,9 @@ import com.righthand.common.GetClientProfile;
 import com.righthand.common.dto.res.ResponseHandler;
 import com.righthand.common.type.ReturnType;
 
+import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.validation.BindingResult;
+
 import com.righthand.common.util.ConvertUtil;
 import com.righthand.file.service.FileService;
 import com.righthand.membership.service.MembershipInfo;
@@ -50,23 +53,23 @@ public class BoardController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public boolean checkBoardType(String bType) {
-        if(bType.equalsIgnoreCase("tech"))
+        if (bType.equalsIgnoreCase("tech"))
             return true;
-        else if(bType.equalsIgnoreCase("dev"))
+        else if (bType.equalsIgnoreCase("dev"))
             return true;
         else
             return false;
     }
 
-    private void setResponseBoard(Map<String, Object> tempBoardData, List<Map<String, Object>> tempBoardList, String btype, ResponseHandler<Object> result){
+    private void setResponseBoard(Map<String, Object> tempBoardData, List<Map<String, Object>> tempBoardList, String btype, ResponseHandler<Object> result) {
         for (int i = 0; i < tempBoardList.size(); i++) {
             tempBoardList.get(i).put("BOARD_TYPE", btype);
         }
         tempBoardData.put("data", tempBoardList);
-        if(!(tempBoardList.isEmpty() || tempBoardList == null)) {
+        if (!(tempBoardList.isEmpty() || tempBoardList == null)) {
             result.setData(tempBoardData);
             result.setReturnCode(ReturnType.RTN_TYPE_OK);
-        }else{
+        } else {
             result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST);
         }
     }
@@ -84,7 +87,7 @@ public class BoardController {
             total++;
         }
         for (int i = 0; i < total; i++) {
-            StringTokenizer firstSt = new StringTokenizer(imgTexts.get(i),",");
+            StringTokenizer firstSt = new StringTokenizer(imgTexts.get(i), ",");
             firstSt.nextToken();
             String transformText = firstSt.nextToken();
             StringBuilder base64 = new StringBuilder();
@@ -99,13 +102,13 @@ public class BoardController {
 
             files[0] = base64DecodedMultipartFile;
             Map<String, Object> param = new HashMap<>();
-            ArrayList<HashMap<String,Object>> urlMap = null;
+            ArrayList<HashMap<String, Object>> urlMap = null;
             try {
                 System.out.println("[StoreFile]");
                 urlMap = fileService.storeFile(files, param);
                 /**
-                * Right-Hand-Imgs가 resource Root 디렉토리이기 때문에 subFileUrl 적용
-                */
+                 * Right-Hand-Imgs가 resource Root 디렉토리이기 때문에 subFileUrl 적용
+                 */
                 String newText = srcTag[0] + (String) urlMap.get(0).get("subFileUrl") + srcTag[1];
 //                String newText = srcTag[0] + (String) urlMap.get(0).get("fileUrl") + srcTag[1];
                 text = text.replace(imgTexts.get(i), newText);
@@ -118,10 +121,10 @@ public class BoardController {
 
     @ApiOperation("게시물 리스트")
     @GetMapping("/board/list/{btype}")
-    public ResponseHandler<?> showBoardList(@ApiParam(value = "페이지 번호")@RequestParam int page,
-                                            @ApiParam(value="게시판 종류")@PathVariable String btype){
+    public ResponseHandler<?> showBoardList(@ApiParam(value = "페이지 번호") @RequestParam int page,
+                                            @ApiParam(value = "게시판 종류") @PathVariable String btype) {
         final ResponseHandler<Object> result = new ResponseHandler<>();
-        if(checkBoardType(btype) == true){
+        if (checkBoardType(btype) == true) {
             Map<String, Object> tempBoardData = new HashMap<>();
             List<Map<String, Object>> tempBoardList;
             // 사용자 정보 가져옴
@@ -134,7 +137,7 @@ public class BoardController {
             }
             tempBoardData.put("authority", userInfo.get("authority"));
             tempBoardData.put("nickname", userInfo.get("nickname"));
-            if(btype.equals("tech")){
+            if (btype.equals("tech")) {
                 try {
                     tempBoardData.put("total", boardDao.selectCountListTech());
                     tempBoardList = boardService.selectBoardListTech(page);
@@ -144,7 +147,7 @@ public class BoardController {
                     logger.error("[ShowTechBoardList][Exception] " + e.toString());
                     result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST);
                 }
-            }else if(btype.equals("dev")){
+            } else if (btype.equals("dev")) {
                 try {
                     tempBoardData.put("total", boardDao.selectCountListDev());
                     tempBoardList = boardService.selectBoardListDev(page);
@@ -155,8 +158,7 @@ public class BoardController {
                     result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST);
                 }
             }
-        }
-        else {
+        } else {
             result.setReturnCode(ReturnType.RTN_TYPE_BOARD_TYPE_NG);
         }
 
@@ -165,17 +167,16 @@ public class BoardController {
 
     @ApiOperation("게시판 검색")
     @GetMapping("/board/list/searched/{btype}")
-    public ResponseHandler<?> searchedBoardList(
-            @ApiParam(value = "검색어") @RequestParam String searchedWord,
-            @ApiParam(value = "페이지 번호") @RequestParam int page,
-            @ApiParam(value = "게시판 종류") @PathVariable String btype
-    ) {
+    public ResponseHandler<?> searchedBoardList( @ApiParam(value = "검색어") @RequestParam String searchedWord,
+                                                 @ApiParam(value = "페이지 번호") @RequestParam int page,
+                                                 @ApiParam(value = "게시판 종류") @PathVariable String btype) {
         final ResponseHandler<Object> result = new ResponseHandler<>();
-        if(checkBoardType(btype) == true) {
+//        if(searchedWord.equals("") || searchedWord == null)
+        if (checkBoardType(btype) == true) {
             Map<String, Object> tempBoardData = new HashMap<>();
             List<Map<String, Object>> tempBoardList;
             // 사용자 정보 가져옴
-            Map<String, Object> userInfo= null;
+            Map<String, Object> userInfo = null;
             try {
                 userInfo = GetClientProfile.getUserInfo(membershipService);
             } catch (Exception e) {
@@ -187,7 +188,7 @@ public class BoardController {
             tempBoardData.put("authority", userInfo.get("authority"));
             tempBoardData.put("nickname", userInfo.get("nickname"));
             tempBoardData.put("searchedWord", searchedWord);
-            if(btype.equals("tech")) {
+            if (btype.equals("tech")) {
                 try {
                     tempBoardData.put("total", boardDao.selectSearchedCountListTech(vo));
                     tempBoardList = boardService.searchedBoardListTech(searchedWord, page);
@@ -197,7 +198,7 @@ public class BoardController {
                     logger.error("[SearchTechBoardList] [Exception " + e.toString());
                     result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST);
                 }
-            }else if(btype.equals("dev")){
+            } else if (btype.equals("dev")) {
                 try {
                     tempBoardData.put("total", boardDao.selectSearchedCountListDev(vo));
                     tempBoardList = boardService.searchedBoardListDev(searchedWord, page);
@@ -208,8 +209,7 @@ public class BoardController {
                     result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST);
                 }
             }
-        }
-        else {
+        } else {
             result.setReturnCode(ReturnType.RTN_TYPE_BOARD_TYPE_NG);
         }
         return result;
@@ -218,70 +218,72 @@ public class BoardController {
 
     @ApiOperation("글작성")
     @PostMapping("/board/{btype}")
-    public ResponseHandler<?> writeBoard(@Valid @ApiParam(value = "게시물 제목, 내용") @RequestBody final BoardReq _params,
-                                         @ApiParam(value = "게시판 종류") @PathVariable String btype) {
+    public ResponseHandler<?> writeBoard(@ApiParam(value = "게시물 제목, 내용") @Valid @RequestBody BoardReq _params, BindingResult bindingResult,
+                                         @ApiParam(value = "게시판 종류") @PathVariable String btype
+                                         ) {
         final ResponseHandler<?> result = new ResponseHandler<>();
-        try {
-            MembershipInfo membershipInfo = membershipService.currentSessionUserInfo();
-            if(membershipInfo == null) {
-                result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
-                return result;
-            }
-            else {
-                ReturnType returnType = boardChecker.checkParam(_params);
-                System.out.println(returnType.getMessage());
-                if (returnType.equals(ReturnType.RTN_TYPE_OK)) {
-                    Map<String, Object> params = ConvertUtil.convertObjectToMap(_params);
-                    String changedText = storeImgsAndGetChangedText(params);
-                    params.replace("boardContent", changedText);
+        if(!bindingResult.hasFieldErrors()) {
+            try {
+                MembershipInfo membershipInfo = membershipService.currentSessionUserInfo();
+                if (membershipInfo == null) {
+                    result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
+                    return result;
+                } else {
+                    ReturnType returnType = boardChecker.checkParam(_params);
+                    System.out.println(returnType.getMessage());
+                    if (returnType.equals(ReturnType.RTN_TYPE_OK)) {
+                        Map<String, Object> params = ConvertUtil.convertObjectToMap(_params);
+                        String changedText = storeImgsAndGetChangedText(params);
+                        params.replace("boardContent", changedText);
 
-                    if (checkBoardType(btype) == true) {
-                        params.put("boardProfileSeq", membershipInfo.getProfileSeq());
-                        ReturnType rtn;
-                        if (btype.equals("tech")) {
-                            try {
-                                rtn = boardService.insertBoardListTech(params);
-                                result.setReturnCode(rtn);
-                            } catch (Exception e) {
-                                logger.error("[TechBoard][Exception] " + e.toString());
-                                result.setReturnCode(ReturnType.RTN_TYPE_BOARD_INSERT_NG);
+                        if (checkBoardType(btype) == true) {
+                            params.put("boardProfileSeq", membershipInfo.getProfileSeq());
+                            ReturnType rtn;
+                            if (btype.equals("tech")) {
+                                try {
+                                    rtn = boardService.insertBoardListTech(params);
+                                    result.setReturnCode(rtn);
+                                } catch (Exception e) {
+                                    logger.error("[TechBoard][Exception] " + e.toString());
+                                    result.setReturnCode(ReturnType.RTN_TYPE_BOARD_INSERT_NG);
+                                }
+                            } else if (btype.equals("dev")) {
+                                try {
+                                    rtn = boardService.insertBoardListDev(params);
+                                    result.setReturnCode(rtn);
+                                } catch (Exception e) {
+                                    logger.error("[DevBoard][Exception] " + e.toString());
+                                    result.setReturnCode(ReturnType.RTN_TYPE_BOARD_INSERT_NG);
+                                }
                             }
-                        } else if (btype.equals("dev")) {
-                            try {
-                                rtn = boardService.insertBoardListDev(params);
-                                result.setReturnCode(rtn);
-                            } catch (Exception e) {
-                                logger.error("[DevBoard][Exception] " + e.toString());
-                                result.setReturnCode(ReturnType.RTN_TYPE_BOARD_INSERT_NG);
-                            }
+                        } else {
+                            result.setReturnCode(ReturnType.RTN_TYPE_BOARD_TYPE_NG);
                         }
                     } else {
-                        result.setReturnCode(ReturnType.RTN_TYPE_BOARD_TYPE_NG);
+                        result.setReturnCode(returnType);
                     }
                 }
-                else {
-                    result.setReturnCode(returnType);
-                }
-            }
 
-        } catch (Exception e) {
-            logger.error("[Board][Exception] " + e.toString());
-            result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
+            } catch (Exception e) {
+                logger.error("[Board][Exception] " + e.toString());
+                result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
+            }
+            return result;
         }
+        result.setReturnCode(ReturnType.RTN_TYPE_NO_DATA);
         return result;
     }
 
 
-
     @ApiOperation("게시물 상세보기")
     @GetMapping("/board/detail/{btype}")
-    public  ResponseHandler<?> showBoardDetail(@ApiParam(value = "게시물 번호")@RequestParam int boardSeq, @ApiParam(value = "게시판 종류")@PathVariable String btype) {
+    public ResponseHandler<?> showBoardDetail(@ApiParam(value = "게시물 번호") @RequestParam int boardSeq, @ApiParam(value = "게시판 종류") @PathVariable String btype) {
         final ResponseHandler<Object> result = new ResponseHandler<>();
-        if(checkBoardType(btype) == true) {
+        if (checkBoardType(btype) == true) {
             Map<String, Object> boardDetailData = null;
             List<Map<String, Object>> replyDetilData = null;
             // 사용자 정보 가져옴
-            Map<String, Object> userInfo= null;
+            Map<String, Object> userInfo = null;
             try {
                 userInfo = GetClientProfile.getUserInfo(membershipService);
             } catch (Exception e) {
@@ -290,33 +292,30 @@ public class BoardController {
             }
             Map<String, Object> tempBoardData = new HashMap<>();
             try {
-                if(btype.equals("tech")){
+                if (btype.equals("tech")) {
                     boardDetailData = boardService.showBoardDetailTech(boardSeq);
                     replyDetilData = boardService.showReplyBoardTech(boardSeq);
-                }else if(btype.equals("dev")){
+                } else if (btype.equals("dev")) {
                     boardDetailData = boardService.showBoardDetailDev(boardSeq);
                     replyDetilData = boardService.showReplyBoardDev(boardSeq);
                 }
-                if(!(boardDetailData.isEmpty() || boardDetailData == null)) {
+                if (!(boardDetailData.isEmpty() || boardDetailData == null)) {
                     tempBoardData.put("authority", userInfo.get("authority"));
                     tempBoardData.put("nickname", userInfo.get("nickname"));
                     tempBoardData.put("data", boardDetailData);
-                    if(!replyDetilData.isEmpty() || replyDetilData != null) {
+                    if (!replyDetilData.isEmpty() || replyDetilData != null) {
                         tempBoardData.put("replyDetailData", replyDetilData);
                     }
                     result.setData(tempBoardData);
                     result.setReturnCode(ReturnType.RTN_TYPE_OK);
-                }
-                else {
+                } else {
                     result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST);
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 logger.error("[BoardDetail] [Exception " + e.toString());
                 result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST);
             }
-        }
-        else {
+        } else {
             result.setReturnCode(ReturnType.RTN_TYPE_BOARD_TYPE_NG);
         }
 
@@ -325,11 +324,11 @@ public class BoardController {
 
     @ApiOperation("댓글달기")
     @PostMapping("/reply/{btype}")
-    public ResponseHandler<?> writeReply(@ApiParam(value = "게시판 종류")@PathVariable String btype,
-                                             @ApiParam(value = "게시물 번호")@RequestParam int boardSeq,
-                                             @ApiParam(value = "댓글 내용")@RequestBody String replyContent){
+    public ResponseHandler<?> writeReply(@ApiParam(value = "게시판 종류") @PathVariable String btype,
+                                         @ApiParam(value = "게시물 번호") @RequestParam int boardSeq,
+                                         @ApiParam(value = "댓글 내용") @RequestBody String replyContent) {
         final ResponseHandler<?> result = new ResponseHandler<>();
-        if(checkBoardType(btype) == true) {
+        if (checkBoardType(btype) == true) {
             Map<String, Object> params = new HashMap<String, Object>();
             try {
                 MembershipInfo membershipInfo = membershipService.currentSessionUserInfo();
@@ -338,14 +337,14 @@ public class BoardController {
                 params.put("replyContent", replyContent);
                 ReturnType rtn;
                 try {
-                    if(btype.equals("tech")){
+                    if (btype.equals("tech")) {
                         rtn = boardService.insertReplyListTech(params);
                         result.setReturnCode(rtn);
-                    }else if(btype.equals("dev")){
+                    } else if (btype.equals("dev")) {
                         rtn = boardService.insertReplyListDev(params);
                         result.setReturnCode(rtn);
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     logger.error("[Reply][Exception] " + e.toString());
                     result.setReturnCode(ReturnType.RTN_TYPE_BOARD_REPLY_NG);
                 }
@@ -353,8 +352,7 @@ public class BoardController {
                 logger.error("[Reply][Exception] " + e.toString());
                 result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
             }
-        }
-        else {
+        } else {
             result.setReturnCode(ReturnType.RTN_TYPE_BOARD_TYPE_NG);
         }
 
@@ -370,24 +368,21 @@ public class BoardController {
         List<Map<String, Object>> newBoards = null;
         try {
             newBoards = boardService.showNewBoard();
-            if(newBoards.isEmpty() || newBoards == null) {
+            if (newBoards.isEmpty() || newBoards == null) {
                 result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST);
-            }
-            else {
+            } else {
                 res.put("authority", userInfo.get("authority"));
                 res.put("nickname", userInfo.get("nickname"));
                 res.put("data", newBoards);
                 result.setData(res);
                 result.setReturnCode(ReturnType.RTN_TYPE_OK);
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             logger.error("[NewBoard][Exception] " + e.toString());
             result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST);
         }
         return result;
     }
-
 
 
 }
