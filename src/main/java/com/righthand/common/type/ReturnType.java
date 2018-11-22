@@ -72,7 +72,8 @@ public enum ReturnType {
     RTN_TYPE_BOARD_INSERT_NG(306, "글 작성에 실패했습니다."),
     RTN_TYPE_BOARD_TYPE_NG(307, "존재하지 않는 게시판입니다."),
     RTN_TYPE_BOARD_DETAIL_NG(308, "게시물을 불러오는데 실패했습니다."),
-    RTN_TYPE_BOARD_REPLY_NG(309, "댓글 작성에 실패했습니다.");
+    RTN_TYPE_BOARD_REPLY_NG(309, "댓글 작성에 실패했습니다."),
+    RTN_TYPE_BOARD_SEARCH_NG(314, "검색어를 입력해주세요.");
 
     private int code;
     private String message;
