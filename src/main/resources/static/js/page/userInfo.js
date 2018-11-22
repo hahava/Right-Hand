@@ -77,13 +77,14 @@ function setPwRequestView(tag_id, next_page) {
 }
 
 function getUserInfo() {
+    console.log("getUserInfo()");
     $.ajax({
         type: "GET",
         url: "http://localhost:8080/profile",
         dataType: 'json',
         async: false,
         success: function (result) {
-
+            console.log(result.code);
             if (result.code == 0) {
                 var data = result.data;
                 var gender = data.gender;
@@ -179,8 +180,13 @@ function reqModifiedUserInfo() {
         /*반드시 JSON 변환을 거쳐서 요청 보낼 것*/
         data: JSON.stringify(data),
         success: function (result) {
-            alert("수정되었습니다.");
-            location.href = "/user/info";
+            if (result.code === 0) {
+                alert("수정되었습니다.");
+                location.href = "/user/info";
+            }
+            else {
+                alert(data.message);
+            }
         }, error: function (e) {
         }
     });
