@@ -16,17 +16,19 @@ function get_board_list(data, list_type) {
         var type = board_list[i].BOARD_TYPE;
         var date = board_list[i].BOARD_DATE.substring(0, 10);
 
+        if (content.length > 340) {
+            content = content.substr(0, 340) + "...(중략)...";
+        }
+
         var params = {
             "boardSeq": boardSeq, "type": type, "searchedWord": searchedWord
         };
-        console.log("parmas\n" + params.type + params.searchedWord + params.boardSeq);
         var address = '/board/' + list_type + '?';
         address = address + set_address(params);
 
-        console.log(address);
 
         $('#board_list').append('  <div class="row has-margin-bottom">' +
-            '<div class="col-md-4 col-sm-4">' + '<div class="col-md-4 col-sm-4 title_image">' + first_image[0] + '</div>' +
+            '<div class="col-md-12 col-sm-12">' + '<div class="col-md-2 col-sm-2 title_image">' + first_image[0] + '</div>' +
             '<div class="col-md-8 col-sm-8 bulletin">' +
             '<a href=' + address + '><h4 class="media-heading" id="title">' + title + ' </h4></a>' +
             '<p>' + date + ' <a href="#" class="link-reverse">' + nick_name + '</a></p>' +

@@ -11,7 +11,13 @@
 <navbar th:replace="fragment/navbar"/>
 
 <!--SUBPAGE HEAD-->
-<div id="sub_page_header"></div>
+<div class="subpage-head has-margin-bottom">
+    <div class="container">
+        <h3 id="board_title"></h3>
+        <p id="board_info" class="lead"></p>
+    </div>
+</div>
+<!--///SUBPAGE HEAD///-->
 
 <section>
     <div class="container">
@@ -26,7 +32,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row" style="min-height : 400px;">
             <div class="col-md-12 has-margin-bottom" id="board_list">
                 <!--Board list-->
             </div>

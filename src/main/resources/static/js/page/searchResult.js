@@ -29,9 +29,8 @@ $(document).ready(function () {
             board_info = "공지사항";
             break;
     }
-    $('#sub_page_header').replaceWith(set_sub_page_header(board_title, board_info));
+    setSubpageParam(board_title, board_info);
     search_result();
-
 });
 
 
