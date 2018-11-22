@@ -49,17 +49,13 @@ public class TbUserService {
     }
 
     @Transactional
-    public ReturnType updateUserPwd(String oldPwd, String newPwd, String newPwdDup, MembershipInfo membershipInfo)
+    public ReturnType updateUserPwd(String newPwd, String newPwdDup, MembershipInfo membershipInfo)
             throws Exception{
         /*
         * 1. Old Pwd == DB Pwd AND New Pwd == New Pwd Dup
         * */
         int userSeq = membershipInfo.getUserSeq();
         TbUser tbUser = tbUserRepository.getOne((long) userSeq);
-        if(!passwordEncoder.matches(oldPwd, tbUser.getUserPwd())
-            || !newPwd.equals(newPwdDup)){
-            return ReturnType.RTN_TYPE_MEMBERSSHIP_PASSWORD_MATCH_NG;
-        }
 
         /*
         * 2. New Pwd Validation Check
