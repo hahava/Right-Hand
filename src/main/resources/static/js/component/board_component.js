@@ -7,18 +7,7 @@ function get_board_list(data, list_type) {
         var title = board_list[i].BOARD_TITLE;
         var content = board_list[i].BOARD_CONTENT;
         var first_image = content.match(/\<img[^\<]*?(data=todos)*[^\<]\/\>/i) != null ? content.match(/\<img[^\<]*?(data=todos)*[^\<]\/\>/i) : ' ';
-        content = regex_content(content);
-        if (searchedWord != null) {
-            content = highlight(searchedWord, content);
-            title = highlight(searchedWord, title);
-        }
-        var nick_name = board_list[i].NICK_NAME;
-        var type = board_list[i].BOARD_TYPE;
-        var date = board_list[i].BOARD_DATE.substring(0, 10);
-
-        // if (content.length > 340) {
-        //     content = content.substr(0, 340) + "...(중략)...";
-        // }
+        $('#tempEditor').empty();
         var editor = new tui.Editor.factory({
             el: document.getElementById('tempEditor'),
             initialEditType: 'wysiwyg',
@@ -28,9 +17,19 @@ function get_board_list(data, list_type) {
             hideModeSwitch: true,
             initialValue: content
         });
-
         content = $('#tempEditor').text();
+        // content = regex_content(content);
+        if (searchedWord != null) {
+            content = highlight(searchedWord, content);
+            title = highlight(searchedWord, title);
+        }
+        var nick_name = board_list[i].NICK_NAME;
+        var type = board_list[i].BOARD_TYPE;
+        var date = board_list[i].BOARD_DATE.substring(0, 10);
 
+        if (content.length > 340) {
+            content = content.substr(0, 340) + "...(중략)...";
+        }
         var params = {
             "boardSeq": boardSeq, "type": type, "searchedWord": searchedWord
         };
@@ -40,7 +39,7 @@ function get_board_list(data, list_type) {
 
         $('#board_list').append('  <div class="row has-margin-bottom">' +
             '<div class="col-md-12 col-sm-12">' + '<div class="col-md-2 col-sm-2 title_image">' + first_image[0] + '</div>' +
-            '<div class="col-md-8 col-sm-8 bulletin">' +
+            '<div class="col-md-8 col-sm-8 bulletin" style="text-overflow: ellipsis;  overflow : hidden;">' +
             '<a href=' + address + '><h4 class="media-heading" id="title">' + title + ' </h4></a>' +
             '<p>' + date + ' <a href="#" class="link-reverse">' + nick_name + '</a></p>' +
             '<p>' + content + '</p></div></div>');
