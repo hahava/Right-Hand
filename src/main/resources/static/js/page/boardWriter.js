@@ -26,7 +26,14 @@ var type = getParameterByName('type') != null ? getParameterByName('type') : 'de
 
 function write_content() {
 
-    var data = {"boardTitle": $('#writer_title').val(), "boardContent": editor.getValue()};
+    var board_title = $('#writer_title').val();
+    var board_content = editor.getValue();
+
+    board_title = tagRemover(board_title);
+
+    var data = {"boardTitle": board_title, "boardContent": board_content};
+
+
     var writer_success = false;
     $.ajax({
         type: 'POST',
@@ -68,3 +75,11 @@ var editor = new tui.Editor({
     height: '600px',
     hideModeSwitch: true
 });
+
+// <,> 등의 태그를 &lt, &gt 변환
+function tagRemover(tag) {
+    var text = tag;
+    text = text.replace(/\</g, "&lt");
+    text = text.replace(/\>/g, "&gt");
+    return text;
+}
