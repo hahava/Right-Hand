@@ -14,4 +14,5 @@ public class Board {
     @ApiParam(value = "내용", required = true)
     @NotBlank
     private String boardContent;
+
 }
