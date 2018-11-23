@@ -1,7 +1,7 @@
 package com.righthand.notice.dto.req;
 
 import com.righthand.common.board.Board;
-import com.righthand.notice.boards.TbNoticeBoard;
+import com.righthand.notice.domain.boards.TbNoticeBoard;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -1,4 +1,4 @@
-package com.righthand.mypage.info;
+package com.righthand.mypage.domain.info;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

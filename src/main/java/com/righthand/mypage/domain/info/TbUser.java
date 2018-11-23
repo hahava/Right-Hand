@@ -1,4 +1,4 @@
-package com.righthand.mypage.info;
+package com.righthand.mypage.domain.info;
 
 import lombok.AccessLevel;
 import lombok.Getter;

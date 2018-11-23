@@ -6,7 +6,7 @@ import com.righthand.common.dto.res.ResponseHandler;
 import com.righthand.common.type.ReturnType;
 import com.righthand.membership.service.MembershipInfo;
 import com.righthand.membership.service.MembershipService;
-import com.righthand.notice.boards.TbNoticeBoard;
+import com.righthand.notice.domain.boards.TbNoticeBoard;
 import com.righthand.notice.dto.req.BoardReq;
 import com.righthand.notice.service.TbNoticeService;
 import io.swagger.annotations.ApiOperation;
