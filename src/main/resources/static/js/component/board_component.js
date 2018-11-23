@@ -16,9 +16,20 @@ function get_board_list(data, list_type) {
         var type = board_list[i].BOARD_TYPE;
         var date = board_list[i].BOARD_DATE.substring(0, 10);
 
-        if (content.length > 340) {
-            content = content.substr(0, 340) + "...(중략)...";
-        }
+        // if (content.length > 340) {
+        //     content = content.substr(0, 340) + "...(중략)...";
+        // }
+        var editor = new tui.Editor.factory({
+            el: document.getElementById('tempEditor'),
+            initialEditType: 'wysiwyg',
+            previewStyle: 'vertical',
+            height: '100px',
+            viewer: true,
+            hideModeSwitch: true,
+            initialValue: content
+        });
+
+        content = $('#tempEditor').text();
 
         var params = {
             "boardSeq": boardSeq, "type": type, "searchedWord": searchedWord
@@ -33,10 +44,11 @@ function get_board_list(data, list_type) {
             '<a href=' + address + '><h4 class="media-heading" id="title">' + title + ' </h4></a>' +
             '<p>' + date + ' <a href="#" class="link-reverse">' + nick_name + '</a></p>' +
             '<p>' + content + '</p></div></div>');
+
+
     }
 
     $('.title_image').children('img').attr('class', 'img-responsive center-block');
-
 };
 
 function set_address(params_) {

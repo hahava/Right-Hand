@@ -32,6 +32,7 @@ function write_content() {
     board_title = tagRemover(board_title);
 
     var data = {"boardTitle": board_title, "boardContent": board_content};
+    console.log(board_content);
 
 
     var writer_success = false;
