@@ -1,4 +1,4 @@
-package com.righthand.notice.boards;
+package com.righthand.notice.domain.boards;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter

@@ -20,9 +20,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -83,21 +87,26 @@ public class MembershipController {
 
     @ApiOperation(value = "아이디 중복확인")
     @PostMapping(value = "/check/id/dup")
-    public ResponseHandler<UserIdRes> checkIdDup(@Valid @RequestBody final UserIdReq _params) {
+    public ResponseHandler<UserIdRes> checkIdDup(@Valid @RequestBody final UserIdReq _params,
+                                                 BindingResult bindingResult) {
         final ResponseHandler<UserIdRes> result = new ResponseHandler<>();
-        Map<String, Object> params = ConvertUtil.convertObjectToMap(_params);
-        ReturnType rtn;
-        try {
-            UserIdRes userIdRes = new UserIdRes();
-            rtn = membershipService.checkUserIdDup(params);
-            if (rtn.equals(ReturnType.RTN_TYPE_OK)) userIdRes.setIsExist(false);
-            else userIdRes.setIsExist(true);
-            result.setData(userIdRes);
-            result.setReturnCode(rtn);
-        } catch (Exception e) {
-            logger.error("[ID DUP][Exception] " + e.toString());
-            result.setReturnCode(ReturnType.RTN_TYPE_MEMBERSSHIP_USERID_EXIST_NG);
+        if(!bindingResult.hasErrors()) {
+            Map<String, Object> params = ConvertUtil.convertObjectToMap(_params);
+            ReturnType rtn;
+            try {
+                UserIdRes userIdRes = new UserIdRes();
+                rtn = membershipService.checkUserIdDup(params);
+                if (rtn.equals(ReturnType.RTN_TYPE_OK)) userIdRes.setIsExist(false);
+                else userIdRes.setIsExist(true);
+                result.setData(userIdRes);
+                result.setReturnCode(rtn);
+            } catch (Exception e) {
+                logger.error("[ID DUP][Exception] " + e.toString());
+                result.setReturnCode(ReturnType.RTN_TYPE_MEMBERSSHIP_USERID_EXIST_NG);
+            }
+            return result;
         }
+        result.setReturnCode(ReturnType.RTN_TYPE_NO_DATA);
         return result;
     }
 
@@ -150,8 +159,10 @@ public class MembershipController {
 
     @ApiOperation("회원탈퇴")
     @PutMapping("/resign")
-    public ResponseHandler<?> resign(@ApiParam("탈퇴사유") @Valid @RequestBody(required = false) final ResignReq _params) {
+    public ResponseHandler<?> resign(@ApiParam("탈퇴사유") @Valid @RequestBody(required = false) final ResignReq _params,
+                                     HttpServletRequest request) {
         final ResponseHandler<?> res = new ResponseHandler<>();
+        RestTemplate restTemplate = new RestTemplate();
         Map<String, Object> params = ConvertUtil.convertObjectToMap(_params);
         ReturnType rtn;
         try {
@@ -159,12 +170,13 @@ public class MembershipController {
             int userSeq = sessionInfo.getUserSeq();
             params.put("userSeq", userSeq);
             rtn = membershipService.resign(params);
+            //TODO 세션 파기
+            request.getSession().invalidate();
             res.setReturnCode(rtn);
         } catch (Exception e) {
             logger.error("[Resign][Exception] " + e.toString());
             res.setReturnCode(ReturnType.RTN_TYPE_SESSION);
         }
-
         return res;
     }
 
@@ -172,54 +184,62 @@ public class MembershipController {
     // 흥 시른뒈~시른뒈시른뒈시른뒈~~~~
     @ApiOperation("닉네임 중복확인")
     @PostMapping("/check/nick/dup")
-    public ResponseHandler<?> checkNickDup(@Valid @RequestBody final NicknameReq _params) {
+    public ResponseHandler<?> checkNickDup(@Valid @RequestBody final NicknameReq _params, BindingResult bindingResult) {
         final ResponseHandler<?> res = new ResponseHandler<>();
-        Map<String, Object> params = ConvertUtil.convertObjectToMap(_params);
-        ReturnType rtn;
-        try {
-            int count = membershipService.checkNickname(params);
-            if (count == 0) {
-                res.setReturnCode(ReturnType.RTN_TYPE_OK);
-            } else {
-                res.setReturnCode(ReturnType.RTN_TYPE_MEMBERSHIP_NICKNAME_EXIST_NG);
+        if(!bindingResult.hasErrors()) {
+            Map<String, Object> params = ConvertUtil.convertObjectToMap(_params);
+            ReturnType rtn;
+            try {
+                int count = membershipService.checkNickname(params);
+                if (count == 0) {
+                    res.setReturnCode(ReturnType.RTN_TYPE_OK);
+                } else {
+                    res.setReturnCode(ReturnType.RTN_TYPE_MEMBERSHIP_NICKNAME_EXIST_NG);
+                }
+            } catch (Exception e) {
+                log.error("[checkNickname][Exception]" + e.toString());
+                res.setReturnCode(ReturnType.RTN_TYPE_NG);
             }
-        } catch (Exception e) {
-            log.error("[checkNickname][Exception]" + e.toString());
-            res.setReturnCode(ReturnType.RTN_TYPE_NG);
+            return res;
         }
+        res.setReturnCode(ReturnType.RTN_TYPE_NO_DATA);
         return res;
     }
 
     @ApiOperation("비밀번호 중복확인")
     @PostMapping("/check/pwd/dup")
-    public ResponseHandler<?> checkPwdDup(@Valid @RequestBody final PwdReq _params) {
+    public ResponseHandler<?> checkPwdDup(@Valid @RequestBody final PwdReq _params, BindingResult bindingResult) {
         final ResponseHandler<?> res = new ResponseHandler<>();
-        Map<String, Object> params = ConvertUtil.convertObjectToMap(_params);
-        MembershipInfo membershipInfo = null;
-        try {
-            membershipInfo = membershipService.currentSessionUserInfo();
-            if (membershipInfo == null) {
-                log.error("[SessionNoExist][Exception]");
+        if(!bindingResult.hasErrors()) {
+            Map<String, Object> params = ConvertUtil.convertObjectToMap(_params);
+            MembershipInfo membershipInfo = null;
+            try {
+                membershipInfo = membershipService.currentSessionUserInfo();
+                if (membershipInfo == null) {
+                    log.error("[SessionNoExist][Exception]");
+                    res.setReturnCode(ReturnType.RTN_TYPE_SESSION);
+                    return res;
+                }
+            } catch (Exception e) {
+                log.error("[GetSessionUserInfo][Exception]" + e.toString());
                 res.setReturnCode(ReturnType.RTN_TYPE_SESSION);
                 return res;
             }
-        } catch (Exception e) {
-            log.error("[GetSessionUserInfo][Exception]" + e.toString());
-            res.setReturnCode(ReturnType.RTN_TYPE_SESSION);
+
+            try {
+                String userPwd = membershipService.getUserPwd(membershipInfo.getUserSeq());
+                if (passwordHandler.matches((CharSequence) params.get("userPwd"), userPwd)) {
+                    res.setReturnCode(ReturnType.RTN_TYPE_OK);
+                } else {
+                    res.setReturnCode(ReturnType.RTN_TYPE_MEMBERSSHIP_PASSWORD_MATCH_NG);
+                }
+            } catch (Exception e) {
+                log.error("[GetUserPwd][Exception]" + e.toString());
+                res.setReturnCode(ReturnType.RTN_TYPE_MEMBERSSHIP_PASSWORD_NO_EXIST_NG);
+            }
             return res;
         }
-
-        try {
-            String userPwd = membershipService.getUserPwd(membershipInfo.getUserSeq());
-            if (passwordHandler.matches((CharSequence) params.get("userPwd"), userPwd)) {
-                res.setReturnCode(ReturnType.RTN_TYPE_OK);
-            } else {
-                res.setReturnCode(ReturnType.RTN_TYPE_MEMBERSSHIP_PASSWORD_MATCH_NG);
-            }
-        } catch (Exception e) {
-            log.error("[GetUserPwd][Exception]" + e.toString());
-            res.setReturnCode(ReturnType.RTN_TYPE_MEMBERSSHIP_PASSWORD_NO_EXIST_NG);
-        }
+        res.setReturnCode(ReturnType.RTN_TYPE_NO_DATA);
         return res;
     }
 

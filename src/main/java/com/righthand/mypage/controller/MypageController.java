@@ -89,40 +89,43 @@ public class MypageController {
 
     @ApiOperation("비밀번호 변경")
     @PutMapping("/pwd")
-    public ResponseHandler<?> editMyPassword(@ApiParam("비밀번호 정보") @Valid @RequestBody PasswordReq _params){
+    public ResponseHandler<?> editMyPassword(@ApiParam("비밀번호 정보") @Valid @RequestBody PasswordReq _params, BindingResult bindingResult){
         final ResponseHandler<Object> result = new ResponseHandler<>();
-        try {
-            MembershipInfo membershipInfo = membershipService.currentSessionUserInfo();
-            if(membershipInfo == null) {
-                result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
-            }else{
-                Map<String, Object> params = ConvertUtil.convertObjectToMap(_params);
+        if(!bindingResult.hasErrors()) {
+            try {
+                MembershipInfo membershipInfo = membershipService.currentSessionUserInfo();
+                if (membershipInfo == null) {
+                    result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
+                } else {
+                    Map<String, Object> params = ConvertUtil.convertObjectToMap(_params);
 
-                String newPwd = (String) params.get("newPwd");
-                String newPwdDup = (String) params.get("newPwdDup");
+                    String newPwd = (String) params.get("newPwd");
+                    String newPwdDup = (String) params.get("newPwdDup");
 
-                // 공백 여부
-                if(newPwd.equals("") || newPwdDup.equals("") || newPwd == null || newPwdDup == null) {
-                    result.setReturnCode(ReturnType.RTN_TYPE_MEMBERSSHIP_PASSWORD_EMPTY_NG);
-                    return result;
-                }
-                if(newPwd.equals(newPwdDup)) {
-                    try {
-                        //트랜잭션 업데이트 PWD
-                        result.setReturnCode(tbUserService.updateUserPwd(newPwd, newPwdDup, membershipInfo));
-                    }catch (Exception e){
-                        log.error("[UpdateUserPwd][Exception]" + e.toString());
+                    // 공백 여부
+                    if (newPwd.equals("") || newPwdDup.equals("") || newPwd == null || newPwdDup == null) {
+                        result.setReturnCode(ReturnType.RTN_TYPE_MEMBERSSHIP_PASSWORD_EMPTY_NG);
+                        return result;
                     }
-                }
-                else {
-                    result.setReturnCode(ReturnType.RTN_TYPE_MEMBERSSHIP_PASSWORD_MATCH_NG);
-                }
+                    if (newPwd.equals(newPwdDup)) {
+                        try {
+                            //트랜잭션 업데이트 PWD
+                            result.setReturnCode(tbUserService.updateUserPwd(newPwd, newPwdDup, membershipInfo));
+                        } catch (Exception e) {
+                            log.error("[UpdateUserPwd][Exception]" + e.toString());
+                        }
+                    } else {
+                        result.setReturnCode(ReturnType.RTN_TYPE_MEMBERSSHIP_PASSWORD_MATCH_NG);
+                    }
 
+                }
+            } catch (Exception e) {
+                log.error("[Session][Exception]" + e.toString());
+                result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
             }
-        } catch (Exception e) {
-            log.error("[Session][Exception]" + e.toString());
-            result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
+            return result;
         }
+        result.setReturnCode(ReturnType.RTN_TYPE_NO_DATA);
         return result;
     }
 }
