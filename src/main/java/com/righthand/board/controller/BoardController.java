@@ -71,6 +71,24 @@ public class BoardController {
             imgTexts.add(matcher.group());
             total++;
         }
+
+        /*
+        * 복사 붙여넣기를 통해 마크다운 형식으로 들어간 이미지 필터링
+        * */
+        for (int i = 0; i < total; i++) {
+            StringTokenizer stringTokenizer = new StringTokenizer(imgTexts.get(i), "(");
+            stringTokenizer.nextToken();
+            String secondText = stringTokenizer.nextToken();
+            String isHttps = secondText.substring(0, 8);
+            if(isHttps.equals("https://")) {
+                String imgUrl = secondText.replace(")", "");
+                text = text.replace(imgTexts.get(i), srcTag[0] + imgUrl + srcTag[1]);
+                imgTexts.remove(i);
+                total--;
+            }
+        }
+
+
         for (int i = 0; i < total; i++) {
             StringTokenizer firstSt = new StringTokenizer(imgTexts.get(i), ",");
             firstSt.nextToken();
@@ -103,10 +121,7 @@ public class BoardController {
         }
         return text;
     }
-    private String eliminateHtmlTags(String text){
-        final String regex = "<(\\\"[^\\\"]*\\\"|\\'[^\\']*\\'|[^\\'\\\">])*>";
-        return text.replaceAll(regex,"");
-    }
+
 
     @ApiOperation("게시물 리스트")
     @GetMapping("/board/list/{btype}")
@@ -239,10 +254,11 @@ public class BoardController {
                     System.out.println(returnType.getMessage());
                     if (returnType.equals(ReturnType.RTN_TYPE_OK)) {
                         Map<String, Object> params = ConvertUtil.convertObjectToMap(_params);
+                        System.out.println(params.get("boardContent"));
                         String changedText = storeImgsAndGetChangedText(params);
                         params.replace("boardContent", changedText);
                         // 제목에 html태그가 들어가는 것 제거
-                        params.replace("boardTitle", eliminateHtmlTags((String) params.get("boardTitle")));
+                        params.replace("boardTitle", ConvertUtil.eliminateHtmlTags((String) params.get("boardTitle")));
 
                         // 검색용 Column
 //                        params.put("boardContent4Searching", eliminateHtmlTags(changedText));
@@ -251,7 +267,10 @@ public class BoardController {
                             ReturnType rtn;
                             if (btype.equals("tech")) {
                                 try {
-                                    params.put("boardContent4Searching", eliminateHtmlTags(changedText));
+                                    //Tag를 지운 후에 MarkDown 또한 지운다.
+                                    changedText = ConvertUtil.eliminateHtmlTags(changedText);
+                                    changedText = ConvertUtil.eliminateMarkdown(changedText);
+                                    params.put("boardContent4Searching", changedText);
                                     rtn = boardService.insertBoardListTech(params);
                                     result.setReturnCode(rtn);
                                 } catch (Exception e) {
