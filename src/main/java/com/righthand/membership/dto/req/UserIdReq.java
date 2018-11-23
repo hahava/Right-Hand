@@ -3,6 +3,7 @@ package com.righthand.membership.dto.req;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiParam;
 import lombok.Data;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -12,6 +13,6 @@ import java.io.Serializable;
 public class UserIdReq implements Serializable {
 
     @ApiParam(value = "이메일", required = true)
-    @NotNull
+    @NotBlank
     private String userId;
 }

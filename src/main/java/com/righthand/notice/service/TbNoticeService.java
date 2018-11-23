@@ -1,7 +1,7 @@
 package com.righthand.notice.service;
 
-import com.righthand.notice.boards.TbNoticeBoard;
-import com.righthand.notice.boards.TbNoticeBoardRepository;
+import com.righthand.notice.domain.boards.TbNoticeBoard;
+import com.righthand.notice.domain.boards.TbNoticeBoardRepository;
 import com.righthand.notice.dto.req.BoardReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,10 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Service
 public class TbNoticeService {

@@ -1,7 +1,5 @@
 package com.righthand.notice.domain.boards;
 
-import com.righthand.notice.boards.TbNoticeBoard;
-import com.righthand.notice.boards.TbNoticeBoardRepository;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
