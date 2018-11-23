@@ -24,7 +24,7 @@ public class CustomLogoutHandler implements LogoutSuccessHandler {
                                 HttpServletResponse response, Authentication authentication)
             throws IOException, ServletException {
 
-        logger.info("Loout Success Handler");
+        logger.info("Logout Success Handler");
 
         response.setStatus(HttpServletResponse.SC_OK);
         PrintWriter writer = response.getWriter();
