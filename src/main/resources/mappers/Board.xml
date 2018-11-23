@@ -83,8 +83,8 @@
     </insert>
 
     <insert id="insertBoardListDev" parameterType="map" useGeneratedKeys="true" keyProperty="BOARD_SEQ">
-        INSERT INTO TB_DEVELOP_STORY_BOARD(BOARD_TITLE, BOARD_CONTENT, BOARD_DATE, BOARD_PROFILE_SEQ)
-        VALUES (#{boardTitle}, #{boardContent}, CURRENT_TIMESTAMP(6) , #{boardProfileSeq})
+        INSERT INTO TB_DEVELOP_STORY_BOARD(BOARD_TITLE, BOARD_CONTENT, BOARD_CONTENT4SEARCHING, BOARD_DATE, BOARD_PROFILE_SEQ)
+        VALUES (#{boardTitle}, #{boardContent}, #{boardContent4Searching}, CURRENT_TIMESTAMP(6) , #{boardProfileSeq})
     </insert>
 
 
