@@ -103,8 +103,8 @@ public class BoardController {
         }
         return text;
     }
-    private String eliminateImgTags(String text){
-        final String regex = "<img[^>]*src=[\\\"']?([^>\\\"']+)[\\\"']?[^>]*>";
+    private String eliminateHtmlTags(String text){
+        final String regex = "<(\\\"[^\\\"]*\\\"|\\'[^\\']*\\'|[^\\'\\\">])*>";
         return text.replaceAll(regex,"");
     }
 
@@ -241,6 +241,9 @@ public class BoardController {
                         Map<String, Object> params = ConvertUtil.convertObjectToMap(_params);
                         String changedText = storeImgsAndGetChangedText(params);
                         params.replace("boardContent", changedText);
+                        // 제목에 html태그가 들어가는 것 제거
+                        params.replace("boardTitle", eliminateHtmlTags((String) params.get("boardTitle")));
+
                         // 검색용 Column
 //                        params.put("boardContent4Searching", eliminateHtmlTags(changedText));
                         if (checkBoardType(btype) == true) {
@@ -248,7 +251,7 @@ public class BoardController {
                             ReturnType rtn;
                             if (btype.equals("tech")) {
                                 try {
-                                    params.put("boardContent4Searching", eliminateImgTags(changedText));
+                                    params.put("boardContent4Searching", eliminateHtmlTags(changedText));
                                     rtn = boardService.insertBoardListTech(params);
                                     result.setReturnCode(rtn);
                                 } catch (Exception e) {
