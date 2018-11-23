@@ -10,8 +10,6 @@ import com.righthand.common.GetClientProfile;
 import com.righthand.common.dto.res.ResponseHandler;
 import com.righthand.common.type.ReturnType;
 
-import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.data.repository.query.Param;
 import org.springframework.validation.BindingResult;
 
 import com.righthand.common.util.ConvertUtil;
@@ -48,8 +46,6 @@ public class BoardController {
 
     @Autowired
     BoardDao boardDao;
-
-    private BoardChecker boardChecker;
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -106,6 +102,10 @@ public class BoardController {
             }
         }
         return text;
+    }
+    private String eliminateImgTags(String text){
+        final String regex = "<img[^>]*src=[\\\"']?([^>\\\"']+)[\\\"']?[^>]*>";
+        return text.replaceAll(regex,"");
     }
 
     @ApiOperation("게시물 리스트")
@@ -235,18 +235,20 @@ public class BoardController {
                     result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
                     return result;
                 } else {
-                    ReturnType returnType = boardChecker.checkParam(_params);
+                    ReturnType returnType = BoardChecker.checkParam(_params);
                     System.out.println(returnType.getMessage());
                     if (returnType.equals(ReturnType.RTN_TYPE_OK)) {
                         Map<String, Object> params = ConvertUtil.convertObjectToMap(_params);
                         String changedText = storeImgsAndGetChangedText(params);
                         params.replace("boardContent", changedText);
-
+                        // 검색용 Column
+//                        params.put("boardContent4Searching", eliminateHtmlTags(changedText));
                         if (checkBoardType(btype) == true) {
                             params.put("boardProfileSeq", membershipInfo.getProfileSeq());
                             ReturnType rtn;
                             if (btype.equals("tech")) {
                                 try {
+                                    params.put("boardContent4Searching", eliminateImgTags(changedText));
                                     rtn = boardService.insertBoardListTech(params);
                                     result.setReturnCode(rtn);
                                 } catch (Exception e) {
