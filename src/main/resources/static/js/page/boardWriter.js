@@ -26,7 +26,15 @@ var type = getParameterByName('type') != null ? getParameterByName('type') : 'de
 
 function write_content() {
 
-    var data = {"boardTitle": $('#writer_title').val(), "boardContent": editor.getValue()};
+    var board_title = $('#writer_title').val();
+    var board_content = editor.getValue();
+
+    board_title = tagRemover(board_title);
+
+    var data = {"boardTitle": board_title, "boardContent": board_content};
+    console.log(board_content);
+
+
     var writer_success = false;
     $.ajax({
         type: 'POST',
@@ -47,6 +55,10 @@ function write_content() {
                     alert("등록되었습니다.");
                     writer_success = true;
                     break;
+                default:
+                    alert("등록 실패 입니다.");
+                    writer_success = false;
+
             }
         }, error: function (e) {
             alert("등록 실패입니다.");
@@ -68,3 +80,11 @@ var editor = new tui.Editor({
     height: '600px',
     hideModeSwitch: true
 });
+
+// <,> 등의 태그를 &lt, &gt 변환
+function tagRemover(tag) {
+    var text = tag;
+    text = text.replace(/\</g, "&lt");
+    text = text.replace(/\>/g, "&gt");
+    return text;
+}

@@ -51,7 +51,7 @@ function view_detail() {
             var nick_name = board_detail.NICK_NAME;
             var board_date = board_detail.BOARD_DATE.substr(0, 10);
 
-            $('#board_title').text(board_title);
+            $('#board_title').html(board_title);
             $('#board_date').text(board_date);
             $('#nick_name').text(nick_name);
 
@@ -89,32 +89,36 @@ function view_reply(reply_list) {
 
 // 댓글 작성
 function send_reply() {
+    var session = session_checker();
+    if (session == 1 || session == 103) {
+        var reply_success = false;
+        $.ajax({
+            async: false,
+            url: "http://localhost:8080/reply/" + type + "?boardSeq=" + Number(board_seq),
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            data: $('#reply_content').val(),
+            success: function (result) {
+                switch (result.code) {
+                    case 0 :
+                        reply_success = true;
+                        break;
+                    default :
+                        reply_success = false;
+                }
+            }, error: function (e) {
 
-    var reply_success = false;
-    $.ajax({
-        async: false,
-        url: "http://localhost:8080/reply/" + type + "?boardSeq=" + Number(board_seq),
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        data: $('#reply_content').val(),
-        success: function (result) {
-            switch (result.code) {
-                case 0 :
-                    reply_success = true;
-                    break;
-                default :
-                    reply_success = false;
             }
-        }, error: function (e) {
+        });
 
+        if (reply_success) {
+            window.location.href = "http://localhost:8080/board/content?boardSeq=" + board_seq + "&type=" + type;
         }
-    });
-
-    if (reply_success) {
-        window.location.href = "http://localhost:8080/board/content?boardSeq=" + board_seq + "&type=" + type;
+    } else {
+        alert("로그인 후 이용해주세요");
+        return;
     }
-
-};
+}
