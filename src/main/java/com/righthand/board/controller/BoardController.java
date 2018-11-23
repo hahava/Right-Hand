@@ -261,16 +261,14 @@ public class BoardController {
                         params.replace("boardTitle", ConvertUtil.eliminateHtmlTags((String) params.get("boardTitle")));
 
                         // 검색용 Column
-//                        params.put("boardContent4Searching", eliminateHtmlTags(changedText));
+                        //Tag를 지운 후에 MarkDown 또한 지운다.
+                        changedText = ConvertUtil.eliminateHtmlTags(changedText); changedText = ConvertUtil.eliminateMarkdown(changedText);
+                        params.put("boardContent4Searching", changedText);
                         if (checkBoardType(btype) == true) {
                             params.put("boardProfileSeq", membershipInfo.getProfileSeq());
                             ReturnType rtn;
                             if (btype.equals("tech")) {
                                 try {
-                                    //Tag를 지운 후에 MarkDown 또한 지운다.
-                                    changedText = ConvertUtil.eliminateHtmlTags(changedText);
-                                    changedText = ConvertUtil.eliminateMarkdown(changedText);
-                                    params.put("boardContent4Searching", changedText);
                                     rtn = boardService.insertBoardListTech(params);
                                     result.setReturnCode(rtn);
                                 } catch (Exception e) {
