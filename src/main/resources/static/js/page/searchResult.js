@@ -60,7 +60,6 @@ function search_result() {
 
             window.scrollTo(0, 0);
         }, error: function () {
-            //    TODO : 에러 페이지 제작해야 함
         }
     });
 
