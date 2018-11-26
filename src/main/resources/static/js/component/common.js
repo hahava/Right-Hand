@@ -36,3 +36,15 @@ function session_checker() {
     });
     return authorityLevel;
 }
+
+// 모달이 켜질 때, 엔터키를 이벤트에 따란 submit 버튼을 클릭하게 됨
+var captureEnterKey = $(document).keypress(function (e) {
+    // 로그인
+    if ($("#loginModal").hasClass('in') && (e.keycode == 13 || e.which == 13)) {
+        $('#login_submit').click();
+    }
+    // 회원가입
+    else if ($('#registerModal').hasClass('in') && (e.keycode == 13 || e.which == 13)) {
+        $('#register_submit').click();
+    }
+});
