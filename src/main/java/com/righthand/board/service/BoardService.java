@@ -29,4 +29,5 @@ public interface BoardService {
 
     List<Map<String, Object>> showNewBoard() throws Exception;
 
+    Map<String, Object> getMyBoardList(int profileSeq, int page) throws Exception;
 }

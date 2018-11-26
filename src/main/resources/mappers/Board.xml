@@ -41,6 +41,28 @@
       LIMIT #{start}, #{offset}
     </select>
 
+    <select id="getMyBoardList" resultType="hashMap" parameterType="com.righthand.board.dto.model.MyBoardVO">
+        SELECT BOARD_PROFILE_SEQ, BOARD_TYPE, BOARD_SEQ, BOARD_TITLE, BOARD_CONTENT, BOARD_DATE, NICK_NAME
+        FROM TB_PROFILE
+        JOIN
+        (SELECT BOARD_PROFILE_SEQ, BOARD_TYPE, BOARD_SEQ, BOARD_TITLE, BOARD_CONTENT, BOARD_DATE
+        FROM TB_IT_TECH_BOARD
+        UNION
+        SELECT BOARD_PROFILE_SEQ, BOARD_TYPE, BOARD_SEQ, BOARD_TITLE, BOARD_CONTENT, BOARD_DATE
+        FROM TB_DEVELOP_STORY_BOARD)
+        AS BOARD ON BOARD.BOARD_PROFILE_SEQ = TB_PROFILE.PROFILE_SEQ AND BOARD_PROFILE_SEQ = #{profileSeq}
+        ORDER BY BOARD_DATE DESC
+        LIMIT #{start}, #{offset}
+    </select>
+
+    <select id="countMyBoard" resultType="int" parameterType="int">
+        SELECT COUNT(*) FROM (SELECT * FROM TB_IT_TECH_BOARD
+        UNION
+        SELECT * FROM TB_DEVELOP_STORY_BOARD)
+        AS BOARD
+        WHERE BOARD_PROFILE_SEQ = #{profileSeq}
+    </select>
+
     <select id="searchedBoardListTech" resultType="hashMap" parameterType="com.righthand.board.dto.model.BoardSearchVO">
         SELECT BOARD_SEQ, BOARD_TYPE, BOARD_TITLE, BOARD_CONTENT, BOARD_DATE, NICK_NAME
         FROM
