@@ -6,12 +6,14 @@ import com.righthand.board.dto.model.BoardDetailVO;
 import com.righthand.board.dto.model.BoardSearchVO;
 
 
+import com.righthand.board.dto.model.MyBoardVO;
 import com.righthand.common.type.ReturnType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.HashMap;
@@ -187,6 +189,33 @@ public class BoardServiceImpl implements BoardService {
         }
         return newBoards;
     }
+
+    @Override
+    @Transactional
+    public Map<String, Object> getMyBoardList(int profileSeq, int page) throws Exception{
+        int start;
+        final int offset = 5;
+        MyBoardVO vo = new MyBoardVO();
+        List<Map<String, Object>> myBoard;
+        Map<String, Object> result = new HashMap<>();
+
+        start = (page - 1) * 5;
+        vo.setStart(start);
+        vo.setOffset(offset);
+        vo.setProfileSeq(profileSeq);
+
+        try {
+            int count = boardDao.countMyBoard(profileSeq);
+            myBoard = boardDao.getMyBoardList(vo);
+            result.put("total", count);
+            result.put("data", myBoard);
+        }
+        catch (Exception e) {
+            throw new Exception(e);
+        }
+        return result;
+    }
+
 
     @Override
     public ReturnType insertBoardListTech(Map input_data) throws Exception {
