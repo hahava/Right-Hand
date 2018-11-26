@@ -17,36 +17,36 @@
     </div>
 </div>
 <!--///SUBPAGE HEAD///-->
-<!--result information-->
-<section>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12 has-margin-bottom">
-                <h4><span id="keyword_info"></span> 에 대한 검색 결과 입니다.</h4>
-                <p>총 <span id="total_info" style="font-weight: bold"></span> 건이 검색 되었습니다.</p>
-                <hr>
-            </div>
-        </div>
-        <div class="row">
 
-            <div class="col-md-12 has-margin-bottom" id="board_list">
-                <!--Blog list-->
-            </div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 has-margin-bottom">
+            <h4><span id="keyword_info"></span> 에 대한 검색 결과 입니다.</h4>
+            <p>총 <span id="total_info" style="font-weight: bold"></span> 건이 검색 되었습니다.</p>
+            <hr>
         </div>
-        <!-- PAGINATION -->
-        <div class="pull-right">
-            <a class="btn btn-info">글작성</a>
-        </div>
-        <div class="text-center center-block">
-            <ul class="pagination" id="pageNation">
-                <!--pagenation-->
-            </ul>
-        </div>
-        <!--///END PAGINATION///-->
-
     </div>
-</section>
-<!--///END result information///-->
+
+    <div id="tempEditor" style="display: none"></div>
+    <div class="row">
+        <div class="col-md-12 has-margin-bottom" id="board_list">
+            <!--Blog list-->
+        </div>
+    </div>
+
+
+    <!-- PAGINATION -->
+    <div class="pull-right">
+        <a class="btn btn-info">글작성</a>
+    </div>
+    <div class="text-center center-block">
+        <ul class="pagination" id="pageNation">
+            <!--pagenation-->
+        </ul>
+    </div>
+    <!--///END PAGINATION///-->
+
+</div>
 
 <!--footer-->
 <footer th:replace="fragment/footer"/>

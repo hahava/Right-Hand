@@ -26,7 +26,7 @@
                 <div class="input-group input-group-lg">
                     <input id="search_text" type="text" class="form-control" placeholder="Search..">
                     <span class="input-group-btn">
-          <a class="btn btn-default" type="button" href="javascript:search_result()"><i
+          <a class="btn btn-default" type="button" href="javascript:getSearchResults()" id="search_input"><i
                   class="glyphicon glyphicon-search glyphicon-lg"></i></a>
           </span></div>
             </div>
@@ -41,7 +41,7 @@
 
         <!-- PAGINATION -->
         <div class="pull-right">
-            <a class="btn btn-info" href="javascript:board_writer();" id="board_writer">글작성</a>
+            <a class="btn btn-info" href="javascript:board_writer();" id="getBoardWriterPage()">글작성</a>
         </div>
         <div class="text-center center-block">
             <ul class="pagination" id="pageNation">

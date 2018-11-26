@@ -26,10 +26,15 @@ $(document).ready(function () {
 
 
     // 해당 페이지 게시글 요청
-    // TODO : session == 0코드 지울 것
     req_page(type, page);
     if ((session == 101 || session == 0) && type == 'notice') {
         $('#board_writer').remove();
+    }
+});
+// 검색하기 기능 엔터키 입력 가능
+$(document).keypress(function (e) {
+    if ($('#search_input').focusin() && e.keycode == 13 || e.which == 13) {
+        getSearchResults();
     }
 });
 /*현재 페이지 정보*/
@@ -68,25 +73,22 @@ function req_page(requested_type, requested_page) {
 
 }
 
-/*검색하기 기능*/
-function search_result() {
+/* 검색하기 기능 */
+function getSearchResults() {
     var keyword = $('#search_text').val();
+    if (keyword.length == 0) {
+        alert("빈칸으로 검색하실 수 없습니다.");
+        return false;
+    }
     location.href = "/board/search?type=" + type + "&page=1&searchedWord=" + keyword;
 }
 
-/*글작성*/
-function board_writer() {
+/* 글작성 */
+function getBoardWriterPage() {
     var session = session_checker();
     if (session == 1 || session == 103) {
         location.href = "/board/writer?type=" + type;
     } else {
         alert("로그인 후 이용해 주세요!");
     }
-}
-
-/*정규식*/
-function regex_content(text) {
-    var regex_text = text.replace(/\<img[^\<]*?(data=todos)*[^\<]\/\>/gi, '(사진)');
-    regex_text = regex_text.replace(/\#|\*|~|_|-|>/gi, '');
-    return regex_text;
 }
