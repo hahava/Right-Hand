@@ -3,6 +3,7 @@ package com.righthand.board.dao;
 import com.righthand.board.dto.model.BoardCountVO;
 import com.righthand.board.dto.model.BoardDetailVO;
 import com.righthand.board.dto.model.BoardSearchVO;
+import com.righthand.board.dto.model.MyBoardVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Repository;
@@ -40,5 +41,6 @@ public interface BoardDao {
     int selectSearchedCountListTech(BoardSearchVO vo);
     int selectSearchedCountListDev(BoardSearchVO vo);
 
-
+    List<Map<String, Object>> getMyBoardList(MyBoardVO vo);
+    int countMyBoard(int profileSeq);
 }

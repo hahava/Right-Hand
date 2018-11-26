@@ -1,5 +1,8 @@
 package com.righthand.mypage.controller;
 
+import com.righthand.board.controller.BoardController;
+import com.righthand.board.service.BoardService;
+import com.righthand.common.GetClientProfile;
 import com.righthand.common.dto.res.ResponseHandler;
 import com.righthand.common.type.ReturnType;
 import com.righthand.common.util.ConvertUtil;
@@ -12,14 +15,15 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -29,19 +33,63 @@ public class MypageController {
     private TbUserService tbUserService;
     private MembershipService membershipService;
 
+    @Autowired
+    private BoardService boardService;
+
+    @ApiOperation("내가 작성한 게시물")
+    @GetMapping("/myBoard")
+    public ResponseHandler<?> showBoardList(@ApiParam(value = "페이지 번호") @RequestParam int page) {
+        final ResponseHandler<Object> result = new ResponseHandler<>();
+        Map<String, Object> boardData = new HashMap<>();
+        Map<String, Object> myBoard;
+
+        try {
+            MembershipInfo membershipInfo = membershipService.currentSessionUserInfo();
+            if(membershipInfo == null) {
+                result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
+            }
+            else {
+                boardData.put("authority", membershipInfo.getAuthoritiesLevel());
+                boardData.put("nickname", membershipInfo.getNickname());
+                try {
+                    myBoard = boardService.getMyBoardList(membershipInfo.getProfileSeq(), page);
+                    if(myBoard == null || myBoard.isEmpty()) {
+                        boardData.put("total", 0);
+                        boardData.put("data", null);
+                        result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST);
+                        result.setData(boardData);
+                        return result;
+                    }
+                    boardData.put("data", myBoard.get("data"));
+                    boardData.put("total", myBoard.get("total"));
+                    result.setData(boardData);
+                    result.setReturnCode(ReturnType.RTN_TYPE_OK);
+                }
+                catch (Exception e) {
+                    result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST);
+                }
+            }
+        }
+        catch (Exception e) {
+            result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
+        }
+        return result;
+    }
+
     @ApiOperation("프로필 보기")
     @GetMapping("/profile")
     public ResponseHandler<?> showMyProfile() {
         final ResponseHandler<Object> result = new ResponseHandler<>();
-
+        MembershipInfo membershipInfo;
         try {
-            if(membershipService.currentSessionUserInfo() == null) {
+            membershipInfo = membershipService.currentSessionUserInfo();
+            if(membershipInfo == null) {
                 result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
             }
             else {
                 try {
                     log.info("[GetProfile][Start]");
-                    Map<String, Object> userInfo = tbUserService.findUserAndProfile();
+                    Map<String, Object> userInfo = tbUserService.findUserAndProfile(membershipInfo.getUserSeq());
                     result.setReturnCode(ReturnType.RTN_TYPE_OK);
                     result.setData(userInfo);
                 } catch (Exception e) {
