@@ -9,6 +9,8 @@ import com.righthand.mypage.domain.info.TbProfileRepository;
 import com.righthand.mypage.domain.info.TbUser;
 import com.righthand.mypage.domain.info.TbUserRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class TbUserService {
@@ -27,10 +30,10 @@ public class TbUserService {
     private ConfigValidationCheck configValidationCheck;
 
     @Transactional
-    public Map<String, Object> findUserAndProfile() throws Exception{
-        MembershipInfo membershipInfo = membershipService.currentSessionUserInfo();
+    @Cacheable(value = "findUserAndProfileCache", key = "#userSeq")
+    public Map<String, Object> findUserAndProfile(int userSeq) throws Exception{
         Map<String, Object> map = new HashMap<>();
-        TbProfile tbProfile = tbProfileRepository.findByProfileSeq((long) membershipInfo.getProfileSeq());
+        TbProfile tbProfile = tbProfileRepository.findByProfileSeq((long) userSeq);
         System.out.println("profileSeq : " + tbProfile.getProfileSeq());
         TbUser tbUser = tbUserRepository.getOne(tbProfile.getUserSeq());
         map.put("userId", tbUser.getUserId());
@@ -65,6 +68,7 @@ public class TbUserService {
         /*
         * Update Pwd!
         * */
+
         newPwd = passwordEncoder.encode(newPwd);
         tbUserRepository.updatePwd(newPwd, userSeq);
         return ReturnType.RTN_TYPE_OK;
