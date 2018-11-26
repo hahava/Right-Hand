@@ -19,6 +19,8 @@ $(document).ready(function () {
     setSubpageParam(title, '게시글작성');
     /*초기화*/
     $('#writer_title').attr('value', '');
+
+    imageFinder()
 });
 
 // 기본은 dev 게시판
@@ -87,4 +89,25 @@ function tagRemover(tag) {
     text = text.replace(/\</g, "&lt");
     text = text.replace(/\>/g, "&gt");
     return text;
+}
+
+function imageFinder() {
+    var mutationObserver = new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
+            if (mutation.addedNodes[0] != null) {
+                var tag = mutation.addedNodes[0];
+                if (tag.toString() == '[object HTMLImageElement]') {
+                    $('.tui-editor-contents').find('img').attr('class', 'img-responsive');
+                }
+            }
+        });
+    });
+    mutationObserver.observe(document.documentElement, {
+        attributes: true,
+        characterData: true,
+        childList: true,
+        subtree: true,
+        attributeOldValue: true,
+        characterDataOldValue: true
+    });
 }

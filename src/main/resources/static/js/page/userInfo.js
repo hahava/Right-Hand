@@ -6,6 +6,8 @@ $(document).ready(function () {
         setPwRequestView($('#user_info_list').attr('id'), req);
     } else {
         setUserInfoTable($('#user_info_list').attr('id'));
+        $('#btn_userInfoEdit').css('display', 'inline');
+        $('#btn_userPwEdit').css('display', 'inline');
     }
 });
 
@@ -216,3 +218,4 @@ function reqModifiedUserPw() {
         }
     });
 }
+

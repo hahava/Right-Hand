@@ -7,7 +7,7 @@
 </head>
 <!-- Navigation Bar -->
 <navbar th:replace="fragment/navbar"/>
-<body>
+<body onload="userInfoLoad()">
 
 <!--SUBPAGE HEAD-->
 <div class="subpage-head has-margin-bottom">
@@ -20,8 +20,14 @@
 
 <div class="container has-margin-bottom has-margin-top" style="height: 500px" id="container">
     <div id="user_info_list"></div>
+    <div class="row">
+        <Br>
+        <a style="margin-left: 10px;display: none" class="btn btn-primary pull-right" id="btn_userInfoEdit"
+           href="/user/info?userdata=editInfo">회원정보 수정</a>
+        <a style="display: none" class="btn btn-primary pull-right" id="btn_userPwEdit"
+           href="/user/info?userdata=editPw">비밀번호 수정</a>
+    </div>
 </div>
-
 
 <!--///END Board info///-->
 <footer th:replace="fragment/footer"/>
