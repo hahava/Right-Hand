@@ -23,6 +23,7 @@ import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -79,15 +80,16 @@ public class MypageController {
     @GetMapping("/profile")
     public ResponseHandler<?> showMyProfile() {
         final ResponseHandler<Object> result = new ResponseHandler<>();
-
+        MembershipInfo membershipInfo;
         try {
-            if(membershipService.currentSessionUserInfo() == null) {
+            membershipInfo = membershipService.currentSessionUserInfo();
+            if(membershipInfo == null) {
                 result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
             }
             else {
                 try {
                     log.info("[GetProfile][Start]");
-                    Map<String, Object> userInfo = tbUserService.findUserAndProfile();
+                    Map<String, Object> userInfo = tbUserService.findUserAndProfile(membershipInfo.getUserSeq());
                     result.setReturnCode(ReturnType.RTN_TYPE_OK);
                     result.setData(userInfo);
                 } catch (Exception e) {
