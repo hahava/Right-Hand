@@ -61,7 +61,7 @@ public class BoardController {
 
     private String storeImgsAndGetChangedText(Map<String, Object> params) {
         final String regex = "\\!\\[.*?\\)";
-        final String[] srcTag = {"<img src=\"", "\" data=todos/>"};
+        final String[] srcTag = {"<img class=\"img-responsive\" src=\"", "\" data=todos/>"};
         String text = (String) params.get("boardContent");
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(text);
