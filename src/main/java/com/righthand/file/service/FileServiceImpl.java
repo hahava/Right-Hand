@@ -13,9 +13,11 @@ import com.righthand.file.ftp.FtpHandler;
 import com.righthand.file.ftp.FtpHandlerImpl;
 import com.righthand.file.storage.StorigeHandler;
 import com.righthand.file.storage.StorigeHandlerImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,6 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 public class FileServiceImpl implements FileService{
 
@@ -44,6 +47,9 @@ public class FileServiceImpl implements FileService{
 
     @Autowired
     GetNowTime getNowTime;
+
+    @Autowired
+    Environment environment;
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -162,6 +168,17 @@ public class FileServiceImpl implements FileService{
 
         ArrayList<HashMap<String,Object>> resultMap = new ArrayList<HashMap<String,Object>>();
 
+        /*
+        * @author : Danny
+        * @date : 2018/11/27
+        * Comment : Profile에 따른 저장방식 결정
+        * */
+        String[] profiles = environment.getActiveProfiles();
+        for (String profile : profiles){
+            if(profile.equals("dev"))
+                configFile.setSelectSavingWay(3);
+                break;
+        }
         /////////////////////////////////////////////////////////////////////////////////
         // 1. 파라미터 확인
         int maxFilesCnt = configFile.getMaxFilesCnt();
@@ -235,8 +252,12 @@ public class FileServiceImpl implements FileService{
             case 3:
                 awsHandler = new AwsHandlerImpl();
 
-                // Connect
-                awsHandler.connect(configFile.getSettingAwsFileBucketName(), configFile.getSettingAwsAccessKey(),
+                /*
+                 * @author : Danny
+                 * @date : 2018/11/27
+                 * Comment : 파일이 아닌 이미지에 대한 용도의 버킷
+                 * */
+                awsHandler.connect(configFile.getSettingAwsImageBucketName(), configFile.getSettingAwsAccessKey(),
                         configFile.getSettingAwsSecretKey(), configFile.getRegions());
                 break;
         }
