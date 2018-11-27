@@ -37,6 +37,28 @@ spring:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
   resources:
     static-locations: classpath:/resources,classpath:/static/,classpath:/templates/static/,file:../Right-Hand-Imgs/
+#    static-locations: classpath:/resources,classpath:/static/,classpath:/templates/static/,file:../Right-Hand-Imgs/
+
+---
+
+spring:
+  profiles: local
+  datasource:
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    url: jdbc:log4jdbc:mysql://121.134.77.202:3408/RIGHT_HAND_DEV
+    username: todos
+    password: wkdqkr3266@
+    jpa:
+      show-sql: true
+      hibernate:
+        naming:
+          implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+          physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    resources:
+      static-locations: classpath:/resources,classpath:/static/,classpath:/templates/static/,file:../Right-Hand-Imgs/
+
+
+
 
 # test 환경
 ---
