@@ -28,7 +28,8 @@
         <div class="row">
             <div class="col-md-offset-8 col-md-4 blog-search has-margin-bottom">
                 <div class="input-group input-group-lg">
-                    <input id="search_text" type="text" class="form-control" placeholder="Search..">
+                    <input id="search_text" type="text" class="form-control" placeholder="Search.."
+                           onkeydown="checkEnter()">
                     <span class="input-group-btn">
           <a class="btn btn-default" type="button" href="javascript:getSearchResults()" id="search_input"><i
                   class="glyphicon glyphicon-search glyphicon-lg"></i></a>
