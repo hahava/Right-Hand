@@ -37,7 +37,6 @@ spring:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
   resources:
     static-locations: classpath:/resources,classpath:/static/,classpath:/templates/static/,file:../Right-Hand-Imgs/
-#    static-locations: classpath:/resources,classpath:/static/,classpath:/templates/static/,file:../Right-Hand-Imgs/
 
 ---
 
@@ -56,9 +55,6 @@ spring:
           physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     resources:
       static-locations: classpath:/resources,classpath:/static/,classpath:/templates/static/,file:../Right-Hand-Imgs/
-
-
-
 
 # test 환경
 ---
