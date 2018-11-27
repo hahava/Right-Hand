@@ -62,7 +62,7 @@ public class BoardController {
 
     private String storeImgsAndGetChangedText(Map<String, Object> params) {
         final String regex = "\\!\\[.*?\\)";
-        final String[] srcTag = {"<img class=\"img-responsive\" src=\"" + bucketUrl, "\" data=todos/>"};
+        final String[] srcTag = {"<img class=\"img-responsive\" src=\"", "\" data=todos/>"};
         String text = (String) params.get("boardContent");
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(text);
@@ -113,11 +113,11 @@ public class BoardController {
                 /**
                  * Right-Hand-Imgs가 resource Root 디렉토리이기 때문에 subFileUrl 적용
                  */
-                String newText = srcTag[0] + (String) urlMap.get(0).get("subFileUrl") + srcTag[1];
+                String newText = srcTag[0] +  bucketUrl + (String) urlMap.get(0).get("subFileUrl") + srcTag[1];
 //                String newText = srcTag[0] + (String) urlMap.get(0).get("fileUrl") + srcTag[1];
                 text = text.replace(imgTexts.get(i), newText);
             } catch (Exception e) {
-                System.out.println("[StoreFile][Exception] " + e.toString());
+                log.error("[StoreFile][Exception]" + e.toString());
             }
         }
         return text;
@@ -258,10 +258,8 @@ public class BoardController {
                     return result;
                 } else {
                     ReturnType returnType = BoardChecker.checkParam(_params);
-                    System.out.println(returnType.getMessage());
                     if (returnType.equals(ReturnType.RTN_TYPE_OK)) {
                         Map<String, Object> params = ConvertUtil.convertObjectToMap(_params);
-                        System.out.println(params.get("boardContent"));
                         String changedText = storeImgsAndGetChangedText(params);
                         params.replace("boardContent", changedText);
                         // 제목에 html태그가 들어가는 것 제거
