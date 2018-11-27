@@ -1,0 +1,63 @@
+<div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form id="register_form">
+                    <div class="form-group">
+                        <label for="register_id">아이디</label>
+                        <input type="email" class="form-control" maxlength="30" id="register_id" placeholder="Email">
+                        <p class="text-small" id="register_id_hint">이메일 형식으로 입력해주세요</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="register_nickname">닉네임</label>
+                        <input type="text" class="form-control" maxlength="20" id="register_nickname" placeholder="닉네임">
+                        <p class="text-small" id="register_nickname_hint"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="register_pw">비밀번호</label>
+                        <input type="password" class="form-control" id="register_pw" placeholder="Password"
+                               maxlength="16">
+                    </div>
+                    <div class="form-group">
+                        <label for="register_pw_check">비밀번호 확인</label>
+                        <input type="password" class="form-control" id="register_pw_check" placeholder="Password"
+                               maxlength="16">
+                        <p class="text-small" id="register_pw_hint">비밀번호는 대소문자와 특수문자를 포함합니다.</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="radio-inline"><input type="radio" name="gender" value="남자">남자</label>
+                        <label class="radio-inline"><input type="radio" name="gender" value="여자">여자</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="register_name">이름</label>
+                        <input type="text" class="form-control" placeholder="이름" id="register_name" maxlength="15"/>
+                        <p class="text-small" id="register_name_hint">이름을 입력해주세요</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="register_birth">출생년도</label>
+                        <input type="text" class=" form-control" id="register_birth" maxlength="4"
+                               onkeydown='return onlyNumber(event)' onkeyup='removeChar(event)'
+                               style='ime-mode:disabled;' placeholder="1980"/>
+                        <p class="text-small" id="register_birth_hint">출생년도를 입력해주세요</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="register_phone">전화번호</label>
+                        <input type="text" class="form-control" id="register_phone" placeholder="- 없이 입력"
+                               maxlength="11" onkeydown='return onlyNumber(event)' onkeyup='removeChar(event)'
+                               style='ime-mode:disabled;'>
+                        <p class="text-small" id="register_phone_hint">전화번호를 입력해주세요</p>
+                    </div>
+                    <div class="form-group">
+                        <a style="width: 100%;" class="btn btn-primary " id="register_submit" type="submit"
+                           onclick="return registerUser();">
+                            회원가입
+                        </a>
+                    </div>
+                    <div class="form-group">
+                        <button style="width: 100%;" class="btn btn-danger" data-dismiss="modal">취소</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
