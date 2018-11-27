@@ -49,6 +49,7 @@ public class BoardController {
     BoardDao boardDao;
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final String bucketUrl = "https://s3.ap-northeast-2.amazonaws.com/right-hand-dev";
 
     public boolean checkBoardType(String bType) {
         if (bType.equalsIgnoreCase("tech"))
@@ -61,7 +62,7 @@ public class BoardController {
 
     private String storeImgsAndGetChangedText(Map<String, Object> params) {
         final String regex = "\\!\\[.*?\\)";
-        final String[] srcTag = {"<img class=\"img-responsive\" src=\"", "\" data=todos/>"};
+        final String[] srcTag = {"<img class=\"img-responsive\" src=\"" + bucketUrl, "\" data=todos/>"};
         String text = (String) params.get("boardContent");
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(text);
@@ -108,7 +109,6 @@ public class BoardController {
             Map<String, Object> param = new HashMap<>();
             ArrayList<HashMap<String, Object>> urlMap = null;
             try {
-                System.out.println("[StoreFile]");
                 urlMap = fileService.storeFile(files, param);
                 /**
                  * Right-Hand-Imgs가 resource Root 디렉토리이기 때문에 subFileUrl 적용
