@@ -26,7 +26,7 @@ $(document).ready(function () {
 
 
     // 해당 페이지 게시글 요청
-    req_page(type, page);
+    req_page(page);
     if ((session == 101 || session == 0) && type == 'notice') {
         $('#board_writer').remove();
     }
@@ -46,10 +46,10 @@ var page = getParameterByName('page') != null ? getParameterByName('page') : 1;
 
 
 // 사용자가 원하는 페이지를 요청 번호에 맞춰 반환
-function req_page(requested_type, requested_page) {
+function req_page(requested_page) {
     $.ajax({
         type: 'GET',
-        url: "http://localhost:8080/board/list/" + requested_type + "?page=" + requested_page,
+        url: "http://localhost:8080/board/list/" + type + "?page=" + requested_page,
         dataType: 'json',
         success: function (result) {
 
@@ -62,9 +62,10 @@ function req_page(requested_type, requested_page) {
 
             var data = result.data;
             var total = data.total;
-            set_page(total, requested_page, requested_type);
-
             get_board_list(data, 'content');
+
+            var addr = {"default": "/board/list", "type": type};
+            set_page(data, page, addr);
             window.scrollTo(0, 0);
         },
         error: function () {

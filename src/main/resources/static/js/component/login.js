@@ -15,7 +15,7 @@ function login() {
         success: function (data) {
             loginOk = true;
             /* 로그인 성공 시 모달 종료 */
-            $('#submitBtn').attr('data-dismiss', 'modal');
+            $('#login_submit').attr('data-dismiss', 'modal');
             login_user();
         },
         error: function () {

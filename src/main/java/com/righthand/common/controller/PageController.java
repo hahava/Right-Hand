@@ -65,6 +65,11 @@ public class PageController {
         return "error/" + type;
     }
 
+    @ApiOperation(value = "사용자의 활동 내역 화면")
+    @GetMapping("/user/activity")
+    public String userActivity() {
+        return "userActivity";
+    }
 //    @RequestMapping("/")
 //    public String index(HttpServletRequest request) {
 //        return "/index.html";

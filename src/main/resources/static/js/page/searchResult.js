@@ -50,7 +50,9 @@ function search_result() {
 
             // 페이지 리스트를 초기화 한다.
             $('#pageNation').empty();
-            search_page(total, page, type, keyword);
+
+            var addr = {"default": "/board/search", "type": type, "searchedWord": keyword};
+            set_page(data, page, addr);
 
             $('#keyword_info').text(keyword);
             $('#total_info').text(total);
