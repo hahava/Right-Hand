@@ -91,16 +91,20 @@ function view_reply(reply_list) {
 function send_reply() {
     var session = session_checker();
     if (session == 1 || session == 103) {
+        var data = {
+            "boardSeq": Number(board_seq),
+            "content": $('#reply_content').val()
+        };
         var reply_success = false;
         $.ajax({
             async: false,
-            url: "http://localhost:8080/reply/" + type + "?boardSeq=" + Number(board_seq),
+            url: "http://localhost:8080/reply/" + type,
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            data: $('#reply_content').val(),
+            data: JSON.stringify(data),
             success: function (result) {
                 switch (result.code) {
                     case 0 :

@@ -9,17 +9,29 @@ $(document).ready(function () {
         $('#btn_userInfoEdit').css('display', 'inline');
         $('#btn_userPwEdit').css('display', 'inline');
     }
+
 });
 
+function setProfilePhoto(elem) {
+    var j_id = '#' + elem.id;
+    $(j_id).css('opacity', '0.3');
+}
+
+function setProfilePhotoOrigin(elem) {
+    var j_id = '#' + elem.id;
+    $(j_id).css('opacity', '1');
+}
 
 function setUserInfoTable(tag_id) {
     var tag = '#' + tag_id;
     $(tag).replaceWith(' <div class="row" id="' + tag_id + '">\n' +
-        '        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 has-margin-top">\n' +
-        '            <img data-src="holder.js/200x200" class="img-rounded" alt="200x200"\n' +
-        '                 src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2VlZSIvPjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjEwMCIgeT0iMTAwIiBzdHlsZT0iZmlsbDojYWFhO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1zaXplOjEzcHg7Zm9udC1mYW1pbHk6QXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWY7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+MjAweDIwMDwvdGV4dD48L3N2Zz4="\n' +
-        '                 style="width: 200px; height: 200px;">\n' +
-        '        </div>\n' +
+        '        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 has-margin-top">' +
+        '<div class="outer">\n' +
+        '     <img data-src="holder.js/200x200" class="img-responsive image" alt="200x200" id="user_profile_photo" \n' +
+        '                 src="https://via.placeholder.com/200"  style="width: 200px; height: 200px;">  <div class="middle">\n' +
+        '    <button class="text btn btn-sm btn-primary">수정</button>\n' +
+        '  </div></div></div>\n' +
+        '       \n' +
         '        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">\n' +
         '            <table class="table">\n' +
         '                <thead>\n' +
@@ -36,7 +48,7 @@ function setUserInfoTable(tag_id) {
         '                    <td><span class="pull-left" id="user_name"></span></td>\n' +
         '                </tr>\n' +
         '                <tr>\n' +
-        '                    <td>닉네임</td>\n' +
+        '                    <td style="vertical-align: middle">닉네임</td>\n' +
         '                    <td><span class="pull-left" id="user_nickname"></span></td>\n' +
         '                </tr>\n' +
         '                <tr>\n' +
@@ -44,7 +56,7 @@ function setUserInfoTable(tag_id) {
         '                    <td><span class="pull-left" id="user_gender"></span></td>\n' +
         '                </tr>\n' +
         '                <tr>\n' +
-        '                    <td>전화번호</td>\n' +
+        '                    <td style="vertical-align: middle">전화번호</td>\n' +
         '                    <td><span class="pull-left" id="user_tel"></span></td>\n' +
         '                </tr>\n' +
         '                <tr>\n' +
