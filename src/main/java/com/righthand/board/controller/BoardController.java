@@ -214,15 +214,21 @@ public class BoardController {
                     tempBoardData.put("data", tempBoardList);
                     result.setData(tempBoardData);
                     result.setReturnCode(ReturnType.RTN_TYPE_OK);
-//                    setResponseBoard(tempBoardData, tempBoardList, btype, result);
                 } catch (Exception e) {
                     logger.error("[SearchTechBoardList] [Exception " + e.toString());
                     result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST);
                 }
             } else if (btype.equals("dev")) {
                 try {
-                    tempBoardData.put("total", boardDao.selectSearchedCountListDev(vo));
                     tempBoardList = boardService.searchedBoardListDev(searchedWord, page);
+                    if(tempBoardList.isEmpty() || tempBoardList == null) {
+                        tempBoardData.put("data", null);
+                        tempBoardData.put("total", 0);
+                        result.setData(tempBoardData);
+                        result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST);
+                        return result;
+                    }
+                    tempBoardData.put("total", boardDao.selectSearchedCountListDev(vo));
                     tempBoardData.put("data", tempBoardList);
                     result.setData(tempBoardData);
                     result.setReturnCode(ReturnType.RTN_TYPE_OK);

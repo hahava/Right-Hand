@@ -13,12 +13,12 @@
 
     <select id="selectSearchedCountListTech" resultType="int" parameterType="com.righthand.board.dto.model.BoardSearchVO">
         SELECT COUNT(*) FROM TB_IT_TECH_BOARD
-        WHERE (BOARD_TITLE LIKE CONCAT('%',#{searchedWord},'%') OR BOARD_CONTENT LIKE CONCAT('%',#{searchedWord},'%'))
+        WHERE (BOARD_TITLE LIKE CONCAT('%',#{searchedWord},'%') OR BOARD_CONTENT4SEARCHING LIKE CONCAT('%',#{searchedWord},'%'))
     </select>
 
     <select id="selectSearchedCountListDev" resultType="int" parameterType="com.righthand.board.dto.model.BoardSearchVO">
         SELECT COUNT(*) FROM TB_DEVELOP_STORY_BOARD
-        WHERE (BOARD_TITLE LIKE CONCAT('%',#{searchedWord},'%') OR BOARD_CONTENT LIKE CONCAT('%',#{searchedWord},'%'))
+        WHERE (BOARD_TITLE LIKE CONCAT('%',#{searchedWord},'%') OR BOARD_CONTENT4SEARCHING LIKE CONCAT('%',#{searchedWord},'%'))
     </select>
 
     <select id="selectBoardListTech" resultType="hashMap" parameterType="com.righthand.board.dto.model.BoardCountVO">
@@ -78,7 +78,7 @@
         FROM
         TB_DEVELOP_STORY_BOARD AS BOARD
         , TB_PROFILE AS PROFILE
-        WHERE BOARD.BOARD_PROFILE_SEQ = PROFILE.PROFILE_SEQ AND (BOARD.BOARD_TITLE LIKE CONCAT('%',#{searchedWord},'%') OR BOARD_CONTENT LIKE CONCAT('%',#{searchedWord},'%'))
+        WHERE BOARD.BOARD_PROFILE_SEQ = PROFILE.PROFILE_SEQ AND (BOARD.BOARD_TITLE LIKE CONCAT('%',#{searchedWord},'%') OR BOARD_CONTENT4SEARCHING LIKE CONCAT('%',#{searchedWord},'%'))
         ORDER BY BOARD_DATE DESC
         LIMIT #{start}, #{offset}
     </select>
