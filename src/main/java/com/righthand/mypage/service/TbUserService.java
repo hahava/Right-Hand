@@ -33,9 +33,9 @@ public class TbUserService {
     @Cacheable(value = "findUserAndProfileCache", key = "#userSeq")
     public Map<String, Object> findUserAndProfile(int userSeq) throws Exception{
         Map<String, Object> map = new HashMap<>();
-        TbProfile tbProfile = tbProfileRepository.findByProfileSeq((long) userSeq);
+        TbProfile tbProfile = tbProfileRepository.findByUserSeq((long) userSeq);
         System.out.println("profileSeq : " + tbProfile.getProfileSeq());
-        TbUser tbUser = tbUserRepository.getOne(tbProfile.getUserSeq());
+        TbUser tbUser = tbUserRepository.getOne((long) userSeq);
         map.put("userId", tbUser.getUserId());
         map.put("nickname", tbProfile.getNickName());
         map.put("userName", tbProfile.getUserName());

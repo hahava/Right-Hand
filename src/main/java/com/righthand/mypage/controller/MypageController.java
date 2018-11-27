@@ -16,9 +16,11 @@ import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
@@ -32,9 +34,12 @@ public class MypageController {
 
     private TbUserService tbUserService;
     private MembershipService membershipService;
-
-    @Autowired
     private BoardService boardService;
+
+    @CacheEvict(value = "findUserAndProfileCache", key = "#{userSeq}")
+    public void refreshCache(int userSeq){
+        log.info("[Cache][Refresing] userSeq : " + userSeq);
+    }
 
     @ApiOperation("내가 작성한 게시물")
     @GetMapping("/myBoard")
@@ -89,6 +94,7 @@ public class MypageController {
             else {
                 try {
                     log.info("[GetProfile][Start]");
+                    System.out.println("getUserSeq : " + membershipInfo.getUserSeq());
                     Map<String, Object> userInfo = tbUserService.findUserAndProfile(membershipInfo.getUserSeq());
                     result.setReturnCode(ReturnType.RTN_TYPE_OK);
                     result.setData(userInfo);
@@ -176,4 +182,5 @@ public class MypageController {
         result.setReturnCode(ReturnType.RTN_TYPE_NO_DATA);
         return result;
     }
+
 }
