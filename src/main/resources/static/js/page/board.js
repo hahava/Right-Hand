@@ -4,6 +4,7 @@ $(document).ready(function () {
     var board_title;
     var board_info;
     var session = session_checker();
+    var authorityLevel = session.data.authorityLevel;
     switch (type) {
         case 'dev':
             $('#dev_story_nav').attr('class', 'active');
@@ -27,7 +28,7 @@ $(document).ready(function () {
 
     // 해당 페이지 게시글 요청
     req_page(page);
-    if ((session == 101 || session == 0) && type == 'notice') {
+    if ((authorityLevel == 101 || authorityLevel == 0) && type == 'notice') {
         $('#board_writer').remove();
     }
 });
@@ -84,7 +85,8 @@ function getSearchResults() {
 /* 글작성 */
 function getBoardWriterPage() {
     var session = session_checker();
-    if (session == 1 || session == 103) {
+    var authorityLevel = session.data.authorityLevel;
+    if (authorityLevel == 1 || authorityLevel == 103) {
         location.href = "/board/writer?type=" + type;
     } else {
         alert("로그인 후 이용해 주세요!");
