@@ -37,9 +37,11 @@ function login() {
 }
 
 function logout() {
+    var session = session_checker();
+    var userSeq = session.data.userSeq;
     $.ajax({
         type: 'GET',
-        url: "/api/logout",
+        url: "/api/logout?userSeq=" + userSeq,
         success: function (data) {
             alert("logout 되었습니다.");
             /* 로그아웃 성공후 페이지 새로고침 */

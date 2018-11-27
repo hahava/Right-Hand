@@ -90,7 +90,8 @@ function view_reply(reply_list) {
 // 댓글 작성
 function send_reply() {
     var session = session_checker();
-    if (session == 1 || session == 103) {
+    var authorityLevel = session.data.authorityLevel;
+    if (authorityLevel == 1 || authorityLevel == 103) {
         var data = {
             "boardSeq": Number(board_seq),
             "content": $('#reply_content').val()
