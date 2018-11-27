@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface TbProfileRepository extends JpaRepository<TbProfile, Long> {
 
-    TbProfile findByProfileSeq(long profileSeq);
+    TbProfile findByUserSeq(long profileSeq);
 
     @Modifying
     @Query(value = "UPDATE TB_PROFILE SET NICK_NAME = ?1, TEL = ?2 WHERE PROFILE_SEQ = ?3", nativeQuery = true)
