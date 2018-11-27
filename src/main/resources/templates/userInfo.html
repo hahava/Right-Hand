@@ -4,10 +4,52 @@
 <head>
     <init th:replace="fragment/head"/>
     <title>Hoi</title>
+
+    <style>
+        .outer {
+            position: relative;
+            width: 50%;
+        }
+
+        .image {
+            opacity: 1;
+            display: block;
+            width: 100%;
+            height: auto;
+            transition: .5s ease;
+            backface-visibility: hidden;
+        }
+
+        .middle {
+            transition: .5s ease;
+            opacity: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%)
+        }
+
+        .outer:hover .image {
+            opacity: 0.3;
+        }
+
+        .outer:hover .middle {
+            opacity: 1;
+        }
+
+        .text {
+        }
+    </style>
 </head>
+<!--Register Modal-->
+<RegisterModal th:replace="fragment/registerModal"/>
+<!--LoginModal-->
+<LoginModal th:replace="fragment/loginModal"/>
 <!-- Navigation Bar -->
-<navbar th:replace="fragment/navbar"/>
-<body onload="userInfoLoad()">
+<NavigationBar th:replace="fragment/navbar"/>
+
+<body>
 
 <!--SUBPAGE HEAD-->
 <div class="subpage-head has-margin-bottom">

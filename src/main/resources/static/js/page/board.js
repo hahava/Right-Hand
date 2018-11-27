@@ -31,12 +31,9 @@ $(document).ready(function () {
         $('#board_writer').remove();
     }
 });
-// 검색하기 기능 엔터키 입력 가능
-$(document).keypress(function (e) {
-    if ($('#search_input').focusin() && e.keycode == 13 || e.which == 13) {
-        getSearchResults();
-    }
-});
+
+//TODO: 검색 input 태그에서 엔터 키 입력 기능 필요
+
 /*현재 페이지 정보*/
 
 var type = getParameterByName('type');

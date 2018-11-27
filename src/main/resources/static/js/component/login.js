@@ -22,10 +22,11 @@ function login() {
             userPwd: user_login_pw
         },
         success: function (data) {
+            alert("로그인 되었습니다. 반갑습니다.");
             loginOk = true;
             /* 로그인 성공 시 모달 종료 */
             $('#login_submit').attr('data-dismiss', 'modal');
-            login_user();
+            loginUser();
         },
         error: function () {
             loginOk = false;
