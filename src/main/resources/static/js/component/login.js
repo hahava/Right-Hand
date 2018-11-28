@@ -26,6 +26,7 @@ function login() {
             loginOk = true;
             /* 로그인 성공 시 모달 종료 */
             $('#login_submit').attr('data-dismiss', 'modal');
+            location.reload();
             loginUser();
         },
         error: function () {
@@ -60,3 +61,36 @@ $(document).keypress(function (e) {
         $('#login_submit').click();
     }
 });
+
+
+function findUserId() {
+    if ($('#find_user_id').val().length == 0) {
+        alert("이메일을 입력해주세요");
+        return;
+    }
+    $.ajax({
+        type: "GET",
+        url: "/api/membership/email?userId=" + $('#find_user_id').val(),
+        success: function (data) {
+            alert("이메일을 확인해주세요!");
+        }, error: function (e) {
+        }
+    })
+}
+
+
+function findUserPw() {
+    if ($('#find_user_pw').val().length == 0) {
+        alert("이메일을 입력해주세요");
+        return;
+    }
+    $.ajax({
+        type: "GET",
+        url: "/api/membership/tempPwd?userId=" + $('#find_user_pw').val(),
+        success: function (data) {
+            alert("이메일을 확인해주세요!");
+        }, error: function (e) {
+        }
+    })
+
+}
