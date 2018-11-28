@@ -4,10 +4,10 @@ import com.righthand.common.VaildationCheck.ConfigValidationCheck;
 import com.righthand.common.type.ReturnType;
 import com.righthand.membership.service.MembershipInfo;
 import com.righthand.membership.service.MembershipService;
-import com.righthand.mypage.domain.info.TbProfile;
-import com.righthand.mypage.domain.info.TbProfileRepository;
-import com.righthand.mypage.domain.info.TbUser;
-import com.righthand.mypage.domain.info.TbUserRepository;
+import com.righthand.mypage.domain.profile.TbProfile;
+import com.righthand.mypage.domain.profile.TbProfileRepository;
+import com.righthand.mypage.domain.user.TbUser;
+import com.righthand.mypage.domain.user.TbUserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
@@ -29,7 +29,7 @@ public class TbUserService {
     private PasswordEncoder passwordEncoder;
     private ConfigValidationCheck configValidationCheck;
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Cacheable(value = "findUserAndProfileCache", key = "#userSeq")
     public Map<String, Object> findUserAndProfile(int userSeq) throws Exception{
         Map<String, Object> map = new HashMap<>();

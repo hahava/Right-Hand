@@ -17,13 +17,13 @@ public class TbNoticeService {
     @Autowired
     private TbNoticeBoardRepository tbNoticeBoardRepository;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Page<TbNoticeBoard> findAllBoardDateDesc(int page, int size) throws Exception{
         Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.DESC, "boardDate"));
         return tbNoticeBoardRepository.findAll(pageable);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Page<TbNoticeBoard> findAllBySearchedWord(String searchedWord, int page, int size) throws Exception{
         Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.DESC, "BOARD_DATE"));
         return tbNoticeBoardRepository.findByBoardTitleOrBoardContent(searchedWord, pageable);
@@ -34,7 +34,7 @@ public class TbNoticeService {
         return tbNoticeBoardRepository.save(boardReq.toEntity());
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public TbNoticeBoard findByBoardSeq(long boardSeq) throws Exception{
         return tbNoticeBoardRepository.findByBoardSeq(boardSeq);
     }
