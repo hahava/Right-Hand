@@ -72,10 +72,11 @@ function findUserId() {
         type: "GET",
         url: "/api/membership/email?userId=" + $('#find_user_id').val(),
         success: function (data) {
-            alert("이메일을 확인해주세요!");
+            /* 반드시 성공 응답코드가 날아온다. */
         }, error: function (e) {
         }
-    })
+    });
+    alert("이메일을 확인해주세요!");
 }
 
 
@@ -88,9 +89,9 @@ function findUserPw() {
         type: "GET",
         url: "/api/membership/tempPwd?userId=" + $('#find_user_pw').val(),
         success: function (data) {
-            alert("이메일을 확인해주세요!");
+            /* 반드시 성공 응답코드가 날아온다. */
         }, error: function (e) {
         }
     })
-
+    alert("이메일을 확인해주세요!");
 }
