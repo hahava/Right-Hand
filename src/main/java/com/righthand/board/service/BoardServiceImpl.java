@@ -191,7 +191,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public Map<String, Object> getMyBoardList(int profileSeq, int page) throws Exception{
         int start;
         final int offset = 5;
