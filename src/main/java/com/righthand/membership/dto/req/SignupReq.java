@@ -3,6 +3,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiParam;
 import lombok.Data;
+import org.springframework.lang.Nullable;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -43,6 +44,9 @@ public class SignupReq implements Serializable {
     @ApiModelProperty(value = "핸드폰번호", required = true)
     @NotNull
     private String tel;
+
+    @ApiModelProperty(value = "추천인 아이디")
+    private String recommender;
 
 //    @ApiModelProperty(value = "로그인 타입")
 //    private String loginType;

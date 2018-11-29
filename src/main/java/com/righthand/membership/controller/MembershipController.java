@@ -112,7 +112,7 @@ public class MembershipController {
 
     @ApiOperation(value = "회원가입")
     @PostMapping(value = "/signUp")
-    public ResponseHandler<?> signUp(@Valid @RequestBody(required = false) final SignupReq _params) {
+    public ResponseHandler<?> signUp(@Valid @RequestBody final SignupReq _params) {
         final ResponseHandler<?> result = new ResponseHandler<>();
         Map<String, Object> params = ConvertUtil.convertObjectToMap(_params);
         ReturnType rtn;
@@ -130,9 +130,8 @@ public class MembershipController {
 
     @PostMapping(value = "/check/live/session")
     @ApiOperation(value = "checkLiveSession", notes = "세션이 열려있는지 확인")
-    public ResponseHandler<SessionRes> checkLiveSession() {
-
-        ResponseHandler<SessionRes> result = new ResponseHandler<>();
+    public ResponseHandler<Object> checkLiveSession() {
+        ResponseHandler<Object> result = new ResponseHandler<>();
 
         try {
 
@@ -151,6 +150,9 @@ public class MembershipController {
             }
         } catch (Exception e) {
             logger.error("[checkLiveSession][Exception] " + e.toString());
+            Map<String, Object> session = new HashMap<>();
+            session.put("authorityLevel", 0);
+            result.setData(session);
             result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
         }
 

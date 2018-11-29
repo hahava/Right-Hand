@@ -22,4 +22,8 @@ public interface MembershipDao
     int checkNickname(Map userData);
     String getUserPwd(int userSeq);
     void changePwd(UserVO vo);
+    int getRecommender(Map userData);
+    void rewardRecommendProfile(Map userData);
+    void rewardRecommendPromote(Map userData);
+    int getUserSeq(String id);
 }
