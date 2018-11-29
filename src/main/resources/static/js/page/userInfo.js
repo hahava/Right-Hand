@@ -1,6 +1,10 @@
 $(document).ready(function () {
     var req = getParameterByName('userdata');
     $('#myPage').attr('class', 'active');
+
+    setNavActive("userInfo");
+    setSubPageText("userInfo");
+
     if (req === 'editInfo' || req === 'editPw') {
         /* 회원정보 또는 비밀번호 수정 시, 비밀번호 인증 요청 화면으로 변경 */
         setPwRequestView($('#user_info_list').attr('id'), req);

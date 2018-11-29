@@ -16,7 +16,8 @@ function registerUser() {
             "tel": $('#register_phone').val(),
             "userId": $('#register_id').val(),
             "userName": $('#register_name').val(),
-            "userPwd": $('#register_pw').val()
+            "userPwd": $('#register_pw').val(),
+            "recommender": $('#register_recommender').val()
         };
         $.ajax({
             type: 'POST',
@@ -272,7 +273,7 @@ $('#register_phone').on("focusout", function () {
     }
 });
 
-//출생년도
+// 출생년도
 $('#register_birth').focusout(function () {
 
     input_checker = userBirthChecker();
@@ -295,6 +296,23 @@ $('#register_birth').focusout(function () {
         return true;
     }
 });
+// 추천인
+$('#register_recommender').on("focusout", function () {
+    input_checker = recommenderChecker();
+
+    function recommenderChecker() {
+        var hasId = $.ajax({
+            type: "GET",
+            url: "",
+            data: "data",
+            success: function (result) {
+
+            }, error: function (e) {
+
+            }
+        })
+    }
+})
 
 function nullChecker() {
     if ($('#register_id').val().length == 0) {
