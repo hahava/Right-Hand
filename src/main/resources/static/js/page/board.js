@@ -1,30 +1,11 @@
 $(document).ready(function () {
 
 
-    var board_title;
-    var board_info;
     var session = sessionChecker();
     var authorityLevel = session.data.authorityLevel;
-    switch (type) {
-        case 'dev':
-            $('#dev_story_nav').attr('class', 'active');
-            board_title = "Dev. Story";
-            board_info = "개발 중 어려운 점이 있다면, 언제든지 무엇이든 질문하세요! 만약, 원하는 답변을 찾았다면 RHT로 고마움을 표현하세요.";
-            break;
-        case 'tech':
-            $('#it_story_nav').attr('class', 'active');
-            board_title = "IT. Story";
-            board_info = "공유하고싶은 지식과 정보를 작성해보세요. 또한, 소개하고 싶은 IT 제품에 대한 글을 남겨보세요.";
-            break;
-        case 'notice':
-            $('#notice_nav').attr('class', 'active');
-            board_title = "공지사항";
-            board_info = "공지사항 입니다.";
-            break;
-    }
 
-    setSubpageParam(board_title, board_info);
-
+    setNavActive(type);
+    setSubPageText(type);
 
     // 해당 페이지 게시글 요청
     req_page(page);
@@ -32,7 +13,6 @@ $(document).ready(function () {
         $('#board_writer').remove();
     }
 });
-
 
 
 /*현재 페이지 정보*/

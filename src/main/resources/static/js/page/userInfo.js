@@ -1,13 +1,19 @@
 $(document).ready(function () {
+
+    setNavActive("userInfo");
+    setSubPageText("userInfo");
+
     var req = getParameterByName('userdata');
-    $('#myPage').attr('class', 'active');
+
     if (req === 'editInfo' || req === 'editPw') {
         /* 회원정보 또는 비밀번호 수정 시, 비밀번호 인증 요청 화면으로 변경 */
         setPwRequestView($('#user_info_list').attr('id'), req);
     } else {
-        setUserInfoTable($('#user_info_list').attr('id'));
         $('#btn_userInfoEdit').css('display', 'inline');
         $('#btn_userPwEdit').css('display', 'inline');
+        setUserInfoTableView($('#user_info_list').attr('id'));
+        var userInfoData = getUserInfo();
+        setUserInfoTableData(userInfoData);
     }
 
 });
@@ -22,7 +28,7 @@ function setProfilePhotoOrigin(elem) {
     $(j_id).css('opacity', '1');
 }
 
-function setUserInfoTable(tag_id) {
+function setUserInfoTableView(tag_id) {
     var tag = '#' + tag_id;
     $(tag).replaceWith(' <div class="row" id="' + tag_id + '">\n' +
         '        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 has-margin-top">' +
@@ -67,7 +73,6 @@ function setUserInfoTable(tag_id) {
         '            </table>\n' +
         '        </div>\n' +
         '    </div>');
-    getUserInfo();
 }
 
 function setPwRequestView(tag_id, next_page) {
@@ -91,7 +96,7 @@ function setPwRequestView(tag_id, next_page) {
 }
 
 function getUserInfo() {
-    console.log("getUserInfo()");
+    var userInfoData;
     $.ajax({
         type: "GET",
         url: "http://localhost:8080/profile",
@@ -100,31 +105,32 @@ function getUserInfo() {
         success: function (result) {
             console.log(result.code);
             if (result.code == 0) {
-                var data = result.data;
-                var gender = data.gender;
-                var birthYear = data.birthYear;
-                var nickName = data.nickname;
-                var tel = data.tel;
-                var userName = data.userName;
-                var userId = data.userId;
-
-                $('#user_gender').text(gender);
-                $('#user_birth').text(birthYear);
-                $('#user_name').text(userName);
-                $('#user_nickname').text(nickName);
-                $('#user_id').text(userId);
-                $('#user_tel').text(tel);
+                userInfoData = result.data;
             } else {
                 alert("로그인을 해주세요");
                 location.href = "/";
             }
-
         }, error: function () {
-
         }
     });
+    return userInfoData;
 }
 
+function setUserInfoTableData(data) {
+    var gender = data.gender;
+    var birthYear = data.birthYear;
+    var nickName = data.nickname;
+    var tel = data.tel;
+    var userName = data.userName;
+    var userId = data.userId;
+
+    $('#user_gender').text(gender);
+    $('#user_birth').text(birthYear);
+    $('#user_name').text(userName);
+    $('#user_nickname').text(nickName);
+    $('#user_id').text(userId);
+    $('#user_tel').text(tel);
+}
 
 function checkPwDup(next_page) {
     var userPwd = $('#userPwd').val();
@@ -145,7 +151,7 @@ function checkPwDup(next_page) {
             if (result.code === 0) {
                 switch (next_page) {
                     case 'editInfo':
-                        setUserInfoTable($('#user_info_list').attr('id'));
+                        setUserInfoTableView($('#user_info_list').attr('id'));
                         var user_tel = $('#user_tel').text();
                         var user_nickname = $('#user_nickname').text();
                         /* 수정가능한 항목들을 input 태그로 변경 */
@@ -154,7 +160,7 @@ function checkPwDup(next_page) {
                         $('#container').append('<br><button class="btn btn-primary pull-right" onclick="reqModifiedUserInfo()">수정</button>');
                         break;
                     case 'editPw':
-                        setUserInfoTable($('#user_info_list').attr('id'));
+                        setUserInfoTableView($('#user_info_list').attr('id'));
                         $('#user_info_list').append(
                             '<form class="form-horizontal">' +
                             '<div class="form-group">' +

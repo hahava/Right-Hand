@@ -1,6 +1,5 @@
 $(document).ready(function () {
-    var req = getParameterByName('userdata');
-    $('#myPage').attr('class', 'active');
+    setNavActive('userInfo');
     getUserInfo();
 });
 

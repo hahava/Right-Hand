@@ -6,22 +6,7 @@ var board_seq = getParameterByName('boardSeq');
 
 $(document).ready(function () {
 
-    var board_title;
-    var board_info;
-
-    switch (type) {
-        case 'dev':
-            $('#dev_story_nav').attr('class', 'active');
-            break;
-        case 'tech':
-            $('#it_story_nav').attr('class', 'active');
-            break;
-        case 'notice':
-            $('#notice_nav').attr('class', 'active');
-            break;
-    }
-
-
+    setNavActive(type);
     view_detail();
 
 });

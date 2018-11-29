@@ -68,6 +68,7 @@ function findUserId() {
         alert("이메일을 입력해주세요");
         return;
     }
+    alert("메일이 전송되었습니다!");
     $.ajax({
         type: "GET",
         url: "/api/membership/email?userId=" + $('#find_user_id').val(),
@@ -76,7 +77,6 @@ function findUserId() {
         }, error: function (e) {
         }
     });
-    alert("이메일을 확인해주세요!");
 }
 
 
@@ -85,6 +85,7 @@ function findUserPw() {
         alert("이메일을 입력해주세요");
         return;
     }
+    alert("메일이 전송되었습니다.!");
     $.ajax({
         type: "GET",
         url: "/api/membership/tempPwd?userId=" + $('#find_user_pw').val(),
@@ -93,5 +94,4 @@ function findUserPw() {
         }, error: function (e) {
         }
     })
-    alert("이메일을 확인해주세요!");
 }
