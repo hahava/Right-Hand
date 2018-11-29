@@ -80,8 +80,8 @@ function setPwRequestView(tag_id, next_page) {
         '                </div>\n' +
         '                <div class="panel-body">\n' +
         '                    <div class="form-group">\n' +
-        '                        <input type="password" class="form-control" id="userPwd"/><br/>\n' +
-        '                        <button class="btn btn-primary btn-sm pull-right" onclick="checkPwDup(\'' + next_page + '\')">확인</button>\n' +
+        '                        <input type="password" class="form-control" id="userPwd" onkeypress="checkEnter(this,event)"/><br/>\n' +
+        '                        <button class="btn btn-primary btn-sm pull-right"id="checkPwDup" onclick="checkPwDup(\'' + next_page + '\')">확인</button>\n' +
         '                    </div>\n' +
         '                </div>\n' +
         '            </div>\n' +
@@ -129,6 +129,10 @@ function getUserInfo() {
 function checkPwDup(next_page) {
     var userPwd = $('#userPwd').val();
     var data = {"userPwd": userPwd};
+    if (userPwd == null) {
+        alert("빈칸으로 입력할 수 없습니다.");
+        return;
+    }
     $.ajax({
         type: 'POST',
         url: "/api/membership/check/pwd/dup",
@@ -171,6 +175,8 @@ function checkPwDup(next_page) {
 
                     /* 패스워드가 필요한 부분이기에 default 없음 */
                 }
+            } else {
+                alert("암호가 틀렸습니다.");
             }
         }, error: function (e) {
         }

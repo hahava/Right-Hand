@@ -63,7 +63,6 @@ function view_detail() {
             console.log(type + board_seq);
 
         }, error: function () {
-            //    TODO : 에러 페이지 제작해야 함
         }
     });
 }
@@ -87,15 +86,30 @@ function view_reply(reply_list) {
     }
 }
 
+// <,> 등의 태그를 &lt, &gt 변환
+function tagRemover(tag) {
+    var text = tag;
+    text = text.replace(/\</g, "&lt");
+    text = text.replace(/\>/g, "&gt");
+    return text;
+}
+
 // 댓글 작성
 function send_reply() {
     var session = sessionChecker();
     var authorityLevel = session.data.authorityLevel;
+    if ($('#reply_content').val().length < 1) {
+        alert("빈칸으로 제출할수 없습니다.");
+    }
+    var content = $('#reply_content').val();
+    content = tagRemover(content);
     if (authorityLevel == 1 || authorityLevel == 103) {
         var data = {
             "boardSeq": Number(board_seq),
-            "content": $('#reply_content').val()
+            "content": content
         };
+
+
         var reply_success = false;
         $.ajax({
             async: false,
