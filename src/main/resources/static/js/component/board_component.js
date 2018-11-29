@@ -1,4 +1,4 @@
-function get_board_list(data, list_type) {
+function setBoardList(data, list_type) {
     var searchedWord = data.searchedWord;
     var board_list = data.data;
     for (var i = 0; i < board_list.length; i++) {
@@ -7,6 +7,11 @@ function get_board_list(data, list_type) {
         var title = board_list[i].BOARD_TITLE;
         var content = board_list[i].BOARD_CONTENT;
         var first_image = content.match(/\<img[^\<]*?(data=todos)*[^\<]\/\>/i) != null ? content.match(/\<img[^\<]*?(data=todos)*[^\<]\/\>/i) : ' ';
+        first_image = first_image[0];
+        if (first_image.length < 5) {
+            first_image = '<img class="img-responsive center-block" src="https://via.placeholder.com/160">';
+        }
+
         $('#tempEditor').empty();
         var editor = new tui.Editor.factory({
             el: document.getElementById('tempEditor'),
@@ -38,24 +43,24 @@ function get_board_list(data, list_type) {
 
 
         $('#board_list').append('  <div class="row has-margin-bottom">' +
-            '<div class="col-md-12 col-sm-12">' + '<div class="col-md-2 col-sm-2 title_image">' + first_image[0] + '</div>' +
+            '<div class="col-md-12 col-sm-12">' + '<div class="col-md-2 col-sm-2 title_image">' + first_image + '</div>' +
             '<div class="col-md-8 col-sm-8 bulletin" style="text-overflow: ellipsis;  overflow : hidden;">' +
             '<a href=' + address + '><h4 class="media-heading" id="title">' + title + ' </h4></a>' +
             '<p>' + date + ' <a href="#" class="link-reverse">' + nick_name + '</a></p>' +
             '<p>' + content + '</p></div></div>');
 
+        $('#board_list').css('min-height', '300px');
 
     }
 
     $('.title_image').children('img').attr('class', 'img-responsive center-block');
-};
+
+}
 
 function set_address(params_) {
     var href = "";
     for (var key in params_) {
-        console.log(params_[key]);
         if (typeof params_[key] !== "undefined") {
-            console.log(params_[key]);
             if (href.length < 1) {
                 href = href + key + "=" + params_[key];
             } else {
@@ -64,7 +69,7 @@ function set_address(params_) {
         }
     }
     return href;
-};
+}
 
 /*정규식*/
 function regex_content(text) {

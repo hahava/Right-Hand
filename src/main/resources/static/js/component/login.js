@@ -26,6 +26,7 @@ function login() {
             loginOk = true;
             /* 로그인 성공 시 모달 종료 */
             $('#login_submit').attr('data-dismiss', 'modal');
+            location.reload();
             loginUser();
         },
         error: function () {
@@ -37,7 +38,7 @@ function login() {
 }
 
 function logout() {
-    var session = session_checker();
+    var session = sessionChecker();
     var userSeq = session.data.userSeq;
     $.ajax({
         type: 'GET',
@@ -60,3 +61,37 @@ $(document).keypress(function (e) {
         $('#login_submit').click();
     }
 });
+
+
+function findUserId() {
+    if ($('#find_user_id').val().length == 0) {
+        alert("이메일을 입력해주세요");
+        return;
+    }
+    $.ajax({
+        type: "GET",
+        url: "/api/membership/email?userId=" + $('#find_user_id').val(),
+        success: function (data) {
+            /* 반드시 성공 응답코드가 날아온다. */
+        }, error: function (e) {
+        }
+    });
+    alert("이메일을 확인해주세요!");
+}
+
+
+function findUserPw() {
+    if ($('#find_user_pw').val().length == 0) {
+        alert("이메일을 입력해주세요");
+        return;
+    }
+    $.ajax({
+        type: "GET",
+        url: "/api/membership/tempPwd?userId=" + $('#find_user_pw').val(),
+        success: function (data) {
+            /* 반드시 성공 응답코드가 날아온다. */
+        }, error: function (e) {
+        }
+    })
+    alert("이메일을 확인해주세요!");
+}

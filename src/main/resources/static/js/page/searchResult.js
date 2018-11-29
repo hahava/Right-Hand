@@ -30,11 +30,11 @@ $(document).ready(function () {
             break;
     }
     setSubpageParam(board_title, board_info);
-    search_result();
+    searchResult();
 });
 
 
-function search_result() {
+function searchResult() {
     $.ajax({
         type: 'GET',
         url: "http://localhost:8080/board/list/searched/" + type + "?searchedWord=" + keyword + "&page=" + page,
@@ -58,7 +58,7 @@ function search_result() {
             $('#total_info').text(total);
 
 
-            get_board_list(data, 'content');
+            setBoardList(data, 'content');
 
             window.scrollTo(0, 0);
         }, error: function () {

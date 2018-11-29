@@ -3,7 +3,7 @@ $(document).ready(function () {
 
     var board_title;
     var board_info;
-    var session = session_checker();
+    var session = sessionChecker();
     var authorityLevel = session.data.authorityLevel;
     switch (type) {
         case 'dev':
@@ -33,7 +33,7 @@ $(document).ready(function () {
     }
 });
 
-//TODO: 검색 input 태그에서 엔터 키 입력 기능 필요
+
 
 /*현재 페이지 정보*/
 
@@ -60,7 +60,7 @@ function req_page(requested_page) {
 
             var data = result.data;
             var total = data.total;
-            get_board_list(data, 'content');
+            setBoardList(data, 'content');
 
             var addr = {"default": "/board/list", "type": type};
             set_page(data, page, addr);
@@ -74,7 +74,7 @@ function req_page(requested_page) {
 
 /* 검색하기 기능 */
 function getSearchResults() {
-    var keyword = $('#search_text').val();
+    var keyword = $('#board_search').val();
     if (keyword.length == 0) {
         alert("빈칸으로 검색하실 수 없습니다.");
         return false;
@@ -84,7 +84,7 @@ function getSearchResults() {
 
 /* 글작성 */
 function getBoardWriterPage() {
-    var session = session_checker();
+    var session = sessionChecker();
     var authorityLevel = session.data.authorityLevel;
     if (authorityLevel == 1 || authorityLevel == 103) {
         location.href = "/board/writer?type=" + type;

@@ -11,6 +11,13 @@
                         <label for="user_login_pw">비밀번호</label>
                         <input type="password" class="form-control" id="user_login_pw" placeholder="Password">
                     </div>
+                    <div class="form-group has-margin-bottom">
+                        <u class="text-small pull-left"><a data-dismiss="modal" data-toggle="modal"
+                                                           data-target="#findIdModal" href="#findIdModal">아이디
+                            찾기</a></u>
+                        <u class="text-small pull-right"><a data-dismiss="modal" data-toggle="modal" href="#findPwModal"
+                                                            data-target="#findPwModal">비밀번호 찾기</a></u>
+                    </div>
                     <div class="form-group">
                         <!--반드시 a 타입으로 해야 모달이 안 닫힌다.-->
                         <a style="width: 100%;" class="btn btn-primary " id="login_submit" type="submit"
@@ -20,6 +27,57 @@
                     </div>
                     <div class="form-group">
                         <button style="width: 100%;" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="findIdModal" tabindex="-1" role="dialog" aria-labelledby="findPwModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <p class="lead">회원가입시 입력한 아이디를 입력해주세요</p>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="find_user_id">이메일 주소</label>
+                        <input type="email" class="form-control" id="find_user_id" placeholder="Email">
+                    </div>
+                    <div class="form-group">
+                        <!--반드시 a 타입으로 해야 모달이 안 닫힌다.-->
+                        <a style="width: 100%;" class="btn btn-primary " id="find_user_id_btn" type="submit"
+                           onclick="return findUserId();">
+                            아이디 찾기
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="findPwModal" tabindex="-1" role="dialog" aria-labelledby="findRegisterModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <p class="lead">회원가입시 입력한 아이디를 입력해주세요</p>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="find_user_pw">이메일 주소</label>
+                        <input type="email" class="form-control" id="find_user_pw" placeholder="Email">
+                    </div>
+                    <div class="form-group">
+                        <!--반드시 a 타입으로 해야 모달이 안 닫힌다.-->
+                        <a style="width: 100%;" class="btn btn-primary " id="find_user_pw_btn" type="submit"
+                           onclick="return findUserPw();">
+                            비밀번호 찾기
+                        </a>
                     </div>
                 </form>
             </div>

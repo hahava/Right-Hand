@@ -63,7 +63,6 @@ function view_detail() {
             console.log(type + board_seq);
 
         }, error: function () {
-            //    TODO : 에러 페이지 제작해야 함
         }
     });
 }
@@ -77,9 +76,9 @@ function view_reply(reply_list) {
         var reply_date = reply_list[temp].REPLY_DATE;
         var reply_nickName = reply_list[temp].NICK_NAME;
 
-        $('#reply_list').append('<div class="media has-margin-bottom"><a class="pull-left" href="#">' +
-            ' <img class="media-object" alt="avatar" src="images/avatar-1.jpg"> </a>' +
-            '<div class="media-body"><h6 class="media-heading">' + reply_nickName + '</h6>' +
+        $('#reply_list').append('<div class="media has-margin-bottom"><a class="pull-left" href="#none">' +
+            ' <img class="media-object" alt="avatar" src="https://via.placeholder.com/128"> </a>' +
+            '<div class="media-body"><h6 class="media-heading"><a class="link-reverse" href="#none">' + reply_nickName + '</a></h6>' +
             ' <p class="text-muted" id="reply_date">' + reply_date.substr(0, 10) + '</p>' +
             reply_content + '  </div>'
         );
@@ -87,15 +86,30 @@ function view_reply(reply_list) {
     }
 }
 
+// <,> 등의 태그를 &lt, &gt 변환
+function tagRemover(tag) {
+    var text = tag;
+    text = text.replace(/\</g, "&lt");
+    text = text.replace(/\>/g, "&gt");
+    return text;
+}
+
 // 댓글 작성
 function send_reply() {
-    var session = session_checker();
+    var session = sessionChecker();
     var authorityLevel = session.data.authorityLevel;
+    if ($('#reply_content').val().length < 1) {
+        alert("빈칸으로 제출할수 없습니다.");
+    }
+    var content = $('#reply_content').val();
+    content = tagRemover(content);
     if (authorityLevel == 1 || authorityLevel == 103) {
         var data = {
             "boardSeq": Number(board_seq),
-            "content": $('#reply_content').val()
+            "content": content
         };
+
+
         var reply_success = false;
         $.ajax({
             async: false,
