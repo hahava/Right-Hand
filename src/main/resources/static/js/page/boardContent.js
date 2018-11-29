@@ -76,9 +76,9 @@ function view_reply(reply_list) {
         var reply_date = reply_list[temp].REPLY_DATE;
         var reply_nickName = reply_list[temp].NICK_NAME;
 
-        $('#reply_list').append('<div class="media has-margin-bottom"><a class="pull-left" href="#">' +
-            ' <img class="media-object" alt="avatar" src="images/avatar-1.jpg"> </a>' +
-            '<div class="media-body"><h6 class="media-heading">' + reply_nickName + '</h6>' +
+        $('#reply_list').append('<div class="media has-margin-bottom"><a class="pull-left" href="#none">' +
+            ' <img class="media-object" alt="avatar" src="https://via.placeholder.com/128"> </a>' +
+            '<div class="media-body"><h6 class="media-heading"><a class="link-reverse" href="#none">' + reply_nickName + '</a></h6>' +
             ' <p class="text-muted" id="reply_date">' + reply_date.substr(0, 10) + '</p>' +
             reply_content + '  </div>'
         );
