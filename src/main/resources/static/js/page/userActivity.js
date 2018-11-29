@@ -17,7 +17,7 @@ function getUserActivity(page) {
             var data = result.data;
             var total = data.total;
 
-            get_board_list(data);
+            setBoardList(data);
 
             var addr = {"default": "/user/activity"};
             set_page(data, page, addr);

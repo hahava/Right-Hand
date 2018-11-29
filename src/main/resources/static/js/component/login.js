@@ -38,7 +38,7 @@ function login() {
 }
 
 function logout() {
-    var session = session_checker();
+    var session = sessionChecker();
     var userSeq = session.data.userSeq;
     $.ajax({
         type: 'GET',

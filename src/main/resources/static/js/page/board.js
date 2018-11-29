@@ -3,7 +3,7 @@ $(document).ready(function () {
 
     var board_title;
     var board_info;
-    var session = session_checker();
+    var session = sessionChecker();
     var authorityLevel = session.data.authorityLevel;
     switch (type) {
         case 'dev':
@@ -60,7 +60,7 @@ function req_page(requested_page) {
 
             var data = result.data;
             var total = data.total;
-            get_board_list(data, 'content');
+            setBoardList(data, 'content');
 
             var addr = {"default": "/board/list", "type": type};
             set_page(data, page, addr);
@@ -84,7 +84,7 @@ function getSearchResults() {
 
 /* 글작성 */
 function getBoardWriterPage() {
-    var session = session_checker();
+    var session = sessionChecker();
     var authorityLevel = session.data.authorityLevel;
     if (authorityLevel == 1 || authorityLevel == 103) {
         location.href = "/board/writer?type=" + type;

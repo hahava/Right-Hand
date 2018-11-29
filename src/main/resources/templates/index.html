@@ -7,7 +7,7 @@
     <title>Hoi</title>
 </head>
 
-<body style="display: flex;min-height: 100vh;flex-direction: column">
+<body>
 <!--Register Modal-->
 <RegisterModal th:replace="fragment/registerModal"/>
 <!--LoginModal-->
@@ -17,7 +17,6 @@
 
 <!-- BANNER SLIDER-->
 <div id="myCarousel" class="carousel slide" data-ride="carousel">
-    <!-- Indicators -->
     <ol class="carousel-indicators">
         <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
         <li data-target="#myCarousel" data-slide-to="1"></li>
@@ -58,7 +57,7 @@
 <!-- ///END Banner Slider/// -->
 <Br/>
 <!--/// Board Section /// -->
-<div class="container has-margin-bottom">
+<div class="container has-margin-top has-margin-bottom">
     <div class="row">
         <div class="col-md-12 has-margin-bottom">
             <div class="section-title left-align-desktop">
@@ -66,7 +65,7 @@
             </div>
         </div>
     </div>
-    <!--board list-->
+    <!--Board list-->
     <div id="tempEditor" style="display: none"></div>
     <div class="row" id="board_list"></div>
 </div>
@@ -106,12 +105,12 @@
     </div>
 </div>
 
-<!--footer-->
+<!--Footer-->
 <footer th:replace="fragment/footer"/>
-<!--script for functions-->
+<!--Script for functions-->
 <script th:replace="fragment/commonScript"/>
 <script th:src="@{../js/component/board_component.js}" type="text/javascript"></script>
-<!--script for page-->
+<!--Script for page-->
 <script th:src="@{../js/page/index.js}" type="text/javascript"></script>
 </body>
 </html>

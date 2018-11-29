@@ -1,4 +1,4 @@
-function get_board_list(data, list_type) {
+function setBoardList(data, list_type) {
     var searchedWord = data.searchedWord;
     var board_list = data.data;
     for (var i = 0; i < board_list.length; i++) {

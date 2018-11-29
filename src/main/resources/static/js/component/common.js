@@ -17,7 +17,7 @@ function setSubpageParam(title, info) {
 }
 
 /* 현재 로그인 여부 확인 기능 */
-function session_checker() {
+function sessionChecker() {
     var data;
     $.ajax({
         type: 'POST',

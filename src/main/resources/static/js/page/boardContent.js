@@ -89,7 +89,7 @@ function view_reply(reply_list) {
 
 // 댓글 작성
 function send_reply() {
-    var session = session_checker();
+    var session = sessionChecker();
     var authorityLevel = session.data.authorityLevel;
     if (authorityLevel == 1 || authorityLevel == 103) {
         var data = {
