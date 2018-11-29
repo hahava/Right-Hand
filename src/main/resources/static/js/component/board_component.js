@@ -49,11 +49,13 @@ function setBoardList(data, list_type) {
             '<p>' + date + ' <a href="#" class="link-reverse">' + nick_name + '</a></p>' +
             '<p>' + content + '</p></div></div>');
 
+        $('#board_list').css('min-height', '300px');
 
     }
 
     $('.title_image').children('img').attr('class', 'img-responsive center-block');
-};
+
+}
 
 function set_address(params_) {
     var href = "";
@@ -67,7 +69,7 @@ function set_address(params_) {
         }
     }
     return href;
-};
+}
 
 /*정규식*/
 function regex_content(text) {
