@@ -4,6 +4,7 @@ import com.righthand.common.CheckData;
 import com.righthand.common.GetNowTime;
 import com.righthand.common.PasswordHandler;
 import com.righthand.common.VaildationCheck.ConfigValidationCheck;
+import com.righthand.common.dto.res.ResponseHandler;
 import com.righthand.common.type.ReturnType;
 import com.righthand.membership.config.ConfigMembership;
 import com.righthand.membership.dao.MembershipDao;
@@ -65,7 +66,7 @@ public class MembershipServiceImpl implements MembershipService {
      * @param params
      * @return ReturnType
      */
-    public boolean checkExistInUser(Map params) throws  Exception{
+    private boolean checkExistInUser(Map params) throws  Exception{
 
         // user 데이터에서 찾기
         Map resMemberData = membershipDao.selectUser(params);
@@ -91,6 +92,19 @@ public class MembershipServiceImpl implements MembershipService {
         return ReturnType.RTN_TYPE_OK;
     }
 
+    public boolean getRecommender(Map input_data) throws Exception{
+        int count = membershipDao.getRecommender(input_data);
+        if(count == 0) {
+            return false;
+        }
+        return true;
+    }
+
+    private int getUserSeq(String id) {
+       int seq = membershipDao.getUserSeq(id);
+       return seq;
+    }
+
     /**
      *
      * @param
@@ -108,9 +122,11 @@ public class MembershipServiceImpl implements MembershipService {
     public ReturnType signUp(Map input_data) throws Exception{
 
         String userId = null;
+        String recommenderId = null;
         String pwd = null;
 
-        HashMap<String, Object> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
+        Map<String, Object> recommenderParam = new HashMap<>();
 
         logger.info("[Service][SignUp]");
 
@@ -123,7 +139,6 @@ public class MembershipServiceImpl implements MembershipService {
             // 1. User id 검증
             ///////////////////////////////////////////////////////////////////////////////////////////////
             userId = (String) input_data.get("userId");
-
             params.put("userId", userId);
 
             if (this.checkExistInUser(params) == true) {
@@ -145,6 +160,25 @@ public class MembershipServiceImpl implements MembershipService {
             }
 
             logger.info("[Service][SignUp] USER ID OK");
+
+            recommenderId = (String) input_data.get("recommender");
+            if(recommenderId == null) logger.info("**** recommenderId Not EXIST ****");
+            recommenderParam.put("recommender", recommenderId);
+
+            if(recommenderId != null) {
+                if(configValidationCheck.checkEmail(recommenderId) != 0) {
+                    membershipSemaphore.release();
+                    return ReturnType.RTN_TYPE_MEMBERSSHIP_EMAIL_PATTERN_NG;
+                }
+                if(!getRecommender(recommenderParam)) {
+                    input_data.remove("recommender");
+                    System.out.println("Recommender null");
+                    return ReturnType.RTN_TYPE_MEMBERSHIP_RECOMMENDER_NG;
+                }
+
+            }
+
+
             ///////////////////////////////////////////////////////////////////////////////////////////////
 
             ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -212,7 +246,17 @@ public class MembershipServiceImpl implements MembershipService {
             ///////////////////////////////////////////////////////////////////////////////////////////////
             try {
                 membershipDao.insertUser(input_data);
+                Map<String, Object> recommendData = new HashMap<>();
+                recommendData.put("userSeq", getUserSeq(userId));
+                recommendData.put("recommenderSeq", getUserSeq(recommenderId));
                 membershipDao.insertProfile(input_data);
+                try {
+                    membershipDao.rewardRecommendProfile(recommendData);
+                    membershipDao.rewardRecommendPromote(recommendData);
+                }
+                catch (Exception e) {
+                    return ReturnType.RTN_TYPE_SIGNUP_REWARD_NG;
+                }
             }catch (Exception e){
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return ReturnType.RTN_TYPE_NG;

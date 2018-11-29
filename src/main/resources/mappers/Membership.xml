@@ -5,8 +5,8 @@
 
     <insert id="insertUser" parameterType="map" useGeneratedKeys="true" keyProperty="userSeq">
         INSERT INTO
-        TB_USER( LOGIN_TYPE, DEVICE, USER_ID, EMAIL, USER_PWD, AUTHORITY, RESIGN_YN, RESIGN_REASON, RESIGN_DT, PENDING_YN, PENDING_DT, PENDING_PERIOD, DEL_YN, CRE_ID, CRE_DT, UPD_ID, UPD_DT)
-        VALUES(  #{loginType}, #{device}, #{userId}, #{email}, #{userPwd}, #{authority}, 'N', #{resignReason}, #{resingDt},  #{pendingYn}, #{pendingDt}, #{pendingPeriod}, 'N', #{creId}, UTC_TIMESTAMP(), #{updId}, UTC_TIMESTAMP() )
+        TB_USER( LOGIN_TYPE, DEVICE, USER_ID, EMAIL, USER_PWD, AUTHORITY, RESIGN_YN, RESIGN_REASON, RESIGN_DT, PENDING_YN, PENDING_DT, PENDING_PERIOD, DEL_YN, CRE_ID, CRE_DT, UPD_ID, UPD_DT, RECOMMENDER)
+        VALUES(  #{loginType}, #{device}, #{userId}, #{email}, #{userPwd}, #{authority}, 'N', #{resignReason}, #{resingDt},  #{pendingYn}, #{pendingDt}, #{pendingPeriod}, 'N', #{creId}, UTC_TIMESTAMP(), #{updId}, UTC_TIMESTAMP(), #{recommender} )
     </insert>
 
     <insert id="insertProfile" parameterType="map">
@@ -99,10 +99,21 @@
     <select id="countID" resultType="int" parameterType="map">
         SELECT COUNT(*) FROM TB_USER WHERE USER_ID = #{userId}
     </select>
+    <select id="getRecommender" resultType="int" parameterType="map">
+        SELECT COUNT(*) FROM TB_USER WHERE USER_ID = #{recommender}
+    </select>
     <select id="getProfileSeq" resultType="int" parameterType="int">
         SELECT PROFILE_SEQ FROM TB_PROFILE WHERE USER_SEQ = #{userSeq}
     </select>
-
+    <select id="getUserSeq" resultType="int" parameterType="String">
+        SELECT USER_SEQ FROM TB_USER WHERE USER_ID = #{id}
+    </select>
+    <update id="rewardRecommendProfile" parameterType="map">
+        UPDATE TB_PROFILE SET TB_PROFILE.RECOMMEND = TB_PROFILE.RECOMMEND + 50 WHERE TB_PROFILE.USER_SEQ = #{userSeq} OR TB_PROFILE.USER_SEQ = #{recommenderSeq}
+    </update>
+    <update id="rewardRecommendPromote" parameterType="map">
+        UPDATE TB_PROMOTE SET TB_PROMOTE.RECOMMENDER = TB_PROMOTE.RECOMMENDER - 100 WHERE SEQUENCE = 1
+    </update>
     <select id="getProfileNickname" resultType="String" parameterType="int">
         SELECT NICK_NAME FROM TB_PROFILE WHERE USER_SEQ = #{userSeq}
     </select>
