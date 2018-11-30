@@ -886,13 +886,11 @@ a.list-group-item:hover, a.list-group-item:focus {
 }
 
 .blockquote-centered:before {
-    background: url(../images/quote-1.png) no-repeat;
     left: 0;
     top: 0;
 }
 
 .blockquote-centered:after {
-    background: url(../images/quote-2.png) no-repeat;
     right: 0;
     bottom: 0;
 }
