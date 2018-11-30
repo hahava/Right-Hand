@@ -1,13 +1,9 @@
 package com.righthand.common.controller;
 
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * Page 컨틀롤러
@@ -66,6 +62,18 @@ public class PageController {
     }
 
     @ApiOperation(value = "사용자의 활동 내역 화면")
+    @GetMapping("/user/board")
+    public String userBoard() {
+        return "userBoard";
+    }
+
+    @ApiOperation(value = "사용자의 토큰 사용내역  화면")
+    @GetMapping("/user/token")
+    public String userToken() {
+        return "userToken";
+    }
+
+    @ApiOperation(value = "사용자의 토큰 사용내역  화면")
     @GetMapping("/user/activity")
     public String userActivity() {
         return "userActivity";

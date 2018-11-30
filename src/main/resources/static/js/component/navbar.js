@@ -25,9 +25,9 @@ function loginUser() {
     $('#navbar').append('<li class="dropdown" id="myPage"><a href="#none" class="dropdown-toggle" data-toggle="dropdown">MyPage <span class="caret"></span></a>  ' +
         '<ul class="dropdown-menu dropdown-menu-left" role="menu">\n' +
         '<li><a href="/user/info">회원정보</a></li>\n' +
-        /* TODO : 추후 개발 예정 */
-        // '<li><a href="image-gallery.html">토큰내역</a></li>\n' +
+        '<li><a href="/user/token">토큰내역</a></li>\n' +
         '<li><a href="/user/activity">활동내역</a></li>\n' +
+        '<li><a href="/user/board">작성글</a></li>\n' +
         '<li class="divider"></li>\n' +
         '<li><a href="javascript:logout();">LogOut</a></li>\n' +
         '</ul></li>');
