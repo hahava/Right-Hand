@@ -112,11 +112,14 @@ public class MembershipController {
 
     @ApiOperation(value = "회원가입")
     @PostMapping(value = "/signUp")
-    public ResponseHandler<?> signUp(@Valid @RequestBody final SignupReq _params) {
+    public ResponseHandler<?> signUp(@Valid @RequestBody final SignupReq _params, BindingResult bindingResult) {
         final ResponseHandler<?> result = new ResponseHandler<>();
+        if(bindingResult.hasErrors()){
+            result.setReturnCode(ReturnType.RTN_TYPE_MEMBERSHIP_DATA_INVALID_PATTERN_NG);
+            return result;
+        }
         Map<String, Object> params = ConvertUtil.convertObjectToMap(_params);
         ReturnType rtn;
-
         try {
             rtn = membershipService.signUp(params);
             result.setReturnCode(rtn);
