@@ -130,4 +130,7 @@
         UPDATE TB_USER SET USER_PWD = #{pwd} WHERE USER_ID=#{userId}
     </update>
 
+    <select id="checkFileGrpSeq" parameterType="int" resultType="Integer">
+        SELECT FILE_GRP_SEQ FROM TB_PROFILE WHERE PROFILE_SEQ = #{profileSeq}
+    </select>
 </mapper>

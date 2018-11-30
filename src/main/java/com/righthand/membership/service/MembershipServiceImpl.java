@@ -447,6 +447,17 @@ public class MembershipServiceImpl implements MembershipService {
         return membershipDao.getUserPwd(userSeq);
     }
 
+    /*
+    * @author: Danny
+    * @date: 2018.11.30
+    * Comment: file group seq 가져오기
+    * */
+    @Override
+    @Transactional(readOnly = true)
+    public Integer checkFileGrpSeq(int profileSeq) throws Exception {
+        return membershipDao.checkFileGrpSeq(profileSeq);
+    }
+
 
 }
 

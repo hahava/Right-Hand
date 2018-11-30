@@ -26,4 +26,5 @@ public interface MembershipDao
     void rewardRecommendProfile(Map userData);
     void rewardRecommendPromote(Map userData);
     int getUserSeq(String id);
+    Integer checkFileGrpSeq(int profileSeq);
 }

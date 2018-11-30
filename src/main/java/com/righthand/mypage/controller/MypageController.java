@@ -6,6 +6,7 @@ import com.righthand.common.GetClientProfile;
 import com.righthand.common.dto.res.ResponseHandler;
 import com.righthand.common.type.ReturnType;
 import com.righthand.common.util.ConvertUtil;
+import com.righthand.file.service.FileService;
 import com.righthand.membership.service.MembershipInfo;
 import com.righthand.membership.service.MembershipService;
 import com.righthand.mypage.dto.req.PasswordReq;
@@ -19,13 +20,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @RestController
@@ -35,6 +34,7 @@ public class MypageController {
     private TbUserService tbUserService;
     private MembershipService membershipService;
     private BoardService boardService;
+    private FileService fileService;
 
     @CacheEvict(value = "findUserAndProfileCache", key = "#{userSeq}")
     public void refreshCache(int userSeq){
@@ -181,6 +181,48 @@ public class MypageController {
         }
         result.setReturnCode(ReturnType.RTN_TYPE_NO_DATA);
         return result;
+    }
+
+    @ApiOperation("/프로필 이미지 업로드")
+    @PutMapping("/img/profile")
+    public ResponseHandler<?> uploadProfileImg(@ApiParam("이미지") @RequestParam("img") MultipartFile multipartFile){
+        final ResponseHandler<Object> result = new ResponseHandler<>();
+        MembershipInfo membershipInfo = null;
+        try {
+            membershipInfo = membershipService.currentSessionUserInfo();
+            if (membershipInfo == null){
+                result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
+                return result;
+            }
+        } catch (Exception e) {
+            log.error("[Session][Exception] : {}", e.toString());
+            result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
+            return result;
+        }
+
+        try {
+            int profileSeq = membershipInfo.getProfileSeq();
+            Integer fileGrpSeq = membershipService.checkFileGrpSeq(profileSeq);
+            if(fileGrpSeq == null){
+
+            }else{
+
+            }
+
+        } catch (Exception e) {
+            log.error("[CheckFileGrp][Exception] : {}", e.toString());
+        }
+
+        MultipartFile[] files = new MultipartFile[1];
+        files[0] = multipartFile;
+        Map<String, Object> param = new HashMap<>();
+        try {
+            ArrayList<HashMap<String, Object>> urlMap = fileService.storeFile(files, param);
+            urlMap.get(0).get("fileName");
+        } catch (Exception e) {
+            log.error("[Service][storeProfileImgException]" + e.toString());
+        }
+        return null;
     }
 
 }

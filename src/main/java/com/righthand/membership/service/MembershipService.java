@@ -43,4 +43,6 @@ public interface MembershipService extends UserDetailsService {
 
     String getUserPwd(int userSeq) throws Exception;
 
+    Integer checkFileGrpSeq(int profileSeq) throws Exception;
+
 }
