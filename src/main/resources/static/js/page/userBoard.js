@@ -19,7 +19,7 @@ function getUserActivity(page) {
 
             setBoardList(data);
 
-            var addr = {"default": "/user/activity"};
+            var addr = {"default": "/user/board"};
             set_page(data, page, addr);
         },
         error: function () {
