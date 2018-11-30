@@ -48,23 +48,4 @@ public class SignupReq implements Serializable {
     @ApiModelProperty(value = "추천인 아이디")
     private String recommender;
 
-//    @ApiModelProperty(value = "로그인 타입")
-//    private String loginType;
-
-//
-//    @ApiModelProperty(value = "자녀여부")
-//    @NotNull
-//    private String childrenYn; //
-//
-//    @ApiModelProperty(value = "마켓팅 동의 여부")
-//    private String marketingAdvYn;
-//
-//    @ApiModelProperty(value = "서드파티 이미지 패스")
-//    private String profileImgPath;
-//
-//    @ApiModelProperty(value = "언어")
-//    private String lang;
-//
-//    private int authority; //
-
 }

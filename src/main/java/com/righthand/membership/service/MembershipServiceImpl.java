@@ -130,9 +130,6 @@ public class MembershipServiceImpl implements MembershipService {
 
         logger.info("[Service][SignUp]");
 
-        // 로직을 다른 누군가 실행 중일 때는 대기 .
-        membershipSemaphore.acquire();
-
         try {
 
             ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -142,7 +139,6 @@ public class MembershipServiceImpl implements MembershipService {
             params.put("userId", userId);
 
             if (this.checkExistInUser(params) == true) {
-                membershipSemaphore.release();
                 return ReturnType.RTN_TYPE_MEMBERSSHIP_USERID_EXIST_NG;
             }
 
@@ -155,7 +151,6 @@ public class MembershipServiceImpl implements MembershipService {
 
             // 2) email의 pattern
             if (configValidationCheck.checkEmail((String) input_data.get("email")) != 0) {
-                membershipSemaphore.release();
                 return ReturnType.RTN_TYPE_MEMBERSSHIP_EMAIL_PATTERN_NG;
             }
 
@@ -165,11 +160,8 @@ public class MembershipServiceImpl implements MembershipService {
             if(recommenderId == null) logger.info("**** recommenderId Not EXIST ****");
             recommenderParam.put("recommender", recommenderId);
 
-            if(recommenderId != null) {
-                if(configValidationCheck.checkEmail(recommenderId) != 0) {
-                    membershipSemaphore.release();
-                    return ReturnType.RTN_TYPE_MEMBERSSHIP_EMAIL_PATTERN_NG;
-                }
+            if(recommenderId != null && !recommenderId.trim().equals("")) {
+                if(configValidationCheck.checkEmail(recommenderId) != 0) return ReturnType.RTN_TYPE_MEMBERSSHIP_EMAIL_PATTERN_NG;
                 if(!getRecommender(recommenderParam)) {
                     input_data.remove("recommender");
                     System.out.println("Recommender null");
@@ -189,7 +181,6 @@ public class MembershipServiceImpl implements MembershipService {
             // 2) Id의 pattern
             if(configValidationCheck.checkPwd(pwd) != 0)
             {
-                membershipSemaphore.release();
                 return ReturnType.RTN_TYPE_MEMBERSSHIP_PASSWORD_PATTERN_NG;
             }
 
@@ -198,7 +189,6 @@ public class MembershipServiceImpl implements MembershipService {
 
             if (!passwordHandler.matches(pwd, encPassword)) {
                 logger.error("[Service][SignUp]PWD ENC ERR");
-                membershipSemaphore.release();
                 return ReturnType.RTN_TYPE_MEMBERSSHIP_PASSWORD_ENC_NG;
             }
 
@@ -246,31 +236,30 @@ public class MembershipServiceImpl implements MembershipService {
             ///////////////////////////////////////////////////////////////////////////////////////////////
             try {
                 membershipDao.insertUser(input_data);
-                Map<String, Object> recommendData = new HashMap<>();
-                recommendData.put("userSeq", getUserSeq(userId));
-                recommendData.put("recommenderSeq", getUserSeq(recommenderId));
                 membershipDao.insertProfile(input_data);
-                try {
-                    membershipDao.rewardRecommendProfile(recommendData);
-                    membershipDao.rewardRecommendPromote(recommendData);
-                }
-                catch (Exception e) {
-                    return ReturnType.RTN_TYPE_SIGNUP_REWARD_NG;
-                }
             }catch (Exception e){
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return ReturnType.RTN_TYPE_NG;
+            }
+
+            if(recommenderId != null && !recommenderId.trim().equals("")) {
+                Map<String, Object> recommendData = new HashMap<>();
+                recommendData.put("userSeq", getUserSeq(userId));
+                recommendData.put("recommenderSeq", getUserSeq(recommenderId));
+                try {
+                    membershipDao.rewardRecommendProfile(recommendData);
+                    membershipDao.rewardRecommendPromote(recommendData);
+                } catch (Exception e) {
+                    return ReturnType.RTN_TYPE_SIGNUP_REWARD_NG;
+                }
             }
 
 
             ///////////////////////////////////////////////////////////////////////////////////////////////
         }
         catch (Exception e) {
-            membershipSemaphore.release();
             throw new Exception(e);
         }
-
-        membershipSemaphore.release();
         return ReturnType.RTN_TYPE_OK;
     }
 
