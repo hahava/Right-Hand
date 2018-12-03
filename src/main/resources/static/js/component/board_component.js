@@ -1,16 +1,11 @@
 function setBoardList(data, list_type) {
     var searchedWord = data.searchedWord;
     var board_list = data.data;
+
     for (var i = 0; i < board_list.length; i++) {
 
-        var boardSeq = board_list[i].BOARD_SEQ;
-        var title = board_list[i].BOARD_TITLE;
-        var content = board_list[i].BOARD_CONTENT;
-        var first_image = content.match(/\<img[^\<]*?(data=todos)*[^\<]\/\>/i) != null ? content.match(/\<img[^\<]*?(data=todos)*[^\<]\/\>/i) : ' ';
-        first_image = first_image[0];
-        if (first_image.length < 5) {
-            first_image = '<img class="img-responsive center-block" src="https://via.placeholder.com/160">';
-        }
+        var board = new Board(board_list[i].BOARD_SEQ, board_list[i].BOARD_TITLE, board_list[i].BOARD_CONTENT,
+            board_list[i].NICK_NAME, board_list[i].BOARD_TYPE, board_list[i].BOARD_DATE.substring(0, 10));
 
         $('#tempEditor').empty();
         var editor = new tui.Editor.factory({
@@ -20,34 +15,31 @@ function setBoardList(data, list_type) {
             height: '100px',
             viewer: true,
             hideModeSwitch: true,
-            initialValue: content
+            initialValue: board.content
         });
-        content = $('#tempEditor').text();
+        board.content = $('#tempEditor').text();
         // content = regex_content(content);
         if (searchedWord != null) {
-            content = highlight(searchedWord, content);
-            title = highlight(searchedWord, title);
+            board.content = highlight(searchedWord, board.content);
+            board.title = highlight(searchedWord, board.title);
         }
-        var nick_name = board_list[i].NICK_NAME;
-        var type = board_list[i].BOARD_TYPE;
-        var date = board_list[i].BOARD_DATE.substring(0, 10);
 
-        if (content.length > 340) {
-            content = content.substr(0, 340) + "...(중략)...";
+        if (board.content.length > 340) {
+            board.content = board.content.substr(0, 340) + "...(중략)...";
         }
         var params = {
-            "boardSeq": boardSeq, "type": type, "searchedWord": searchedWord
+            "boardSeq": board.boardSeq, "type": board.type, "searchedWord": searchedWord
         };
         var address = '/board/' + list_type + '?';
         address = address + set_address(params);
 
 
         $('#board_list').append('  <div class="row has-margin-bottom">' +
-            '<div class="col-md-12 col-sm-12">' + '<div class="col-md-2 col-sm-2 title_image">' + first_image + '</div>' +
+            '<div class="col-md-12 col-sm-12">' + '<div class="col-md-2 col-sm-2 title_image">' + board.first_image + '</div>' +
             '<div class="col-md-8 col-sm-8 bulletin" style="text-overflow: ellipsis;  overflow : hidden;">' +
-            '<a href=' + address + '><h4 class="media-heading" id="title">' + title + ' </h4></a>' +
-            '<p>' + date + ' <a href="#" class="link-reverse">' + nick_name + '</a></p>' +
-            '<p>' + content + '</p></div></div>');
+            '<a href=' + address + '><h4 class="media-heading" id="title">' + board.title + ' </h4></a>' +
+            '<p>' + board.date + ' <a href="#" class="link-reverse">' + board.nick_name + '</a></p>' +
+            '<p>' + board.content + '</p></div></div>');
 
         $('#board_list').css('min-height', '300px');
 
@@ -56,6 +48,28 @@ function setBoardList(data, list_type) {
     $('.title_image').children('img').attr('class', 'img-responsive center-block');
 
 }
+
+// 게시판 객체
+function Board(boardSeq, title, content, nick_name, type, date) {
+    this.boardSeq = boardSeq;
+    this.title = title;
+    this.content = content;
+    this.nick_name = nick_name;
+    this.type = type;
+    this.date = date;
+    this.first_image = getFirstImage(content);
+
+    // 업로드한 이미지 중, 대표 이미지를 등록한다.
+    function getFirstImage(content) {
+        var image = content.match(/\<img[^\<]*?(data=todos)*[^\<]\/\>/i) != null ? content.match(/\<img[^\<]*?(data=todos)*[^\<]\/\>/i) : ' ';
+        image = image[0];
+        if (image.length < 5) {
+            image = '<img class="img-responsive center-block" src="https://via.placeholder.com/160">';
+        }
+        return image;
+    }
+}
+
 
 function set_address(params_) {
     var href = "";
