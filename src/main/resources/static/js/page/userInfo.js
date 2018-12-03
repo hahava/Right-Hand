@@ -5,12 +5,14 @@ $(document).ready(function () {
 
     var req = getParameterByName('userdata');
 
-    if (req === 'editInfo' || req === 'editPw') {
+    if (req === 'editInfo' || req === 'editPw' || req === 'userDel') {
         /* 회원정보 또는 비밀번호 수정 시, 비밀번호 인증 요청 화면으로 변경 */
         setPwRequestView($('#user_info_list').attr('id'), req);
     } else {
         $('#btn_userInfoEdit').css('display', 'inline');
         $('#btn_userPwEdit').css('display', 'inline');
+        $('#btn_userDel').css('display', 'inline');
+
         setUserInfoTableView($('#user_info_list').attr('id'));
         var userInfoData = getUserInfo();
         setUserInfoTableData(userInfoData);
@@ -152,6 +154,8 @@ function checkPwDup(next_page) {
                 switch (next_page) {
                     case 'editInfo':
                         setUserInfoTableView($('#user_info_list').attr('id'));
+                        var userInfoData = getUserInfo();
+                        setUserInfoTableData(userInfoData);
                         var user_tel = $('#user_tel').text();
                         var user_nickname = $('#user_nickname').text();
                         /* 수정가능한 항목들을 input 태그로 변경 */
@@ -179,12 +183,47 @@ function checkPwDup(next_page) {
                         $('#container').append('<br><button class="btn btn-primary pull-right" onclick="reqModifiedUserPw()">수정</button>');
                         break;
 
+                    case 'userDel':
+                        setUserInfoTableView($('#user_info_list').attr('id'));
+                        var userInfoData = getUserInfo();
+                        setUserInfoTableData(userInfoData);
+                        var html = '<div class="row"><div class="col-xs-10 col-lg-10 col-sm-10 col-md-10"><div class="form-group">\n' +
+                            '  <label for="comment">탈퇴사유:</label>\n' +
+                            '  <textarea class="form-control" rows="5" id="comment" ></textarea>\n' +
+                            '<button class="btn btn-primary pull-right has-margin-top" onclick="resign()">제출</button></div></div></div>';
+                        $('#container').append(html);
                     /* 패스워드가 필요한 부분이기에 default 없음 */
                 }
             } else {
                 alert("암호가 틀렸습니다.");
             }
         }, error: function (e) {
+        }
+    });
+}
+
+function resign() {
+    data = {'reason': $('#comment').val()};
+    if (data.length <= 1) {
+        alert('사유를 입력해주세요');
+        return
+    }
+    $.ajax({
+        type: 'PUT',
+        url: '/api/membership/resign',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        data: JSON.stringify(data),
+        async: false,
+        success: function (result) {
+            if (result.code == 0) {
+                alert("탈퇴되었습니다.")
+                location.href = "/";
+            }
+        }, error: function (e) {
+
         }
     });
 }
