@@ -4,6 +4,8 @@ import com.righthand.common.VaildationCheck.ConfigValidationCheck;
 import com.righthand.common.type.ReturnType;
 import com.righthand.membership.service.MembershipInfo;
 import com.righthand.membership.service.MembershipService;
+import com.righthand.mypage.domain.file.TbFile;
+import com.righthand.mypage.domain.profile.QTbProfile;
 import com.righthand.mypage.domain.profile.TbProfile;
 import com.righthand.mypage.domain.profile.TbProfileRepository;
 import com.righthand.mypage.domain.user.TbUser;
@@ -16,7 +18,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import static com.righthand.mypage.domain.profile.QTbProfile.tbProfile;
 
 @Slf4j
 @Service
@@ -33,15 +38,22 @@ public class TbUserService {
     @Cacheable(value = "findUserAndProfileCache", key = "#userSeq")
     public Map<String, Object> findUserAndProfile(int userSeq) throws Exception{
         Map<String, Object> map = new HashMap<>();
-        TbProfile tbProfile = tbProfileRepository.findByUserSeq((long) userSeq);
-        System.out.println("profileSeq : " + tbProfile.getProfileSeq());
+        List<TbFile> fileList = tbProfileRepository.findAllJoinProfileAndFile();
+        for (int i = 0; i < fileList.size(); i++) {
+            TbProfile tbProfile = fileList.get(i).getProfileList().get(0);
+            TbFile tbFile = fileList.get(i);
+            if(tbProfile.getUserSeq() == userSeq){
+                map.put("nickname", tbProfile.getNickName());
+                map.put("userName", tbProfile.getUserName());
+                map.put("gender", tbProfile.getGender());
+                map.put("tel", tbProfile.getTel());
+                map.put("birthYear", tbProfile.getBirthYear());
+                map.put("filePath",  tbFile.getFilePath());
+                break;
+            }
+        }
         TbUser tbUser = tbUserRepository.getOne((long) userSeq);
         map.put("userId", tbUser.getUserId());
-        map.put("nickname", tbProfile.getNickName());
-        map.put("userName", tbProfile.getUserName());
-        map.put("gender", tbProfile.getGender());
-        map.put("tel", tbProfile.getTel());
-        map.put("birthYear", tbProfile.getBirthYear());
         return map;
     }
 

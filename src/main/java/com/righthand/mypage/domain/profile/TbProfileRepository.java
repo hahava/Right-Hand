@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
-public interface TbProfileRepository extends JpaRepository<TbProfile, Long> {
+public interface TbProfileRepository extends JpaRepository<TbProfile, Long>, CustomTbProfileRepository {
 
     TbProfile findByUserSeq(long profileSeq);
 
