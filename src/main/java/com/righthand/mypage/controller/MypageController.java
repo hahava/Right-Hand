@@ -9,8 +9,10 @@ import com.righthand.common.util.ConvertUtil;
 import com.righthand.file.service.FileService;
 import com.righthand.membership.service.MembershipInfo;
 import com.righthand.membership.service.MembershipService;
+import com.righthand.mypage.domain.file.TbFileGrp;
 import com.righthand.mypage.dto.req.PasswordReq;
 import com.righthand.mypage.dto.req.UserReq;
+import com.righthand.mypage.service.TbFileGrpService;
 import com.righthand.mypage.service.TbUserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -35,9 +37,10 @@ public class MypageController {
     private MembershipService membershipService;
     private BoardService boardService;
     private FileService fileService;
+    private TbFileGrpService tbFileGrpService;
 
     @CacheEvict(value = "findUserAndProfileCache", key = "#{userSeq}")
-    public void refreshCache(int userSeq){
+    public void refreshCache(int userSeq) {
         log.info("[Cache][Refresing] userSeq : " + userSeq);
     }
 
@@ -50,15 +53,14 @@ public class MypageController {
 
         try {
             MembershipInfo membershipInfo = membershipService.currentSessionUserInfo();
-            if(membershipInfo == null) {
+            if (membershipInfo == null) {
                 result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
-            }
-            else {
+            } else {
                 boardData.put("authority", membershipInfo.getAuthoritiesLevel());
                 boardData.put("nickname", membershipInfo.getNickname());
                 try {
                     myBoard = boardService.getMyBoardList(membershipInfo.getProfileSeq(), page);
-                    if(myBoard == null || myBoard.isEmpty()) {
+                    if (myBoard == null || myBoard.isEmpty()) {
                         boardData.put("total", 0);
                         boardData.put("data", null);
                         result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST);
@@ -69,13 +71,11 @@ public class MypageController {
                     boardData.put("total", myBoard.get("total"));
                     result.setData(boardData);
                     result.setReturnCode(ReturnType.RTN_TYPE_OK);
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST);
                 }
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
         }
         return result;
@@ -88,10 +88,9 @@ public class MypageController {
         MembershipInfo membershipInfo;
         try {
             membershipInfo = membershipService.currentSessionUserInfo();
-            if(membershipInfo == null) {
+            if (membershipInfo == null) {
                 result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
-            }
-            else {
+            } else {
                 try {
                     log.info("[GetProfile][Start]");
                     System.out.println("getUserSeq : " + membershipInfo.getUserSeq());
@@ -113,9 +112,9 @@ public class MypageController {
 
     @ApiOperation("프로필 수정")
     @PutMapping("/profile")
-    public ResponseHandler<?> editMyProfile(@ApiParam("사용자 정보") @Valid @RequestBody UserReq _params, BindingResult bindingResult){
+    public ResponseHandler<?> editMyProfile(@ApiParam("사용자 정보") @Valid @RequestBody UserReq _params, BindingResult bindingResult) {
         final ResponseHandler<Object> result = new ResponseHandler<>();
-        if(!bindingResult.hasErrors()) {
+        if (!bindingResult.hasErrors()) {
             try {
                 MembershipInfo membershipInfo = membershipService.currentSessionUserInfo();
                 if (membershipInfo == null) {
@@ -143,9 +142,9 @@ public class MypageController {
 
     @ApiOperation("비밀번호 변경")
     @PutMapping("/pwd")
-    public ResponseHandler<?> editMyPassword(@ApiParam("비밀번호 정보") @Valid @RequestBody PasswordReq _params, BindingResult bindingResult){
+    public ResponseHandler<?> editMyPassword(@ApiParam("비밀번호 정보") @Valid @RequestBody PasswordReq _params, BindingResult bindingResult) {
         final ResponseHandler<Object> result = new ResponseHandler<>();
-        if(!bindingResult.hasErrors()) {
+        if (!bindingResult.hasErrors()) {
             try {
                 MembershipInfo membershipInfo = membershipService.currentSessionUserInfo();
                 if (membershipInfo == null) {
@@ -185,12 +184,14 @@ public class MypageController {
 
     @ApiOperation("/프로필 이미지 업로드")
     @PutMapping("/img/profile")
-    public ResponseHandler<?> uploadProfileImg(@ApiParam("이미지") @RequestParam("img") MultipartFile multipartFile){
+    public ResponseHandler<?> uploadProfileImg(@ApiParam("이미지") @RequestParam("img") MultipartFile multipartFile) {
         final ResponseHandler<Object> result = new ResponseHandler<>();
+        final String bucketUrl = "https://s3.ap-northeast-2.amazonaws.com/right-hand-dev";
+        ReturnType rtn;
         MembershipInfo membershipInfo = null;
         try {
             membershipInfo = membershipService.currentSessionUserInfo();
-            if (membershipInfo == null){
+            if (membershipInfo == null) {
                 result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
                 return result;
             }
@@ -200,29 +201,32 @@ public class MypageController {
             return result;
         }
 
-        try {
-            int profileSeq = membershipInfo.getProfileSeq();
-            Integer fileGrpSeq = membershipService.checkFileGrpSeq(profileSeq);
-            if(fileGrpSeq == null){
-
-            }else{
-
-            }
-
-        } catch (Exception e) {
-            log.error("[CheckFileGrp][Exception] : {}", e.toString());
-        }
-
         MultipartFile[] files = new MultipartFile[1];
         files[0] = multipartFile;
         Map<String, Object> param = new HashMap<>();
+        ArrayList<HashMap<String, Object>> urlMap = null;
         try {
-            ArrayList<HashMap<String, Object>> urlMap = fileService.storeFile(files, param);
-            urlMap.get(0).get("fileName");
+            urlMap = fileService.storeFile(files, param);
         } catch (Exception e) {
             log.error("[Service][storeProfileImgException]" + e.toString());
+            result.setReturnCode(ReturnType.RTN_TYPE_NG);
+            return result;
         }
-        return null;
+        try {
+            int profileSeq = membershipInfo.getProfileSeq();
+            Integer fileGrpSeq = membershipService.checkFileGrpSeq(profileSeq);
+            //파일 그룹 생성
+            TbFileGrp tbFileGrp = new TbFileGrp();
+            rtn = tbFileGrpService.save(tbFileGrp, membershipInfo, urlMap, fileGrpSeq);
+            result.setReturnCode(rtn);
+            return result;
+        } catch (
+                Exception e) {
+            log.error("[CheckFileGrp][Exception] : {}", e.toString());
+            result.setReturnCode(ReturnType.RTN_TYPE_NG);
+            return result;
+        }
+
     }
 
 }

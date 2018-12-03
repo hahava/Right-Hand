@@ -45,4 +45,6 @@ public interface MembershipService extends UserDetailsService {
 
     Integer checkFileGrpSeq(int profileSeq) throws Exception;
 
+    ReturnType saveFileGrpSeq(Map input_data) throws Exception;
+
 }

@@ -133,4 +133,13 @@
     <select id="checkFileGrpSeq" parameterType="int" resultType="Integer">
         SELECT FILE_GRP_SEQ FROM TB_PROFILE WHERE PROFILE_SEQ = #{profileSeq}
     </select>
+
+    <update id="saveFileGrpSeq" parameterType="map">
+        UPDATE TB_PROFILE SET  FILE_GRP_SEQ = #{fileGrpSeq} WHERE PROFILE_SEQ = #{profileSeq}
+    </update>
+
+    <update id="updateFileSeq" parameterType="map">
+        UPDATE TB_PROFILE SET FILE_SEQ = #{fileSeq} WHERE PROFILE_SEQ = #{profileSeq}
+    </update>
+
 </mapper>
