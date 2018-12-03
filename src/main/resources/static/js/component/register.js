@@ -298,19 +298,24 @@ $('#register_birth').focusout(function () {
 });
 // 추천인
 $('#register_recommender').on("focusout", function () {
+
+
     input_checker = recommenderChecker();
 
     function recommenderChecker() {
-        var hasId = $.ajax({
-            type: "GET",
-            url: "",
-            data: "data",
-            success: function (result) {
 
-            }, error: function (e) {
-
+        if ($('#register_recommender').val().length == 0) {
+            $('#register_recommender_hint').text('추천인이 있다면, 입력해주세요.');
+            $('#register_recommender_hint').css('color', 'black');
+            return true;
+        } else {
+            if (!hasSameId($('#register_recommender').val())) {
+                $('#register_recommender_hint').text('추천인이 존재하지 않습니다.');
+                $('#register_recommender_hint').css('color', 'red');
+                return false;
             }
-        })
+        }
+
     }
 })
 
