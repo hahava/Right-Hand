@@ -153,9 +153,10 @@ function checkPwDup(next_page) {
                 switch (next_page) {
                     case 'editInfo':
                         setUserInfoTableView($('#user_info_list').attr('id'));
-                        $('.outer').append(' <div class="middle"> <input class="form-control "  type="file" name="image" onchange="encodeImagetoBase64(this)"/></div>');
                         var userInfoData = getUserInfo();
                         setUserInfoTableData(userInfoData);
+                        $('.outer').append(' <div class="middle"> <input class="form-control "  id="profile_image" type="file" name="image" onchange="encodeImagetoBase64(this)"/></div><div class="text-center"><button class="btn btn-default btn-sm" style="margin-top: 5px" onclick="resetProfile()">초기화\n' +
+                            '</button></div>');
                         var user_tel = $('#user_tel').text();
                         var user_nickname = $('#user_nickname').text();
                         /* 수정가능한 항목들을 input 태그로 변경 */
@@ -165,6 +166,8 @@ function checkPwDup(next_page) {
                         break;
                     case 'editPw':
                         setUserInfoTableView($('#user_info_list').attr('id'));
+                        var userInfoData = getUserInfo();
+                        setUserInfoTableData(userInfoData);
                         $('#user_info_list').append(
                             '<form class="form-horizontal">' +
                             '<div class="form-group">' +
@@ -202,7 +205,22 @@ function checkPwDup(next_page) {
     });
 }
 
+function resetProfile() {
+    $('#profile_image').val('');
+    $.ajax({
+        url: '/img/profile',
+        type: 'DELETE',
+        async: false,
+        success: function (result) {
+            $('#user_profile_photo').attr('src', 'https://via.placeholder.com/200');
+            console.log("성공");
+        }, error: function (e) {
+        }
+    });
+}
+
 function encodeImagetoBase64(element) {
+    console.log("encodeImagetoBase64")
     var file = element.files[0];
     var reader = new FileReader();
     reader.onloadend = function () {
@@ -222,6 +240,7 @@ function encodeImagetoBase64(element) {
         contentType: false,
         success: function (result) {
             if (result.code == 0) {
+                console.log("파일변경됨")
             }
         }, error: function (e) {
 
@@ -277,7 +296,7 @@ function reqModifiedUserInfo() {
                 location.href = "/user/info";
             }
             else {
-                alert(data.message);
+                alert(data.code);
             }
         }, error: function (e) {
         }
@@ -309,3 +328,7 @@ function reqModifiedUserPw() {
     });
 }
 
+/* TODO : user정보 객체 */
+function UserInfo() {
+
+}
