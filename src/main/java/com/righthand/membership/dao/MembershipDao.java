@@ -1,5 +1,6 @@
 package com.righthand.membership.dao;
 
+import com.righthand.common.type.ReturnType;
 import com.righthand.membership.dto.model.UserVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.context.annotation.ComponentScan;
@@ -27,4 +28,6 @@ public interface MembershipDao
     void rewardRecommendPromote(Map userData);
     int getUserSeq(String id);
     Integer checkFileGrpSeq(int profileSeq);
+    void saveFileGrpSeq(Map profileData);
+    void updateFileSeq(Map profileData);
 }

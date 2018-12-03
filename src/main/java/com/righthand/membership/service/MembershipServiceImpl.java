@@ -458,6 +458,18 @@ public class MembershipServiceImpl implements MembershipService {
         return membershipDao.checkFileGrpSeq(profileSeq);
     }
 
+    @Override
+    @Transactional
+    public ReturnType saveFileGrpSeq(Map input_data) throws Exception {
+        try{
+            membershipDao.saveFileGrpSeq(input_data);
+        }catch (Exception e){
+            logger.error("[SaveFileGrpSeq][Exception] : {}", e.toString());
+            return ReturnType.RTN_TYPE_NG;
+        }
+        return ReturnType.RTN_TYPE_OK;
+    }
+
 
 }
 
