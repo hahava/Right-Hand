@@ -183,7 +183,7 @@ public class MypageController {
         return result;
     }
 
-    @ApiOperation("/프로필 이미지 업로드")
+    @ApiOperation("프로필 이미지 업로드")
     @PutMapping("/img/profile")
     public ResponseHandler<?> uploadProfileImg(@ApiParam("이미지") @RequestParam("img") MultipartFile multipartFile) {
         final ResponseHandler<Object> result = new ResponseHandler<>();
@@ -254,6 +254,7 @@ public class MypageController {
             result.setReturnCode(ReturnType.RTN_TYPE_NG);
             return result;
         }
+        result.setReturnCode(ReturnType.RTN_TYPE_OK);
         return result;
     }
 

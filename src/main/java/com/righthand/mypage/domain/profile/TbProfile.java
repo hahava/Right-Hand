@@ -1,5 +1,6 @@
 package com.righthand.mypage.domain.profile;
 
+import com.righthand.mypage.domain.file.TbFile;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,4 +35,8 @@ public class TbProfile {
 
     @Column(name = "NICK_NAME")
     private String nickName;
+
+    @ManyToOne
+    @JoinColumn(name = "FILE_SEQ")
+    private TbFile tbFile;
 }
