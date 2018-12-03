@@ -23,6 +23,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import sun.reflect.annotation.ExceptionProxy;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -227,6 +228,33 @@ public class MypageController {
             return result;
         }
 
+    }
+
+    @ApiOperation("프로필 이미지 삭제")
+    @DeleteMapping("/img/profile")
+    public ResponseHandler<?> deleteProfileImg(){
+        final ResponseHandler<Object> result = new ResponseHandler<>();
+        MembershipInfo membershipInfo = null;
+        try {
+            membershipInfo = membershipService.currentSessionUserInfo();
+            if(membershipInfo == null) throw new Exception();
+        } catch (Exception e) {
+            log.error("[Session][Exception] : {}", e.toString());
+            result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
+            return result;
+        }
+
+        try {
+            Map<String, Object> map = new HashMap<>();
+            map.put("profileSeq", membershipInfo.getProfileSeq());
+            map.put("fileSeq", null);
+            membershipService.updateFileSeq(map);
+        } catch (Exception e) {
+            log.error("[Session][Exception] : {}", e.toString());
+            result.setReturnCode(ReturnType.RTN_TYPE_NG);
+            return result;
+        }
+        return result;
     }
 
 }
