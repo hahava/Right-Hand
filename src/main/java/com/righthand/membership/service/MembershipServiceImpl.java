@@ -470,6 +470,18 @@ public class MembershipServiceImpl implements MembershipService {
         return ReturnType.RTN_TYPE_OK;
     }
 
+    @Override
+    public ReturnType updateFileSeq(Map input_data) throws Exception {
+        try {
+            membershipDao.updateFileSeq(input_data);
+        }
+        catch (Exception e){
+            logger.error("[UpdateFileSeq][Exception] : {}", e.toString());
+            return ReturnType.RTN_TYPE_NG;
+        }
+        return ReturnType.RTN_TYPE_OK;
+    }
+
 
 }
 
