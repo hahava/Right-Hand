@@ -37,6 +37,9 @@ public class TbProfile {
     private String nickName;
 
     @ManyToOne
-    @JoinColumn(name = "FILE_SEQ")
+    @JoinColumn(name = "FILE_SEQ", insertable = false, updatable = false)
     private TbFile tbFile;
+
+    @Column(name = "FILE_SEQ")
+    private Long fileSeq;
 }

@@ -77,9 +77,4 @@ public class ConvertUtil {
         return text;
     }
 
-    @CacheEvict(value = "findUserAndProfileCache", key = "#{userSeq}")
-    public static void refreshCache(int userSeq) {
-        log.info("[Cache][Refresing] userSeq : " + userSeq);
-    }
-
 }
