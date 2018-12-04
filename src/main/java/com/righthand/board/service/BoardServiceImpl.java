@@ -8,6 +8,7 @@ import com.righthand.board.dto.model.BoardSearchVO;
 
 import com.righthand.board.dto.model.MyBoardVO;
 import com.righthand.common.type.ReturnType;
+import com.righthand.membership.dao.MembershipDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +27,9 @@ public class BoardServiceImpl implements BoardService {
 
     @Autowired
     BoardDao boardDao;
+
+    @Autowired
+    MembershipDao membershipDao;
 
     static Semaphore boardSemaphore = new Semaphore(1);
     private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -216,7 +220,6 @@ public class BoardServiceImpl implements BoardService {
         return result;
     }
 
-
     @Override
     public ReturnType insertBoardListTech(Map input_data) throws Exception {
         logger.info("[Service][boardTech]");
@@ -270,6 +273,45 @@ public class BoardServiceImpl implements BoardService {
             return ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST;
         }
         boardSemaphore.release();
+        return ReturnType.RTN_TYPE_OK;
+    }
+
+    @Override
+    @Transactional
+    public ReturnType insertReplyListTechWithRewardPower(Map input_data) throws Exception {
+        logger.info("[Service][replyTechWithRewardPower]");
+        try {
+            boardDao.insertReplyListTechWithRewardPower(input_data);
+
+            //수신자의 정보를 가져오기
+            int receiverProfileSeq = membershipDao.getProfileSeqByBoardSeq((int) input_data.get("boardSeq"));
+            Map<String, Object> map = new HashMap<>();
+            double reqCoin = (double)input_data.get("reqCoin");
+            map.put("reqCoin", reqCoin);
+
+            // 수신자 코인 획득
+            map.put("profileSeq", receiverProfileSeq);
+            membershipDao.updateRhCoin(map);
+
+            // 발신자 코인 차감
+            map.replace("profileSeq", input_data.get("replyProfileSeq"));
+            map.replace("reqCoin", reqCoin*(-1));
+            membershipDao.updateRhCoin(map);
+        } catch (Exception e) {
+            return ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST;
+        }
+        return ReturnType.RTN_TYPE_OK;
+    }
+
+    @Override
+    @Transactional
+    public ReturnType insertReplyListDevWithRewardPower(Map input_data) throws Exception {
+        logger.info("[Service][replyTechWithRewardPower]");
+        try {
+            boardDao.insertReplyListDevWithRewardPower(input_data);
+        } catch (Exception e) {
+            return ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST;
+        }
         return ReturnType.RTN_TYPE_OK;
     }
 

@@ -362,25 +362,46 @@ public class BoardController {
                                          BindingResult bindingResult) {
         final ResponseHandler<?> result = new ResponseHandler<>();
         if(!bindingResult.hasErrors()) {
-            if (checkBoardType(btype) == true) {
+            if (checkBoardType(btype)) {
                 try {
                     MembershipInfo membershipInfo = membershipService.currentSessionUserInfo();
                     Map<String, Object> params = ConvertUtil.convertObjectToMap(replyReq);
                     params.put("replyProfileSeq", membershipInfo.getProfileSeq());
-                    params.put("boardSeq", params.get("boardSeq"));
                     params.put("replyContent", params.get("content"));
+                    params.putIfAbsent("reqCoin", 0);
                     ReturnType rtn;
-                    try {
-                        if (btype.equals("tech")) {
-                            rtn = boardService.insertReplyListTech(params);
-                            result.setReturnCode(rtn);
-                        } else if (btype.equals("dev")) {
-                            rtn = boardService.insertReplyListDev(params);
-                            result.setReturnCode(rtn);
+
+                    // 보내고자 하는 코인의 양
+                    double reqCoin = (double)params.get("reqCoin");
+                    if(0 < reqCoin){
+                        Map senderInfo = membershipService.getRewardPowerAndCoin(membershipInfo.getProfileSeq());
+                        double rewardPower =(double)senderInfo.get("REWARD_POWER");
+                        double rhCoin = (double)senderInfo.get("RH_COIN");
+                        //보유하고 있는 Reward Power가 보내고자 하는 코인보다 작으면
+                        if(rewardPower < reqCoin){
+                            //보유하고 있는 코인의 양을 확인한다.
+                            //보유하고 있는 코인이 보내고자 하는 코인보다 작으면
+                            //보낼 수 없다.
+                            if(rhCoin < reqCoin){
+
+                            }
+                            //이외의 상황에는 보낼 수 있다.
+
+                        }else{
+                            // rewardPower를 보낸다.
+                            try {
+                                if (btype.equals("tech")) {
+                                    rtn = boardService.insertReplyListTechWithRewardPower(params);
+                                    result.setReturnCode(rtn);
+                                } else if (btype.equals("dev")) {
+                                    rtn = boardService.insertReplyListDevWithRewardPower(params);
+                                    result.setReturnCode(rtn);
+                                }
+                            } catch (Exception e) {
+                                logger.error("[Reply][Exception] " + e.toString());
+                                result.setReturnCode(ReturnType.RTN_TYPE_BOARD_REPLY_NG);
+                            }
                         }
-                    } catch (Exception e) {
-                        logger.error("[Reply][Exception] " + e.toString());
-                        result.setReturnCode(ReturnType.RTN_TYPE_BOARD_REPLY_NG);
                     }
                 } catch (Exception e) {
                     logger.error("[Reply][Exception] " + e.toString());

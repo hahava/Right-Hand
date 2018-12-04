@@ -151,4 +151,15 @@
       VALUES (#{replyContent}, CURRENT_TIMESTAMP(6), #{replyProfileSeq}, #{boardSeq})
     </insert>
 
+    <insert id="insertReplyListTechWithRewardPower" parameterType="map" useGeneratedKeys="true" keyProperty="REPLY_SEQ">
+      INSERT INTO TB_IT_TECH_REPLY(REPLY_CONTENT, REPLY_DATE, REPLY_PROFILE_SEQ, REPLY_BOARD_SEQ, REPLY_RH_COIN)
+      VALUES (#{replyContent}, CURRENT_TIMESTAMP(6), #{replyProfileSeq}, #{boardSeq})
+    </insert>
+
+    <insert id="insertReplyListDevWithRewardPower" parameterType="map" useGeneratedKeys="true" keyProperty="REPLY_SEQ">
+      INSERT INTO TB_DEVELOP_STORY_REPLY(REPLY_CONTENT, REPLY_DATE, REPLY_PROFILE_SEQ, REPLY_BOARD_SEQ, REPLY_RH_COIN)
+      VALUES (#{replyContent}, CURRENT_TIMESTAMP(6), #{replyProfileSeq}, #{boardSeq})
+    </insert>
+
+
 </mapper>

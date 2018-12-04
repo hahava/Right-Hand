@@ -18,4 +18,7 @@ public class ReplyReq {
     @ApiParam(value = "댓글 내용", required = true)
     @NotBlank
     private String content;
+
+    @ApiParam(value = "코인")
+    private Double reqCoin;
 }

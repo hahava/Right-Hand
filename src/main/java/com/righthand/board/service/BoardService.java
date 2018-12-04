@@ -30,4 +30,8 @@ public interface BoardService {
     List<Map<String, Object>> showNewBoard() throws Exception;
 
     Map<String, Object> getMyBoardList(int profileSeq, int page) throws Exception;
+
+    ReturnType insertReplyListTechWithRewardPower(Map input_data) throws Exception;
+
+    ReturnType insertReplyListDevWithRewardPower(Map input_data) throws Exception;
 }
