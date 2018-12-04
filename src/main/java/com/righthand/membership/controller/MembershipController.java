@@ -167,7 +167,6 @@ public class MembershipController {
     public ResponseHandler<?> resign(@ApiParam("탈퇴사유") @Valid @RequestBody(required = false) final ResignReq _params,
                                      HttpServletRequest request) {
         final ResponseHandler<?> res = new ResponseHandler<>();
-        RestTemplate restTemplate = new RestTemplate();
         Map<String, Object> params = ConvertUtil.convertObjectToMap(_params);
         ReturnType rtn;
         try {
@@ -178,6 +177,9 @@ public class MembershipController {
             //TODO 세션 파기
             request.getSession().invalidate();
             res.setReturnCode(rtn);
+
+            //캐싱파기
+            ConvertUtil.refreshCache(sessionInfo.getUserSeq());
         } catch (Exception e) {
             logger.error("[Resign][Exception] " + e.toString());
             res.setReturnCode(ReturnType.RTN_TYPE_SESSION);

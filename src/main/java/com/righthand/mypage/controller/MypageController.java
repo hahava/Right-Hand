@@ -40,10 +40,6 @@ public class MypageController {
     private FileService fileService;
     private TbFileGrpService tbFileGrpService;
 
-    @CacheEvict(value = "findUserAndProfileCache", key = "#{userSeq}")
-    public void refreshCache(int userSeq) {
-        log.info("[Cache][Refresing] userSeq : " + userSeq);
-    }
 
     @ApiOperation("내가 작성한 게시물")
     @GetMapping("/myBoard")
@@ -131,6 +127,8 @@ public class MypageController {
                         result.setReturnCode(ReturnType.RTN_TYPE_MYPAGE_EDIT_PRO_NG);
                     }
                 }
+                //캐싱파기
+                ConvertUtil.refreshCache(membershipInfo.getUserSeq());
             } catch (Exception e) {
                 result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
             }
@@ -220,6 +218,8 @@ public class MypageController {
             TbFileGrp tbFileGrp = new TbFileGrp();
             rtn = tbFileGrpService.save(tbFileGrp, membershipInfo, urlMap, fileGrpSeq);
             result.setReturnCode(rtn);
+            //캐싱파기
+            ConvertUtil.refreshCache(membershipInfo.getUserSeq());
             return result;
         } catch (
                 Exception e) {
@@ -254,6 +254,8 @@ public class MypageController {
             result.setReturnCode(ReturnType.RTN_TYPE_NG);
             return result;
         }
+        //캐싱파기
+        ConvertUtil.refreshCache(membershipInfo.getUserSeq());
         result.setReturnCode(ReturnType.RTN_TYPE_OK);
         return result;
     }
