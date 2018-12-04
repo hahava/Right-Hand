@@ -2,6 +2,8 @@ package com.righthand.common.util;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 
 import java.lang.reflect.Method;
 import java.util.Iterator;
@@ -11,6 +13,7 @@ import java.util.Map;
  * Created by MJ on 2018. 8. 23..
  */
 
+@Slf4j
 public class ConvertUtil {
     public static Map<String, Object> convertObjectToMap(Object vo) {
         ObjectMapper objectMapper = new ObjectMapper();

@@ -14,12 +14,14 @@ import com.righthand.membership.dto.res.UserIdRes;
 import com.righthand.membership.dto.res.SessionRes;
 import com.righthand.membership.service.MembershipInfo;
 import com.righthand.membership.service.MembershipService;
+import com.righthand.mypage.service.TbUserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -58,6 +60,9 @@ public class MembershipController {
 
     @Autowired
     EmailService emailService;
+
+    @Autowired
+    TbUserService tbUserService;
 
     /**
      * 회원 가입
@@ -164,15 +169,16 @@ public class MembershipController {
 
     @ApiOperation("회원탈퇴")
     @PutMapping("/resign")
+    @CacheEvict(value = "findUserAndProfileCache", key = "#{userSeq}")
     public ResponseHandler<?> resign(@ApiParam("탈퇴사유") @Valid @RequestBody(required = false) final ResignReq _params,
                                      HttpServletRequest request) {
         final ResponseHandler<?> res = new ResponseHandler<>();
-        RestTemplate restTemplate = new RestTemplate();
         Map<String, Object> params = ConvertUtil.convertObjectToMap(_params);
         ReturnType rtn;
         try {
             MembershipInfo sessionInfo = membershipService.currentSessionUserInfo();
             int userSeq = sessionInfo.getUserSeq();
+            tbUserService.refreshCache(userSeq);
             params.put("userSeq", userSeq);
             rtn = membershipService.resign(params);
             //TODO 세션 파기

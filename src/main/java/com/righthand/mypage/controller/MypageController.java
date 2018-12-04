@@ -40,11 +40,6 @@ public class MypageController {
     private FileService fileService;
     private TbFileGrpService tbFileGrpService;
 
-    @CacheEvict(value = "findUserAndProfileCache", key = "#{userSeq}")
-    public void refreshCache(int userSeq) {
-        log.info("[Cache][Refresing] userSeq : " + userSeq);
-    }
-
     @ApiOperation("내가 작성한 게시물")
     @GetMapping("/myBoard")
     public ResponseHandler<?> showBoardList(@ApiParam(value = "페이지 번호") @RequestParam int page) {
@@ -121,6 +116,7 @@ public class MypageController {
                 if (membershipInfo == null) {
                     result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
                 } else {
+                    tbUserService.refreshCache(membershipInfo.getUserSeq());
                     Map<String, Object> params = ConvertUtil.convertObjectToMap(_params);
                     try {
                         tbUserService.updateUserProfile((String) params.get("nickname"), (String) params.get("tel"));
@@ -201,7 +197,7 @@ public class MypageController {
             result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
             return result;
         }
-
+        tbUserService.refreshCache(membershipInfo.getUserSeq());
         MultipartFile[] files = new MultipartFile[1];
         files[0] = multipartFile;
         Map<String, Object> param = new HashMap<>();
@@ -220,6 +216,8 @@ public class MypageController {
             TbFileGrp tbFileGrp = new TbFileGrp();
             rtn = tbFileGrpService.save(tbFileGrp, membershipInfo, urlMap, fileGrpSeq);
             result.setReturnCode(rtn);
+            //캐싱파기
+            tbUserService.refreshCache(membershipInfo.getUserSeq());
             return result;
         } catch (
                 Exception e) {
@@ -243,7 +241,7 @@ public class MypageController {
             result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
             return result;
         }
-
+        tbUserService.refreshCache(membershipInfo.getUserSeq());
         try {
             Map<String, Object> map = new HashMap<>();
             map.put("profileSeq", membershipInfo.getProfileSeq());

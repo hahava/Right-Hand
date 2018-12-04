@@ -18,11 +18,12 @@ public class CustomTbProfileRepositoryImpl extends QuerydslRepositorySupport imp
     }
 
     @Override
-    public List<TbFile> findAllJoinProfileAndFile() {
+    public List<TbFile> findAllJoinProfileAndFile(long profileSeq) {
         QTbProfile qTbProfile = new QTbProfile("profile");
         QTbFile qTbFile = new QTbFile("file");
         JPQLQuery query = from(qTbFile);
-        query.join(qTbFile.profileList, qTbProfile);
+        query.join(qTbFile.profileList, qTbProfile)
+        .on(qTbProfile.profileSeq.eq(profileSeq));
         List<TbFile> result = query.fetch();
         return result;
     }
