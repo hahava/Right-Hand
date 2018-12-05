@@ -11,8 +11,8 @@ function getParameterByName(name, url) {
 
 function setSubpageParam(title, info) {
 
-    $('#board_title').text(title);
-    $('#board_info').text(info);
+    $('#page_title').text(title);
+    $('#page_info').text(info);
 
 }
 

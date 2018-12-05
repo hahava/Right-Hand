@@ -6,6 +6,8 @@ var board_seq = getParameterByName('boardSeq');
 
 $(document).ready(function () {
 
+    setSubPageText(type);
+
     setNavActive(type);
     var board_content = getBoardContent(type, board_seq);
     setBoardContentView(board_content.data);
@@ -44,6 +46,7 @@ function setBoardContentView(content) {
         previewStyle: 'vertical',
         viewer: true,
         hideModeSwitch: true,
+        height: '500px',
         initialValue: board_content
     });
 }
