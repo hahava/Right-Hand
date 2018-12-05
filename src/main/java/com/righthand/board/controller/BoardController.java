@@ -154,21 +154,40 @@ public class BoardController {
             tempBoardData.put("nickname", userInfo.get("nickname"));
             if (btype.equals("tech")) {
                 try {
-                    tempBoardData.put("total", boardDao.selectCountListTech());
+                    int total = boardDao.selectCountListTech();
+                    tempBoardData.put("total",total);
                     tempBoardList = boardService.selectBoardListTech(page);
                     tempBoardData.put("data", tempBoardList);
                     result.setData(tempBoardData);
+                    if(total == 0) {
+                        result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NG);
+                        return result;
+                    }
+                    if(tempBoardList == null || tempBoardList.isEmpty()) {
+                        result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST);
+                        return result;
+                    }
                     result.setReturnCode(ReturnType.RTN_TYPE_OK);
                 } catch (Exception e) {
-                    logger.error("[ShowTechBoardList][Exception] " + e.toString());
-                    result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST);
-                }
+                logger.error("[ShowDevBoardList][Exception] " + e.toString());
+                result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST);
+            }
+
             } else if (btype.equals("dev")) {
                 try {
-                    tempBoardData.put("total", boardDao.selectCountListDev());
+                    int total = boardDao.selectCountListDev();
+                    tempBoardData.put("total",total);
                     tempBoardList = boardService.selectBoardListDev(page);
                     tempBoardData.put("data", tempBoardList);
                     result.setData(tempBoardData);
+                    if(total == 0) {
+                        result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NG);
+                        return result;
+                    }
+                    if(tempBoardList == null || tempBoardList.isEmpty()) {
+                        result.setReturnCode(ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST);
+                        return result;
+                    }
                     result.setReturnCode(ReturnType.RTN_TYPE_OK);
                 } catch (Exception e) {
                     logger.error("[ShowDevBoardList][Exception] " + e.toString());
