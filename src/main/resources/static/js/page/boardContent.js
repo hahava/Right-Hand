@@ -7,7 +7,6 @@ var board_seq = getParameterByName('boardSeq');
 $(document).ready(function () {
 
     setSubPageText(type);
-
     setNavActive(type);
     var board_content = getBoardContent(type, board_seq);
     setBoardContentView(board_content.data);
@@ -37,9 +36,13 @@ function setBoardContentView(content) {
     var board_content = content.BOARD_CONTENT;
     var nick_name = content.NICK_NAME;
     var board_date = content.BOARD_DATE.substr(0, 10);
+    var profile = (content.FILE_PATH != null) ? (content.FILE_PATH) : 'https://via.placeholder.com/128';
+    
     $('#board_title').html(board_title);
     $('#board_date').text(board_date);
     $('#nick_name').text(nick_name);
+    $('#board_user_profile').attr('src', profile);
+
     var editor = new tui.Editor.factory({
         el: document.querySelector('#viewerSection'),
         initialEditType: 'wysiwyg',
@@ -60,9 +63,9 @@ function setReplyView(reply_list) {
         var reply_content = reply_list[temp].REPLY_CONTENT;
         var reply_date = reply_list[temp].REPLY_DATE;
         var reply_nickName = reply_list[temp].NICK_NAME;
-
+        var reply_profile = (reply_list[temp].FILE_PATH != null) ? reply_list[temp].FILE_PATH : 'https://via.placeholder.com/128';
         $('#reply_list').append('<div class="media has-margin-bottom"><a class="pull-left" href="#none">' +
-            ' <img class="media-object" alt="avatar" src="https://via.placeholder.com/128"> </a>' +
+            ' <img class="media-object" alt="avatar" src=' + reply_profile + '> </a>' +
             '<div class="media-body"><h6 class="media-heading"><a class="link-reverse" href="#none">' + reply_nickName + '</a></h6>' +
             ' <p class="text-muted" id="reply_date">' + reply_date.substr(0, 10) + '</p>' +
             reply_content + '  </div>'

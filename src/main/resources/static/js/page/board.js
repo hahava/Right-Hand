@@ -12,8 +12,19 @@ $(document).ready(function () {
     if ((authorityLevel == 101 || authorityLevel == 0) && type == 'notice') {
         $('#board_writer').remove();
     }
+    resize();
 });
+$(window).on("resize", resize);
 
+function resize() {
+    if ($("html").height() > window.innerHeight) {
+        $("#footer").css("position", "relative");
+        $("#footer").css("bottom", "0px");
+    } else {
+        $("#footer").css("position", "absolute");
+        $("#footer").css("bottom", "0px");
+    }
+}
 
 /*현재 페이지 정보*/
 
@@ -29,6 +40,7 @@ function req_page(requested_page) {
         type: 'GET',
         url: "http://localhost:8080/board/list/" + type + "?page=" + requested_page,
         dataType: 'json',
+        async: false,
         success: function (result) {
 
 
@@ -49,7 +61,6 @@ function req_page(requested_page) {
         error: function () {
         }
     });
-
 }
 
 /* 검색하기 기능 */
