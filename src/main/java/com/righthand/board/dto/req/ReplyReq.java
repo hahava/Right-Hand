@@ -19,6 +19,4 @@ public class ReplyReq {
     @NotBlank
     private String content;
 
-    @ApiParam(value = "코인")
-    private Double reqCoin;
 }
