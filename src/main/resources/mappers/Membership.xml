@@ -149,8 +149,12 @@
         SELECT REWARD_POWER, RH_COIN FROM TB_PROFILE WHERE PROFILE_SEQ = #{profileSeq}
     </select>
 
-    <update id="updateRhCoin" parameterType="double">
+    <update id="updateRhCoin" parameterType="map">
         UPDATE TB_PROFILE SET RH_COIN = RH_COIN + #{reqCoin} WHERE PROFILE_SEQ = #{profileSeq}
+    </update>
+
+    <update id="updateRewardPower" parameterType="map">
+        UPDATE TB_PROFILE SET REWARD_POWER = REWARD_POWER + #{reqCoin} WHERE PROFILE_SEQ = #{profileSeq}
     </update>
 
 </mapper>

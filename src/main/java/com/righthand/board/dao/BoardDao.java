@@ -32,8 +32,6 @@ public interface BoardDao {
     void insertBoardListTech(Map boardData);
     void insertBoardListDev(Map boardData);
 
-
-    //TODO 이거 없애라!
     void insertReplyListTech(Map replyData);
     void insertReplyListDev(Map input_data);
 
@@ -46,7 +44,4 @@ public interface BoardDao {
     List<Map<String, Object>> getMyBoardList(MyBoardVO vo);
     int countMyBoard(int profileSeq);
 
-    //게시판 댓글의 코인 사용량
-    void insertReplyListTechWithRewardPower(Map input_data);
-    void insertReplyListDevWithRewardPower(Map input_data);
 }

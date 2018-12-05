@@ -33,4 +33,5 @@ public interface MembershipDao
     void updateFileSeq(Map profileData);
     Map getRewardPower(int profileSeq);
     void updateRhCoin(Map profileData);
+    void updateRewardPower(Map map);
 }
