@@ -97,8 +97,6 @@
         LIMIT 3
     </select>
 
-
-
     <insert id="insertBoardListTech" parameterType="map" useGeneratedKeys="true" keyProperty="BOARD_SEQ">
         INSERT INTO TB_IT_TECH_BOARD(BOARD_TITLE, BOARD_CONTENT, BOARD_CONTENT4SEARCHING, BOARD_DATE, BOARD_PROFILE_SEQ)
         VALUES (#{boardTitle}, #{boardContent}, #{boardContent4Searching}, CURRENT_TIMESTAMP(6) , #{boardProfileSeq})
@@ -109,7 +107,16 @@
         VALUES (#{boardTitle}, #{boardContent}, #{boardContent4Searching}, CURRENT_TIMESTAMP(6) , #{boardProfileSeq})
     </insert>
 
-
+    <select id="showReplyBoardTech" resultType="map" parameterType="com.righthand.board.dto.model.BoardDetailVO">
+        SELECT REPLY_DATE, REPLY_CONTENT, NICK_NAME, FILE_PATH
+        FROM TB_IT_TECH_REPLY AS R,
+        (select p.PROFILE_SEQ, p.NICK_NAME, f.FILE_PATH
+        from TB_PROFILE p
+        left outer join TB_FILE f
+        on p.FILE_SEQ=f.FILE_SEQ) P
+        WHERE P.PROFILE_SEQ = R.REPLY_PROFILE_SEQ AND R.REPLY_BOARD_SEQ = #{boardSeq}
+        ORDER BY REPLY_DATE DESC;
+    </select>
 
     <select id="showBoardDetailTech" resultType="hashMap" parameterType="com.righthand.board.dto.model.BoardDetailVO">
         SELECT BOARD_TYPE, BOARD_TITLE, BOARD_CONTENT, BOARD_DATE, NICK_NAME
@@ -127,28 +134,26 @@
         WHERE BOARD.BOARD_PROFILE_SEQ = PROFILE.PROFILE_SEQ AND BOARD.BOARD_SEQ = #{boardSeq}
     </select>
 
-    <select id="showReplyBoardTech" resultType="map" parameterType="com.righthand.board.dto.model.BoardDetailVO">
-        SELECT REPLY_CONTENT, REPLY_DATE, NICK_NAME
-        FROM TB_PROFILE AS PROFILE, TB_IT_TECH_REPLY AS REPLY
-        WHERE (REPLY.REPLY_BOARD_SEQ = #{boardSeq}) AND (REPLY.REPLY_PROFILE_SEQ = PROFILE.PROFILE_SEQ)
-        ORDER BY  REPLY.REPLY_DATE DESC
-    </select>
-
     <select id="showReplyBoardDev" resultType="map" parameterType="com.righthand.board.dto.model.BoardDetailVO">
-        SELECT REPLY_CONTENT, REPLY_DATE, NICK_NAME
-        FROM TB_PROFILE AS PROFILE, TB_DEVELOP_STORY_REPLY AS REPLY
-        WHERE (REPLY.REPLY_BOARD_SEQ = #{boardSeq}) AND (REPLY.REPLY_PROFILE_SEQ = PROFILE.PROFILE_SEQ)
-        ORDER BY  REPLY.REPLY_DATE DESC
+        SELECT REPLY_DATE, REPLY_CONTENT, NICK_NAME, FILE_PATH
+        FROM TB_DEVELOP_STORY_REPLY AS R,
+        (select p.PROFILE_SEQ, p.NICK_NAME, f.FILE_PATH
+        from TB_PROFILE p
+        left outer join TB_FILE f
+        on p.FILE_SEQ=f.FILE_SEQ) P
+        WHERE P.PROFILE_SEQ = R.REPLY_PROFILE_SEQ AND R.REPLY_BOARD_SEQ = #{boardSeq}
+        ORDER BY REPLY_DATE DESC;
     </select>
 
     <insert id="insertReplyListTech" parameterType="map" useGeneratedKeys="true" keyProperty="REPLY_SEQ">
-      INSERT INTO TB_IT_TECH_REPLY(REPLY_CONTENT, REPLY_DATE, REPLY_PROFILE_SEQ, REPLY_BOARD_SEQ)
-      VALUES (#{replyContent}, CURRENT_TIMESTAMP(6), #{replyProfileSeq}, #{boardSeq})
+      INSERT INTO TB_IT_TECH_REPLY(REPLY_CONTENT, REPLY_DATE, REPLY_PROFILE_SEQ, REPLY_BOARD_SEQ, REPLY_RH_COIN)
+      VALUES (#{replyContent}, CURRENT_TIMESTAMP(6), #{replyProfileSeq}, #{boardSeq}, #{reqCoin})
     </insert>
 
     <insert id="insertReplyListDev" parameterType="map" useGeneratedKeys="true" keyProperty="REPLY_SEQ">
-      INSERT INTO TB_DEVELOP_STORY_REPLY(REPLY_CONTENT, REPLY_DATE, REPLY_PROFILE_SEQ, REPLY_BOARD_SEQ)
-      VALUES (#{replyContent}, CURRENT_TIMESTAMP(6), #{replyProfileSeq}, #{boardSeq})
+      INSERT INTO TB_DEVELOP_STORY_REPLY(REPLY_CONTENT, REPLY_DATE, REPLY_PROFILE_SEQ, REPLY_BOARD_SEQ, REPLY_RH_COIN)
+      VALUES (#{replyContent}, CURRENT_TIMESTAMP(6), #{replyProfileSeq}, #{boardSeq}, #{reqCoin})
     </insert>
+
 
 </mapper>

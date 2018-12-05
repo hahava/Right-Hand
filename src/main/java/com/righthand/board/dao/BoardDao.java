@@ -43,4 +43,5 @@ public interface BoardDao {
 
     List<Map<String, Object>> getMyBoardList(MyBoardVO vo);
     int countMyBoard(int profileSeq);
+
 }

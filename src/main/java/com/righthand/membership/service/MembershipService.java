@@ -48,4 +48,6 @@ public interface MembershipService extends UserDetailsService {
     ReturnType saveFileGrpSeq(Map input_data) throws Exception;
 
     ReturnType updateFileSeq(Map input_data) throws Exception;
+
+    Map getRewardPowerAndCoin(int profileSeq) throws Exception;
 }

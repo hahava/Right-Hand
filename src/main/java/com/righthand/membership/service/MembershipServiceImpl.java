@@ -341,7 +341,6 @@ public class MembershipServiceImpl implements MembershipService {
 
         // 유저 시퀀스 저장
         member.setUserSeq(Integer.parseInt(tempUser.get("USER_SEQ").toString()));
-
         return member;
     }
 
@@ -482,6 +481,11 @@ public class MembershipServiceImpl implements MembershipService {
         return ReturnType.RTN_TYPE_OK;
     }
 
+    @Override
+    @Transactional
+    public Map getRewardPowerAndCoin(int profileSeq) {
+        return membershipDao.getRewardPowerAndRhCoin(profileSeq);
+    }
 
 }
 

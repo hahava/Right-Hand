@@ -11,6 +11,7 @@ import com.righthand.common.GetClientProfile;
 import com.righthand.common.dto.res.ResponseHandler;
 import com.righthand.common.type.ReturnType;
 
+import io.swagger.annotations.Api;
 import org.springframework.validation.BindingResult;
 
 import com.righthand.common.util.ConvertUtil;
@@ -51,10 +52,19 @@ public class BoardController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private final String bucketUrl = "https://s3.ap-northeast-2.amazonaws.com/right-hand-dev";
 
-    public boolean checkBoardType(String bType) {
+    private boolean checkBoardType(String bType) {
         if (bType.equalsIgnoreCase("tech"))
             return true;
         else if (bType.equalsIgnoreCase("dev"))
+            return true;
+        else
+            return false;
+    }
+
+    private boolean checkCoinType(String cType){
+        if (cType.equalsIgnoreCase("rp"))
+            return true;
+        else if (cType.equalsIgnoreCase("coin"))
             return true;
         else
             return false;
@@ -355,36 +365,118 @@ public class BoardController {
         return result;
     }
 
+    @ApiOperation("Reward Power 확인")
+    @PostMapping("/check-rp")
+    public ResponseHandler<?> checkIsRewardPowerEnough(@ApiParam(value = "댓글 내용") @Valid @RequestBody ReplyReq replyReq,
+                                                       BindingResult bindingResult){
+        final ResponseHandler<?> result = new ResponseHandler<>();
+        if(!bindingResult.hasErrors()){
+            try {
+                MembershipInfo membershipInfo = membershipService.currentSessionUserInfo();
+                if(membershipInfo == null){
+                    throw new Exception("Must Login");
+                }
+                Map senderInfo = membershipService.getRewardPowerAndCoin(membershipInfo.getProfileSeq());
+                Map<String, Object> params = ConvertUtil.convertObjectToMap(replyReq);
+                params.putIfAbsent("reqCoin", 0);
+                double reqCoin = (double)params.get("reqCoin");
+                if((int)reqCoin == 0){
+                    result.setReturnCode(ReturnType.RTN_TYPE_NO_REQUEST_COIN);
+                    return result;
+                }
+                double rewardPower = (double) senderInfo.get("REWARD_POWER");
+                if(rewardPower >= reqCoin){
+                    result.setReturnCode(ReturnType.RTN_TYPE_REWARD_POWER_ENOUGH);
+                    return result;
+                }
+                result.setReturnCode(ReturnType.RTN_TYPE_REWARD_POWER_NOT_ENOUGH_SUGGEST_RH_COIN_NG);
+                return result;
+            } catch (Exception e) {
+                logger.error("[Session][Exception] : {}", e.toString());
+                result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
+            }
+        }
+        result.setReturnCode(ReturnType.RTN_TYPE_NO_DATA);
+        return result;
+    }
+
     @ApiOperation("댓글달기")
-    @PostMapping("/reply/{btype}")
-    public ResponseHandler<?> writeReply(@ApiParam(value = "게시판 종류") @PathVariable String btype,
+    @PostMapping("/reply/{btype}/{ctype}")
+    public ResponseHandler<?> writeReplyWithRewardPower(@ApiParam(value = "게시판 종류") @PathVariable String btype,
+                                         @ApiParam(value = "코인 종류", example = "리워드 파워 = rp, 코인 = coin") @PathVariable String ctype,
                                          @ApiParam(value = "댓글 내용") @Valid @RequestBody ReplyReq replyReq,
                                          BindingResult bindingResult) {
         final ResponseHandler<?> result = new ResponseHandler<>();
         if(!bindingResult.hasErrors()) {
-            if (checkBoardType(btype) == true) {
-                try {
-                    MembershipInfo membershipInfo = membershipService.currentSessionUserInfo();
-                    Map<String, Object> params = ConvertUtil.convertObjectToMap(replyReq);
-                    params.put("replyProfileSeq", membershipInfo.getProfileSeq());
-                    params.put("boardSeq", params.get("boardSeq"));
-                    params.put("replyContent", params.get("content"));
-                    ReturnType rtn;
+            if (checkBoardType(btype)) {
+                if(checkCoinType(ctype)) {
                     try {
-                        if (btype.equals("tech")) {
-                            rtn = boardService.insertReplyListTech(params);
-                            result.setReturnCode(rtn);
-                        } else if (btype.equals("dev")) {
-                            rtn = boardService.insertReplyListDev(params);
-                            result.setReturnCode(rtn);
+                        MembershipInfo membershipInfo = membershipService.currentSessionUserInfo();
+                        Map<String, Object> params = ConvertUtil.convertObjectToMap(replyReq);
+                        params.put("replyProfileSeq", membershipInfo.getProfileSeq());
+                        params.put("replyContent", params.get("content"));
+                        params.putIfAbsent("reqCoin", 0);
+                        ReturnType rtn;
+
+                        // 보내고자 하는 코인의 양
+                        double reqCoin = (double) params.get("reqCoin");
+                        if (0 <= reqCoin) {
+                            Map senderInfo = membershipService.getRewardPowerAndCoin(membershipInfo.getProfileSeq());
+                            double rewardPower = (double) senderInfo.get("REWARD_POWER");
+                            double rhCoin = (double) senderInfo.get("RH_COIN");
+                            //보유하고 있는 Reward Power가 보내고자 하는 코인보다 작으면
+                            //Error 발생
+                            if(ctype.equals("rp")) {
+                                if (rewardPower < reqCoin) {
+                                    log.error("[NotEnoughRewardPower][Error]");
+                                    result.setReturnCode(ReturnType.RTN_TYPE_REWARD_POWER_NOT_ENOUGH_NG);
+                                    return result;
+                                }
+                            }
+                            //보유하고 있는 RH COIN이 보내고자 하는 코인보다 작으면
+                            //Error 발생
+                            else{
+                                if (rhCoin < reqCoin){
+                                    log.error("[NotEnoughCoin][Error]");
+                                    result.setReturnCode(ReturnType.RTN_TYPE_RH_COIN_NOT_ENOUGH_NG);
+                                    return result;
+                                }
+                            }
+                            try {
+                                if (btype.equals("tech")) {
+                                    // rewardPower를 보낸다.
+                                    if(ctype.equals("rp")){
+                                        rtn = boardService.insertReplyListTechWithRewardPower(params);
+                                        result.setReturnCode(rtn);
+                                    }
+                                    //코인을 보낸다.
+                                    else{
+                                        rtn = boardService.insertReplyListTechWithRhCoin(params);
+                                        result.setReturnCode(rtn);
+                                    }
+                                } else{
+                                    // rewardPower를 보낸다.
+                                    if(ctype.equals("rp")){
+                                        rtn = boardService.insertReplyListDevWithRewardPower(params);
+                                        result.setReturnCode(rtn);
+                                    }
+                                    //코인을 보낸다.
+                                    else{
+                                        rtn = boardService.insertReplyListDevWithRhCoin(params);
+                                        result.setReturnCode(rtn);
+                                    }
+                                }
+                            } catch (Exception e) {
+                                logger.error("[Reply][Exception] " + e.toString());
+                                result.setReturnCode(ReturnType.RTN_TYPE_BOARD_REPLY_NG);
+                            }
                         }
                     } catch (Exception e) {
-                        logger.error("[Reply][Exception] " + e.toString());
-                        result.setReturnCode(ReturnType.RTN_TYPE_BOARD_REPLY_NG);
+                        logger.error("[Session][Exception] " + e.toString());
+                        result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
                     }
-                } catch (Exception e) {
-                    logger.error("[Reply][Exception] " + e.toString());
-                    result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
+                }else{
+                    result.setReturnCode(ReturnType.RTN_TYPE_COIN_TYPE_NG);
                 }
             } else {
                 result.setReturnCode(ReturnType.RTN_TYPE_BOARD_TYPE_NG);

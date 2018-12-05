@@ -105,6 +105,9 @@
     <select id="getProfileSeq" resultType="int" parameterType="int">
         SELECT PROFILE_SEQ FROM TB_PROFILE WHERE USER_SEQ = #{userSeq}
     </select>
+    <select id="getProfileSeqByBoardSeq" resultType="int" parameterType="int">
+        SELECT PROFILE_SEQ FROM TB_PROFILE WHERE USER_SEQ = #{boardSeq}
+    </select>
     <select id="getUserSeq" resultType="int" parameterType="String">
         SELECT USER_SEQ FROM TB_USER WHERE USER_ID = #{id}
     </select>
@@ -140,6 +143,18 @@
 
     <update id="updateFileSeq" parameterType="map">
         UPDATE TB_PROFILE SET FILE_SEQ = #{fileSeq} WHERE PROFILE_SEQ = #{profileSeq}
+    </update>
+
+    <select id="getRewardPowerAndRhCoin" parameterType="int" resultType="map">
+        SELECT REWARD_POWER, RH_COIN FROM TB_PROFILE WHERE PROFILE_SEQ = #{profileSeq}
+    </select>
+
+    <update id="updateRhCoin" parameterType="map">
+        UPDATE TB_PROFILE SET RH_COIN = RH_COIN + #{reqCoin} WHERE PROFILE_SEQ = #{profileSeq}
+    </update>
+
+    <update id="updateRewardPower" parameterType="map">
+        UPDATE TB_PROFILE SET REWARD_POWER = REWARD_POWER + #{reqCoin} WHERE PROFILE_SEQ = #{profileSeq}
     </update>
 
 </mapper>
