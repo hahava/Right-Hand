@@ -135,10 +135,14 @@
     </select>
 
     <select id="showReplyBoardDev" resultType="map" parameterType="com.righthand.board.dto.model.BoardDetailVO">
-        SELECT REPLY_CONTENT, REPLY_DATE, NICK_NAME
-        FROM TB_PROFILE AS PROFILE, TB_DEVELOP_STORY_REPLY AS REPLY
-        WHERE (REPLY.REPLY_BOARD_SEQ = #{boardSeq}) AND (REPLY.REPLY_PROFILE_SEQ = PROFILE.PROFILE_SEQ)
-        ORDER BY  REPLY.REPLY_DATE DESC
+        SELECT REPLY_DATE, REPLY_CONTENT, NICK_NAME, FILE_PATH
+        FROM TB_DEVELOP_STORY_REPLY AS R,
+        (select p.PROFILE_SEQ, p.NICK_NAME, f.FILE_PATH
+        from TB_PROFILE p
+        left outer join TB_FILE f
+        on p.FILE_SEQ=f.FILE_SEQ) P
+        WHERE P.PROFILE_SEQ = R.REPLY_PROFILE_SEQ AND R.REPLY_BOARD_SEQ = #{boardSeq}
+        ORDER BY REPLY_DATE DESC;
     </select>
 
     <insert id="insertReplyListTech" parameterType="map" useGeneratedKeys="true" keyProperty="REPLY_SEQ">
