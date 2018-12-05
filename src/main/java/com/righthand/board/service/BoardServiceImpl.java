@@ -257,10 +257,11 @@ public class BoardServiceImpl implements BoardService {
     public ReturnType insertReplyListTechWithRewardPower(Map input_data) throws Exception {
         logger.info("[Service][replyTechWithRewardPower]");
         try {
-
             //게시판 업데이트
             boardDao.insertReplyListTech(input_data);
-
+        }catch (Exception e) {
+            return ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST;
+        }
             //수신자의 정보를 가져오기
             int receiverProfileSeq = membershipDao.getProfileSeqByBoardSeq((int) input_data.get("boardSeq"));
             Map<String, Object> map = new HashMap<>();
@@ -275,48 +276,11 @@ public class BoardServiceImpl implements BoardService {
             map.replace("profileSeq", input_data.get("replyProfileSeq"));
             map.replace("reqCoin", reqCoin * (-1));
             membershipDao.updateRewardPower(map);
-        } catch (Exception e) {
-            return ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST;
-        }
-        return ReturnType.RTN_TYPE_OK;
-    }
 
-    /*
-     * Reward Power를 사용하여 코인을 지급한다.
-     * */
-    @Override
-    @Transactional
-    public ReturnType insertReplyListDevWithRewardPower(Map input_data) throws Exception {
-        logger.info("[Service][replyDevWithRewardPower]");
-        try {
-
-            //게시판 업데이트
-            boardDao.insertReplyListDev(input_data);
-
-            //수신자의 정보를 가져오기
-            int receiverProfileSeq = membershipDao.getProfileSeqByBoardSeq((int) input_data.get("boardSeq"));
-            Map<String, Object> map = new HashMap<>();
-            double reqCoin = (double) input_data.get("reqCoin");
-            map.put("reqCoin", reqCoin);
-
-            // 수신자 코인 획득
-            map.put("profileSeq", receiverProfileSeq);
-            membershipDao.updateRhCoin(map);
-
-            // 발신자 ***리워드 파워*** 차감
-            map.replace("profileSeq", input_data.get("replyProfileSeq"));
-            map.replace("reqCoin", reqCoin * (-1));
-            membershipDao.updateRewardPower(map);
-        } catch (Exception e) {
-            return ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST;
-        }
         return ReturnType.RTN_TYPE_OK;
     }
 
 
-    /*
-    * RhCoin을 사용하여 코인을 지급한다.
-    * */
     @Override
     public ReturnType insertReplyListTechWithRhCoin(Map input_data) throws Exception {
         logger.info("[Service][replyTechWithRhCoin]");
@@ -324,34 +288,6 @@ public class BoardServiceImpl implements BoardService {
 
             //게시판 업데이트
             boardDao.insertReplyListTech(input_data);
-
-            //수신자의 정보를 가져오기
-            int receiverProfileSeq = membershipDao.getProfileSeqByBoardSeq((int) input_data.get("boardSeq"));
-            Map<String, Object> map = new HashMap<>();
-            double reqCoin = (double) input_data.get("reqCoin");
-            map.put("reqCoin", reqCoin);
-
-            // 수신자 코인 획득
-            map.put("profileSeq", receiverProfileSeq);
-            membershipDao.updateRhCoin(map);
-
-            // 발신자 ***리워드 파워*** 차감
-            map.replace("profileSeq", input_data.get("replyProfileSeq"));
-            map.replace("reqCoin", reqCoin * (-1));
-            membershipDao.updateRhCoin(map);
-        } catch (Exception e) {
-            return ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST;
-        }
-        return ReturnType.RTN_TYPE_OK;
-    }
-
-    @Override
-    public ReturnType insertReplyListDevWithRhCoin(Map input_data) throws Exception {
-        logger.info("[Service][replyDevWithRhCoin]");
-        try {
-
-            //게시판 업데이트
-            boardDao.insertReplyListDev(input_data);
 
             //수신자의 정보를 가져오기
             int receiverProfileSeq = membershipDao.getProfileSeqByBoardSeq((int) input_data.get("boardSeq"));
