@@ -18,6 +18,7 @@ public interface MembershipDao
     Map selectUser(Map userData);
     int countID(Map userData);
     int getProfileSeq(int userSeq);
+    int getProfileSeqByBoardSeq(int boardSeq);
     String getProfileNickname(int userSeq);
     void resign(Map reason);
     int checkNickname(Map userData);
@@ -30,4 +31,7 @@ public interface MembershipDao
     Integer checkFileGrpSeq(int profileSeq);
     void saveFileGrpSeq(Map profileData);
     void updateFileSeq(Map profileData);
+    Map getRewardPowerAndRhCoin(int profileSeq);
+    void updateRhCoin(Map profileData);
+    void updateRewardPower(Map map);
 }
