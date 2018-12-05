@@ -133,6 +133,14 @@ public class BoardController {
         return text;
     }
 
+    private double addAllRhCoin(List<Map<String, Object>> replyDetilData) {
+        double temp = 0;
+        for (int i = 0; i < replyDetilData.size(); i++) {
+            temp += (double)replyDetilData.get(i).get("REPLY_RH_COIN");
+        }
+        return temp;
+    }
+
 
     @ApiOperation("게시물 리스트")
     @GetMapping("/board/list/{btype}")
@@ -344,6 +352,8 @@ public class BoardController {
                     replyDetilData = boardService.showReplyBoardDev(boardSeq);
                 }
                 if (!(boardDetailData.isEmpty() || boardDetailData == null)) {
+                    double totalRhCoin = addAllRhCoin(replyDetilData);
+                    tempBoardData.put("totalRhCoin", totalRhCoin);
                     tempBoardData.put("authority", userInfo.get("authority"));
                     tempBoardData.put("nickname", userInfo.get("nickname"));
                     tempBoardData.put("data", boardDetailData);
@@ -365,6 +375,7 @@ public class BoardController {
 
         return result;
     }
+
 
     @ApiOperation("Reward Power 확인")
     @PostMapping("/check-rp")
