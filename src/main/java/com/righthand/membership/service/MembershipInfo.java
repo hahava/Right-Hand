@@ -19,6 +19,7 @@ public class MembershipInfo implements  UserDetails{
     private String name;
     private String nickname;
     private int userSeq;
+    private int fileSeq;
     private SimpleDateFormat loginTime;
 
     private boolean isAccountNonExpired;
@@ -113,7 +114,6 @@ public class MembershipInfo implements  UserDetails{
     public void setUserSeq(int userSeq) {
         this.userSeq = userSeq;
     }
-
 
     public List<String> getAuthoritiesStr() { return authoritiesStr; }
     public void setAuthoritiesStr(List<String> authoritiesStr) { this.authoritiesStr = authoritiesStr; }
