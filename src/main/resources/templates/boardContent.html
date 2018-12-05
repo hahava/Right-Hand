@@ -18,7 +18,7 @@
 <!--SUBPAGE HEAD-->
 <div class="subpage-head has-margin-bottom">
     <div class="container">
-        <h3 id="board_title"></h3>
+        <h4 id="board_title"></h4>
         <span id="board_date"></span>&nbsp;&nbsp;<a href="#" class="link-reverse" id="nick_name"></a>
     </div>
 </div>
@@ -32,8 +32,9 @@
 
             <!--Reply-->
 
+            <hr>
             <section class="comments-block">
-                <h3 class="comments-head" id="reply_count"></h3>
+                <h4 id="reply_count"></h4>
                 <div id="reply_list">
                 </div>
             </section>
@@ -41,7 +42,19 @@
 
 
             <section class="post-comment-form">
-                <h3 class="comments-head">댓글을 작성해 주세요</h3>
+                <div class="row">
+                    <hr>
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <h4>댓글을 작성해 주세요</h4>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <div class=" form-inline">
+                            <input class="form-control pull-right input-sm " id="coin" type=number min=0 step=0.001
+                                   max="10"
+                                   placeholder="코인" size="5">
+                        </div>
+                    </div>
+                </div>
                 <form class="form" role="form">
                     <div class="row">
                         <div class="form-group col-md-12">

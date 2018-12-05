@@ -37,7 +37,7 @@ function setUserInfoTableView(tag_id) {
         '        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 has-margin-top">' +
         '<div class="outer">\n' +
         '     <img data-src="holder.js/200x200" class="img-responsive image" alt="200x200" id="user_profile_photo" \n' +
-        '                 src="https://via.placeholder.com/200"  style="width: 200px; height: 200px;"> \n' +
+        '                   style="width: 200px; height: 200px;"> \n' +
         '  </div></div>\n' +
         '        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">\n' +
         '            <table class="table">\n' +
@@ -131,6 +131,12 @@ function setUserInfoTableData(data) {
     $('#user_nickname').text(nickName);
     $('#user_id').text(userId);
     $('#user_tel').text(tel);
+    if (data.filePath != null) {
+        $('#user_profile_photo').attr('src', data.filePath);
+    } else {
+        $('#user_profile_photo').attr('src', "https://via.placeholder.com/200");
+    }
+
 }
 
 function checkPwDup(next_page) {
