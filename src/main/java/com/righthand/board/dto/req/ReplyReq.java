@@ -13,7 +13,7 @@ public class ReplyReq {
 
     @ApiParam(value = "게시물 번호", required = true)
     @NotNull
-    private int boardSeq;
+    private Integer boardSeq;
 
     @ApiParam(value = "댓글 내용", required = true)
     @NotBlank

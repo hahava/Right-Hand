@@ -84,7 +84,10 @@ public enum ReturnType {
     RTN_TYPE_RH_COIN_NOT_ENOUGH_NG(502, "RH 코인이 부족합니다."),
     RTN_TYPE_REWARD_POWER_NOT_ENOUGH_SUGGEST_RH_COIN_NG(503, "리워드 파워가 부족합니다. RH 코인을 이용하여 지급하시겠습니까?"),
     RTN_TYPE_REWARD_POWER_ENOUGH(504, "리워드 파워를 사용하여 지급합니다."),
-    RTN_TYPE_NO_REQUEST_COIN(505, "코인 지급 없이 댓글을 작성하시겠습니까?");
+    RTN_TYPE_NO_REQUEST_COIN(505, "코인 지급 없이 댓글을 작성하시겠습니까?"),
+    RTN_TYPE_GET_COIN_POWER_NG(506, "코인과 리워드 파워를 가져오는데 실패하였습니다."),
+    RTN_TYPE_COIN_MUST_POSITIVE_NUM_NG(507, "코인은 음수값을 가질 수 없습니다.");
+
 
 
     private int code;
