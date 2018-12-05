@@ -341,7 +341,6 @@ public class MembershipServiceImpl implements MembershipService {
 
         // 유저 시퀀스 저장
         member.setUserSeq(Integer.parseInt(tempUser.get("USER_SEQ").toString()));
-
         return member;
     }
 

@@ -8,6 +8,8 @@ import com.righthand.board.dto.model.BoardSearchVO;
 
 import com.righthand.board.dto.model.MyBoardVO;
 import com.righthand.common.type.ReturnType;
+import com.righthand.membership.dao.MembershipDao;
+import com.righthand.membership.service.MembershipService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +28,8 @@ public class BoardServiceImpl implements BoardService {
 
     @Autowired
     BoardDao boardDao;
+
+    MembershipService membershipService;
 
     static Semaphore boardSemaphore = new Semaphore(1);
     private Logger logger = LoggerFactory.getLogger(this.getClass());
