@@ -29,8 +29,8 @@ public interface BoardService {
     Map<String, Object> getMyBoardList(int profileSeq, int page) throws Exception;
 
     ReturnType insertReplyListTechWithRewardPower(Map input_data) throws Exception;
-    ReturnType insertReplyListDevWithRewardPower(Map input_data) throws Exception;
 
     ReturnType insertReplyListTechWithRhCoin(Map input_data) throws Exception;
-    ReturnType insertReplyListDevWithRhCoin(Map input_data) throws Exception;
+
+//    ReturnType insertReplyListTech(Map input_data) throws Exception;
 }
