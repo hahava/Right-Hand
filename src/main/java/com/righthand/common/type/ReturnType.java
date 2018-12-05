@@ -76,7 +76,7 @@ public enum ReturnType {
     RTN_TYPE_BOARD_DETAIL_NG(308, "게시물을 불러오는데 실패했습니다."),
     RTN_TYPE_BOARD_REPLY_NG(309, "댓글 작성에 실패했습니다."),
     RTN_TYPE_BOARD_SEARCH_NG(314, "검색어를 입력해주세요."),
-    RTN_TYPE_BOARD_LIST_NG(317, "작성된 글이 존재하지 않습니다."),
+    RTN_TYPE_BOARD_LIST_NG(317, "게시판에 글이 존재하지 않습니다."),
 
     // COIN, POWER
     RTN_TYPE_COIN_TYPE_NG(500, "코인 지급 형식이 잘못되었습니다."),
