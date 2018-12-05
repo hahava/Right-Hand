@@ -31,7 +31,7 @@ public interface MembershipDao
     Integer checkFileGrpSeq(int profileSeq);
     void saveFileGrpSeq(Map profileData);
     void updateFileSeq(Map profileData);
-    Map getRewardPower(int profileSeq);
+    Map getRewardPowerAndRhCoin(int profileSeq);
     void updateRhCoin(Map profileData);
     void updateRewardPower(Map map);
 }

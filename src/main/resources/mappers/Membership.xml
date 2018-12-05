@@ -145,7 +145,7 @@
         UPDATE TB_PROFILE SET FILE_SEQ = #{fileSeq} WHERE PROFILE_SEQ = #{profileSeq}
     </update>
 
-    <select id="getRhPower" parameterType="int">
+    <select id="getRewardPowerAndRhCoin" parameterType="int" resultType="map">
         SELECT REWARD_POWER, RH_COIN FROM TB_PROFILE WHERE PROFILE_SEQ = #{profileSeq}
     </select>
 

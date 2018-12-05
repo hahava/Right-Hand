@@ -11,6 +11,7 @@ import com.righthand.common.GetClientProfile;
 import com.righthand.common.dto.res.ResponseHandler;
 import com.righthand.common.type.ReturnType;
 
+import io.swagger.annotations.Api;
 import org.springframework.validation.BindingResult;
 
 import com.righthand.common.util.ConvertUtil;
@@ -364,10 +365,45 @@ public class BoardController {
         return result;
     }
 
+    @ApiOperation("Reward Power 확인")
+    @PostMapping("/check-rp")
+    public ResponseHandler<?> checkIsRewardPowerEnough(@ApiParam(value = "댓글 내용") @Valid @RequestBody ReplyReq replyReq,
+                                                       BindingResult bindingResult){
+        final ResponseHandler<?> result = new ResponseHandler<>();
+        if(!bindingResult.hasErrors()){
+            try {
+                MembershipInfo membershipInfo = membershipService.currentSessionUserInfo();
+                if(membershipInfo == null){
+                    throw new Exception("Must Login");
+                }
+                Map senderInfo = membershipService.getRewardPowerAndCoin(membershipInfo.getProfileSeq());
+                Map<String, Object> params = ConvertUtil.convertObjectToMap(replyReq);
+                params.putIfAbsent("reqCoin", 0);
+                double reqCoin = (double)params.get("reqCoin");
+                if((int)reqCoin == 0){
+                    result.setReturnCode(ReturnType.RTN_TYPE_NO_REQUEST_COIN);
+                    return result;
+                }
+                double rewardPower = (double) senderInfo.get("REWARD_POWER");
+                if(rewardPower >= reqCoin){
+                    result.setReturnCode(ReturnType.RTN_TYPE_REWARD_POWER_ENOUGH);
+                    return result;
+                }
+                result.setReturnCode(ReturnType.RTN_TYPE_REWARD_POWER_NOT_ENOUGH_SUGGEST_RH_COIN_NG);
+                return result;
+            } catch (Exception e) {
+                logger.error("[Session][Exception] : {}", e.toString());
+                result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
+            }
+        }
+        result.setReturnCode(ReturnType.RTN_TYPE_NO_DATA);
+        return result;
+    }
+
     @ApiOperation("댓글달기")
     @PostMapping("/reply/{btype}/{ctype}")
     public ResponseHandler<?> writeReplyWithRewardPower(@ApiParam(value = "게시판 종류") @PathVariable String btype,
-                                         @ApiParam(value = "코인 종류") @PathVariable String ctype,
+                                         @ApiParam(value = "코인 종류", example = "리워드 파워 = rp, 코인 = coin") @PathVariable String ctype,
                                          @ApiParam(value = "댓글 내용") @Valid @RequestBody ReplyReq replyReq,
                                          BindingResult bindingResult) {
         final ResponseHandler<?> result = new ResponseHandler<>();
@@ -436,7 +472,7 @@ public class BoardController {
                             }
                         }
                     } catch (Exception e) {
-                        logger.error("[Reply][Exception] " + e.toString());
+                        logger.error("[Session][Exception] " + e.toString());
                         result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
                     }
                 }else{

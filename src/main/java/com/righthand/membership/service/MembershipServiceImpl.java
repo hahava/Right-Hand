@@ -485,7 +485,7 @@ public class MembershipServiceImpl implements MembershipService {
     @Override
     @Transactional
     public Map getRewardPowerAndCoin(int profileSeq) {
-        return membershipDao.getRewardPower(profileSeq);
+        return membershipDao.getRewardPowerAndRhCoin(profileSeq);
     }
 
 }
