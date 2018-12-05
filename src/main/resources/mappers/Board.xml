@@ -128,11 +128,12 @@
     </select>
 
     <select id="showBoardDetailDev" resultType="hashMap" parameterType="com.righthand.board.dto.model.BoardDetailVO">
-        SELECT BOARD_TITLE, BOARD_CONTENT, BOARD_DATE, NICK_NAME
+        SELECT BOARD_TITLE, BOARD_CONTENT, BOARD_DATE, NICK_NAME, FILE_PATH
         FROM
         TB_DEVELOP_STORY_BOARD AS BOARD
         , TB_PROFILE AS PROFILE
-        WHERE BOARD.BOARD_PROFILE_SEQ = PROFILE.PROFILE_SEQ AND BOARD.BOARD_SEQ = #{boardSeq}
+        , TB_FILE AS FILE
+        WHERE BOARD.BOARD_PROFILE_SEQ = PROFILE.PROFILE_SEQ AND PROFILE.FILE_SEQ = FILE.FILE_SEQ AND BOARD.BOARD_SEQ = #{boardSeq}
     </select>
 
     <select id="showReplyBoardDev" resultType="map" parameterType="com.righthand.board.dto.model.BoardDetailVO">
