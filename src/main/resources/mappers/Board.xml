@@ -142,13 +142,14 @@
     </select>
 
     <insert id="insertReplyListTech" parameterType="map" useGeneratedKeys="true" keyProperty="REPLY_SEQ">
-      INSERT INTO TB_IT_TECH_REPLY(REPLY_CONTENT, REPLY_DATE, REPLY_PROFILE_SEQ, REPLY_BOARD_SEQ)
-      VALUES (#{replyContent}, CURRENT_TIMESTAMP(6), #{replyProfileSeq}, #{boardSeq})
+      INSERT INTO TB_IT_TECH_REPLY(REPLY_CONTENT, REPLY_DATE, REPLY_PROFILE_SEQ, REPLY_BOARD_SEQ, REPLY_RH_COIN)
+      VALUES (#{replyContent}, CURRENT_TIMESTAMP(6), #{replyProfileSeq}, #{boardSeq}, #{reqCoin})
     </insert>
 
     <insert id="insertReplyListDev" parameterType="map" useGeneratedKeys="true" keyProperty="REPLY_SEQ">
-      INSERT INTO TB_DEVELOP_STORY_REPLY(REPLY_CONTENT, REPLY_DATE, REPLY_PROFILE_SEQ, REPLY_BOARD_SEQ)
-      VALUES (#{replyContent}, CURRENT_TIMESTAMP(6), #{replyProfileSeq}, #{boardSeq})
+      INSERT INTO TB_DEVELOP_STORY_REPLY(REPLY_CONTENT, REPLY_DATE, REPLY_PROFILE_SEQ, REPLY_BOARD_SEQ, REPLY_RH_COIN)
+      VALUES (#{replyContent}, CURRENT_TIMESTAMP(6), #{replyProfileSeq}, #{boardSeq}, #{reqCoin})
     </insert>
+
 
 </mapper>
