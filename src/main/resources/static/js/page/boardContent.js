@@ -7,56 +7,53 @@ var board_seq = getParameterByName('boardSeq');
 $(document).ready(function () {
 
     setNavActive(type);
-    view_detail();
-
+    var board_content = getBoardContent(type, board_seq);
+    setBoardContentView(board_content.data);
+    setReplyView(board_content.reply_list);
 });
 
-
-function view_detail() {
+function getBoardContent(type, board_seq) {
+    var content;
     $.ajax({
         type: 'GET',
         url: "http://localhost:8080/board/detail/" + type + "?boardSeq=" + Number(board_seq),
         dataType: 'json',
+        async: false,
         success: function (result) {
-
             var data = result.data;
-            var board_detail = data.data;
-            var board_content = board_detail.BOARD_CONTENT;
-
-            var editor = new tui.Editor.factory({
-                el: document.querySelector('#viewerSection'),
-                initialEditType: 'wysiwyg',
-                previewStyle: 'vertical',
-                viewer: true,
-                hideModeSwitch: true,
-                initialValue: board_content
-            });
-
-            var board_title = board_detail.BOARD_TITLE;
-            var nick_name = board_detail.NICK_NAME;
-            var board_date = board_detail.BOARD_DATE.substr(0, 10);
-
-            $('#board_title').html(board_title);
-            $('#board_date').text(board_date);
-            $('#nick_name').text(nick_name);
-
-            /*reply*/
-            var reply_list = data.replyDetailData;
-            $('#reply_count').text(reply_list.length + " 개의 댓글");
-            view_reply(reply_list);
-
-            console.log(type + board_seq);
-
+            // 게시글 내용과 해당 게시글의 댓글
+            content = {"data": data.data, "reply_list": data.replyDetailData};
         }, error: function () {
         }
     });
+    return content;
 }
 
-var reply_index = 0;
+function setBoardContentView(content) {
 
-function view_reply(reply_list) {
+    var board_title = content.BOARD_TITLE;
+    var board_content = content.BOARD_CONTENT;
+    var nick_name = content.NICK_NAME;
+    var board_date = content.BOARD_DATE.substr(0, 10);
+    $('#board_title').html(board_title);
+    $('#board_date').text(board_date);
+    $('#nick_name').text(nick_name);
+    var editor = new tui.Editor.factory({
+        el: document.querySelector('#viewerSection'),
+        initialEditType: 'wysiwyg',
+        previewStyle: 'vertical',
+        viewer: true,
+        hideModeSwitch: true,
+        initialValue: board_content
+    });
+}
 
-    for (var temp = reply_index; temp < reply_list.length; temp++) {
+
+function setReplyView(reply_list) {
+
+    $('#reply_count').text(reply_list.length + " 개의 댓글");
+
+    for (var temp = 0; temp < reply_list.length; temp++) {
         var reply_content = reply_list[temp].REPLY_CONTENT;
         var reply_date = reply_list[temp].REPLY_DATE;
         var reply_nickName = reply_list[temp].NICK_NAME;
@@ -93,8 +90,6 @@ function send_reply() {
             "boardSeq": Number(board_seq),
             "content": content
         };
-
-
         var reply_success = false;
         $.ajax({
             async: false,
@@ -114,10 +109,8 @@ function send_reply() {
                         reply_success = false;
                 }
             }, error: function (e) {
-
             }
         });
-
         if (reply_success) {
             window.location.href = "http://localhost:8080/board/content?boardSeq=" + board_seq + "&type=" + type;
         }

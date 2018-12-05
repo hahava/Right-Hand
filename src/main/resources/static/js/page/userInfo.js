@@ -294,7 +294,7 @@ function reqModifiedUserInfo() {
             if (result.code === 0) {
                 alert("수정되었습니다.");
                 location.href = "/user/info";
-            }
+            }   
             else {
                 alert(data.code);
             }
