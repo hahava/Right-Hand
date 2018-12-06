@@ -74,6 +74,7 @@ public class BoardController {
         final String regex = "\\!\\[.*?\\)";
         final String[] srcTag = {"<img class=\"img-responsive\" src=\"", "\" data=todos/>"};
         String text = (String) params.get("boardContent");
+        log.info("text : {}", text);
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(text);
 
@@ -85,14 +86,15 @@ public class BoardController {
         }
 
         /*
-         * 복사 붙여넣기를 통해 마크다운 형식으로 들어간 이미지 필터링
+         * 복사 붙여넣기 - BASE64가 URL(http, https)의 형식으로 넘어오는 이미지
          * */
         for (int i = 0; i < total; i++) {
             StringTokenizer stringTokenizer = new StringTokenizer(imgTexts.get(i), "(");
             stringTokenizer.nextToken();
             String secondText = stringTokenizer.nextToken();
             String isHttps = secondText.substring(0, 8);
-            if (isHttps.equals("https://")) {
+            String isHttp = secondText.substring(0, 7);
+            if (isHttps.equals("https://") || isHttp.equals("http://")) {
                 String imgUrl = secondText.replace(")", "");
                 text = text.replace(imgTexts.get(i), srcTag[0] + imgUrl + srcTag[1]);
                 imgTexts.remove(i);
