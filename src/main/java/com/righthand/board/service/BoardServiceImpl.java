@@ -277,7 +277,7 @@ public class BoardServiceImpl implements BoardService {
             map.replace("reqCoin", reqCoin * (-1));
             membershipDao.updateRewardPower(map);
 
-        return ReturnType.RTN_TYPE_OK;
+        return ReturnType.RTN_TYPE_BOARD_REPLY_SUCCESS;
     }
 
 
@@ -307,7 +307,7 @@ public class BoardServiceImpl implements BoardService {
         } catch (Exception e) {
             return ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST;
         }
-        return ReturnType.RTN_TYPE_OK;
+        return ReturnType.RTN_TYPE_BOARD_REPLY_SUCCESS;
     }
 
     @Override
@@ -327,7 +327,7 @@ public class BoardServiceImpl implements BoardService {
             logger.error("[InsertReplyListDev][Exception] : {}", e.toString());
             return ReturnType.RTN_TYPE_BOARD_REPLY_NG;
         }
-        return ReturnType.RTN_TYPE_OK;
+        return ReturnType.RTN_TYPE_BOARD_REPLY_SUCCESS;
     }
 
     @Override
