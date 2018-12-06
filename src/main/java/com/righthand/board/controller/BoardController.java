@@ -434,14 +434,16 @@ public class BoardController {
             params.put("replyProfileSeq", membershipInfo.getProfileSeq());
             params.put("replyContent", params.get("content"));
             try {
-                boardService.insertReplyListDev(params);
+                ReturnType rtn = boardService.insertReplyListDev(params);
+                result.setReturnCode(rtn);
+                return result;
             } catch (Exception e) {
                 log.error("[InsertReplyListDev][Exception]");
                 result.setReturnCode(ReturnType.RTN_TYPE_BOARD_REPLY_NG);
                 return result;
             }
         }
-        result.setReturnCode(ReturnType.RTN_TYPE_NO_DATA);
+        result.setReturnCode(ReturnType.RTN_TYPE_BOARD_REPLY_IS_EMPTY_NG);
         return result;
     }
 
@@ -609,7 +611,7 @@ public class BoardController {
             }
             return result;
         }
-        result.setReturnCode(ReturnType.RTN_TYPE_NO_DATA);
+        result.setReturnCode(ReturnType.RTN_TYPE_BOARD_REPLY_IS_EMPTY_NG);
         return result;
     }
 
