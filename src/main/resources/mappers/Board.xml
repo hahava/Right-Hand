@@ -137,7 +137,7 @@
     </select>
 
     <select id="showReplyBoardDev" resultType="map" parameterType="com.righthand.board.dto.model.BoardDetailVO">
-        SELECT REPLY_DATE, REPLY_CONTENT, NICK_NAME, FILE_PATH
+        SELECT REPLY_DATE, REPLY_CONTENT, NICK_NAME, FILE_PATH, REPLY_IS_REWARDED
         FROM TB_DEVELOP_STORY_REPLY AS R,
         (select p.PROFILE_SEQ, p.NICK_NAME, f.FILE_PATH
         from TB_PROFILE p
@@ -153,9 +153,23 @@
     </insert>
 
     <insert id="insertReplyListDev" parameterType="map" useGeneratedKeys="true" keyProperty="REPLY_SEQ">
-      INSERT INTO TB_DEVELOP_STORY_REPLY(REPLY_CONTENT, REPLY_DATE, REPLY_PROFILE_SEQ, REPLY_BOARD_SEQ, REPLY_RH_COIN)
-      VALUES (#{replyContent}, CURRENT_TIMESTAMP(6), #{replyProfileSeq}, #{boardSeq}, #{reqCoin})
+      INSERT INTO TB_DEVELOP_STORY_REPLY(REPLY_CONTENT, REPLY_DATE, REPLY_PROFILE_SEQ, REPLY_BOARD_SEQ)
+      VALUES (#{replyContent}, CURRENT_TIMESTAMP(6), #{replyProfileSeq}, #{boardSeq})
     </insert>
 
+    <select id="findProfileSeqByBoardSeq" parameterType="int" resultType="int">
+        SELECT BOARD_PROFILE_SEQ FROM TB_DEVELOP_STORY_BOARD WHERE BOARD_SEQ = #{boardSeq}
+    </select>
 
+    <select id="findProfileSeqByReplySeq" parameterType="int" resultType="int">
+        SELECT REPLY_PROFILE_SEQ FROM TB_DEVELOP_STORY_REPLY WHERE REPLY_SEQ = #{replySeq}
+    </select>
+
+    <update id="updateReplyListDev" parameterType="map">
+        UPDATE TB_DEVELOP_STORY_REPLY SET REPLY_RH_COIN = REPLY_RH_COIN + #{reqCoin}, REPLY_IS_REWARDED = TRUE WHERE REPLY_SEQ = #{replySeq}
+    </update>
+
+    <select id="findReplyIsRewarded" parameterType="int" resultType="int">
+        SELECT REPLY_IS_REWARDED FROM TB_DEVELOP_STORY_REPLY WHERE REPLY_SEQ = #{replySeq}
+    </select>
 </mapper>

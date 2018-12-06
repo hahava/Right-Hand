@@ -59,6 +59,12 @@ public class CustomLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
             MembershipInfo membershipInfo = (MembershipInfo)authentication.getPrincipal();
             membershipInfo.setProfileSeq(membershipService.getProfileSeq(membershipInfo.getUserSeq()));
             membershipInfo.setNickname(membershipService.getProfileNickname(membershipInfo.getUserSeq()));
+
+            // 코인과 파워를 가져온다
+            Map map = membershipService.getRewardPowerAndCoin(membershipInfo.getProfileSeq());
+            membershipInfo.setRhCoin((double)map.get("RH_COIN"));
+            membershipInfo.setRewardPower((double)map.get("REWARD_POWER"));
+
             writer.write(getUserInfoWhenSuccessLogin());
             writer.flush();
         } catch (Exception e) {
