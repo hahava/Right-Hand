@@ -309,5 +309,11 @@ public class BoardServiceImpl implements BoardService {
         return ReturnType.RTN_TYPE_OK;
     }
 
+    @Override
+    public int findProfileSeqByBoardSeq(int boardSeq) {
+        logger.info("[Service][findProfileSeqByBoardSeq]");
+        return boardDao.findProfileSeqByBoardSeq(boardSeq);
+    }
+
 
 }

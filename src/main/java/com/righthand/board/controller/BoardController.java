@@ -352,7 +352,7 @@ public class BoardController {
     @GetMapping("/board/detail/{btype}")
     public ResponseHandler<?> showBoardDetail(@ApiParam(value = "게시물 번호") @RequestParam int boardSeq, @ApiParam(value = "게시판 종류") @PathVariable String btype) {
         final ResponseHandler<Object> result = new ResponseHandler<>();
-        if (checkBoardType(btype) == true) {
+        if (checkBoardType(btype)) {
             Map<String, Object> boardDetailData = null;
             List<Map<String, Object>> replyDetilData = null;
             // 사용자 정보 가져옴
@@ -368,13 +368,20 @@ public class BoardController {
                 if (btype.equals("tech")) {
                     boardDetailData = boardService.showBoardDetailTech(boardSeq);
                     replyDetilData = boardService.showReplyBoardTech(boardSeq);
+                    double totalRhCoin = addAllRhCoin(replyDetilData);
+                    tempBoardData.put("totalRhCoin", totalRhCoin);
                 } else if (btype.equals("dev")) {
                     boardDetailData = boardService.showBoardDetailDev(boardSeq);
                     replyDetilData = boardService.showReplyBoardDev(boardSeq);
+                    // 로그인 유저와 작성자가 같은가?
+                    Integer profileSeq = (Integer) userInfo.get("profileSeq");
+                    int boardProfileSeq = boardService.findProfileSeqByBoardSeq(boardSeq);
+                    tempBoardData.put("isWriter", true);
+                    if(profileSeq == null || (profileSeq != boardProfileSeq)){
+                        tempBoardData.replace("isWriter", false);
+                    }
                 }
                 if (!(boardDetailData.isEmpty() || boardDetailData == null)) {
-                    double totalRhCoin = addAllRhCoin(replyDetilData);
-                    tempBoardData.put("totalRhCoin", totalRhCoin);
                     tempBoardData.put("authority", userInfo.get("authority"));
                     tempBoardData.put("nickname", userInfo.get("nickname"));
                     tempBoardData.put("data", boardDetailData);

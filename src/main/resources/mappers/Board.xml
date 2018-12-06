@@ -137,7 +137,7 @@
     </select>
 
     <select id="showReplyBoardDev" resultType="map" parameterType="com.righthand.board.dto.model.BoardDetailVO">
-        SELECT REPLY_DATE, REPLY_CONTENT, NICK_NAME, FILE_PATH
+        SELECT REPLY_DATE, REPLY_CONTENT, NICK_NAME, FILE_PATH, REPLY_IS_REWARDED
         FROM TB_DEVELOP_STORY_REPLY AS R,
         (select p.PROFILE_SEQ, p.NICK_NAME, f.FILE_PATH
         from TB_PROFILE p
@@ -157,5 +157,7 @@
       VALUES (#{replyContent}, CURRENT_TIMESTAMP(6), #{replyProfileSeq}, #{boardSeq}, #{reqCoin})
     </insert>
 
-
+    <select id="findProfileSeqByBoardSeq" parameterType="int" resultType="int">
+        SELECT BOARD_PROFILE_SEQ FROM TB_DEVELOP_STORY_BOARD WHERE BOARD_SEQ = #{boardSeq}
+    </select>
 </mapper>
