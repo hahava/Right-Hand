@@ -77,6 +77,7 @@ public enum ReturnType {
     RTN_TYPE_BOARD_REPLY_NG(309, "댓글 작성에 실패했습니다."),
     RTN_TYPE_BOARD_SEARCH_NG(314, "검색어를 입력해주세요."),
     RTN_TYPE_BOARD_LIST_NG(317, "게시판에 글이 존재하지 않습니다."),
+    RTN_TYPE_BOARD_REPLY_IS_REWARDED_NG(318, "이미 댓글에 코인을 지급하였습니다."),
 
     // COIN, POWER
     RTN_TYPE_COIN_TYPE_NG(500, "코인 지급 형식이 잘못되었습니다."),
@@ -86,8 +87,9 @@ public enum ReturnType {
     RTN_TYPE_REWARD_POWER_ENOUGH(504, "리워드 파워를 사용하여 지급합니다."),
     RTN_TYPE_NO_REQUEST_COIN(505, "코인 지급 없이 댓글을 작성하시겠습니까?"),
     RTN_TYPE_GET_COIN_POWER_NG(506, "코인과 리워드 파워를 가져오는데 실패하였습니다."),
-    RTN_TYPE_COIN_MUST_POSITIVE_NUM_NG(507, "코인은 음수값을 가질 수 없습니다.");
-
+    RTN_TYPE_COIN_MUST_POSITIVE_NUM_NG(507, "코인은 음수값을 가질 수 없습니다."),
+    RTN_TYPE_COIN_SEND_NG(508, "코인 전송에 실패했습니다."),
+    RTN_TYPE_REQ_COIN_NOT_ENOUGH_NG(509, "0보다 많은 코인을 전송해야 합니다.");
 
 
     private int code;

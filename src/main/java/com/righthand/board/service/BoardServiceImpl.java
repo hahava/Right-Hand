@@ -216,7 +216,7 @@ public class BoardServiceImpl implements BoardService {
             result.put("total", count);
             result.put("data", myBoard);
         } catch (Exception e) {
-            throw new Exception(e);
+            logger.error("[getMyBoardList][Exception] : {}", e.toString());
         }
         return result;
     }
@@ -282,6 +282,7 @@ public class BoardServiceImpl implements BoardService {
 
 
     @Override
+    @Transactional
     public ReturnType insertReplyListTechWithRhCoin(Map input_data) throws Exception {
         logger.info("[Service][replyTechWithRhCoin]");
         try {
@@ -299,7 +300,7 @@ public class BoardServiceImpl implements BoardService {
             map.put("profileSeq", receiverProfileSeq);
             membershipDao.updateRhCoin(map);
 
-            // 발신자 ***리워드 파워*** 차감
+            // 발신자 코인 차감
             map.replace("profileSeq", input_data.get("replyProfileSeq"));
             map.replace("reqCoin", reqCoin * (-1));
             membershipDao.updateRhCoin(map);
@@ -310,9 +311,111 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public int findProfileSeqByBoardSeq(int boardSeq) {
         logger.info("[Service][findProfileSeqByBoardSeq]");
         return boardDao.findProfileSeqByBoardSeq(boardSeq);
+    }
+
+    @Override
+    @Transactional
+    public ReturnType insertReplyListDev(Map params) throws Exception {
+        logger.info("[Service][insertReplyListDev]");
+        try{
+            boardDao.insertReplyListDev(params);
+        }catch (Exception e){
+            logger.error("[InsertReplyListDev][Exception] : {}", e.toString());
+            return ReturnType.RTN_TYPE_BOARD_REPLY_NG;
+        }
+        return ReturnType.RTN_TYPE_OK;
+    }
+
+    @Override
+    @Transactional
+    public ReturnType sendDevWithRewardPower(Map input_data) throws Exception {
+        logger.info(("[Service][sendDevWithRewardPower]"));
+        boardDao.findReplyIsRewarded((int)input_data.get("replySeq"));
+
+        try {
+            // 댓글 업데이트 (지급하는 코인의 양 추가)
+            // 그리고 댓글을 보상 받은 상태로 바꾼다.
+            boardDao.updateReplyListDev(input_data);
+        }catch (Exception e) {
+            logger.error("[sendRewardPowerInDev][Exception] : {}", e.toString());
+            return ReturnType.RTN_TYPE_COIN_SEND_NG;
+        }
+        Map<String, Object> map = new HashMap<>();
+
+        double reqCoin = (double) input_data.get("reqCoin");
+        map.put("reqCoin", reqCoin);
+
+        Integer receiverProfileSeq = null;
+        try {
+            receiverProfileSeq = boardDao.findProfileSeqByReplySeq((int) input_data.get("replySeq"));
+        }catch (Exception e){
+            logger.error("[findProfileSeqByReplySeq][Exception] : {}", e.toString());
+            return ReturnType.RTN_TYPE_NG;
+        }
+        map.put("profileSeq", receiverProfileSeq);
+        try {
+            // 수신자 코인 획득
+            membershipDao.updateRhCoin(map);
+        }catch (Exception e){
+            logger.error("[updateReceiver][Exception] : {}", e.toString());
+            return ReturnType.RTN_TYPE_NG;
+        }
+        // 발신자 ***리워드 파워*** 차감
+        map.replace("profileSeq", input_data.get("senderSeq"));
+        map.replace("reqCoin", reqCoin * (-1));
+        try {
+            membershipDao.updateRewardPower(map);
+        }catch (Exception e){
+            logger.error("[updateSender][Exception] : {}", e.toString());
+            return ReturnType.RTN_TYPE_NG;
+        }
+        return ReturnType.RTN_TYPE_OK;
+    }
+
+    @Override
+    public ReturnType sendDevWithRhCoin(Map input_data) throws Exception {
+        logger.info(("[Service][sendDevWithRhCoin]"));
+        try {
+            // 댓글 업데이트 (지급하는 코인의 양 추가)
+            boardDao.updateReplyListDev(input_data);
+        }catch (Exception e) {
+            logger.error("[sendRewardPowerInDev][Exception] : {}", e.toString());
+            return ReturnType.RTN_TYPE_COIN_SEND_NG;
+        }
+        Map<String, Object> map = new HashMap<>();
+
+        double reqCoin = (double) input_data.get("reqCoin");
+        map.put("reqCoin", reqCoin);
+
+        Integer receiverProfileSeq = null;
+        try {
+            receiverProfileSeq = boardDao.findProfileSeqByReplySeq((int) input_data.get("replySeq"));
+        }catch (Exception e){
+            logger.error("[findProfileSeqByReplySeq][Exception] : {}", e.toString());
+            return ReturnType.RTN_TYPE_NG;
+        }
+        map.put("profileSeq", receiverProfileSeq);
+        try {
+            // 수신자 코인 획득
+            membershipDao.updateRhCoin(map);
+        }catch (Exception e){
+            logger.error("[updateReceiver][Exception] : {}", e.toString());
+            return ReturnType.RTN_TYPE_NG;
+        }
+        // 발신자 ***리워드 파워*** 차감
+        map.replace("profileSeq", input_data.get("senderSeq"));
+        map.replace("reqCoin", reqCoin * (-1));
+        try {
+            membershipDao.updateRhCoin(map);
+        }catch (Exception e){
+            logger.error("[updateSender][Exception] : {}", e.toString());
+            return ReturnType.RTN_TYPE_NG;
+        }
+        return ReturnType.RTN_TYPE_OK;
     }
 
 

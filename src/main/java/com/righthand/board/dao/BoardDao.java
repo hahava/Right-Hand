@@ -44,4 +44,10 @@ public interface BoardDao {
     List<Map<String, Object>> getMyBoardList(MyBoardVO vo);
     int countMyBoard(int profileSeq);
     int findProfileSeqByBoardSeq(int boardSeq);
+
+    void updateReplyListDev(Map input_data);
+
+    int findProfileSeqByReplySeq(int replySeq);
+
+    int findReplyIsRewarded(int replySeq);
 }

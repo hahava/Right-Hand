@@ -34,5 +34,11 @@ public interface BoardService {
 
     int findProfileSeqByBoardSeq(int boardSeq) throws Exception;
 
+    ReturnType insertReplyListDev(Map params) throws Exception;
+
+    ReturnType sendDevWithRewardPower(Map input_data) throws Exception;
+
+    ReturnType sendDevWithRhCoin(Map input_data) throws Exception;
+
 //    ReturnType insertReplyListTech(Map input_data) throws Exception;
 }
