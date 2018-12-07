@@ -9,6 +9,7 @@ import com.righthand.board.dto.model.BoardSearchVO;
 import com.righthand.board.dto.model.MyBoardVO;
 import com.righthand.common.type.ReturnType;
 import com.righthand.membership.dao.MembershipDao;
+import com.righthand.membership.service.MembershipInfo;
 import com.righthand.membership.service.MembershipService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +35,14 @@ public class BoardServiceImpl implements BoardService {
 
     static Semaphore boardSemaphore = new Semaphore(1);
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    private void refreshMembershipInfo(MembershipInfo membershipInfo, String cType, double reqCoin){
+        if (cType.equals("coin")){
+            membershipInfo.setRhCoin(membershipInfo.getRhCoin() - reqCoin);
+        }else if(cType.equals("rp")){
+            membershipInfo.setRewardPower(membershipInfo.getRewardPower() - reqCoin);
+        }
+    }
 
     @Override
     public List<Map<String, Object>> selectBoardListTech(int page) throws Exception {
@@ -254,7 +263,7 @@ public class BoardServiceImpl implements BoardService {
      * */
     @Override
     @Transactional
-    public ReturnType insertReplyListTechWithRewardPower(Map input_data) throws Exception {
+    public ReturnType insertReplyListTechWithRewardPower(Map input_data, MembershipInfo membershipInfo) throws Exception {
         logger.info("[Service][replyTechWithRewardPower]");
         try {
             //게시판 업데이트
@@ -277,13 +286,16 @@ public class BoardServiceImpl implements BoardService {
             map.replace("reqCoin", reqCoin * (-1));
             membershipDao.updateRewardPower(map);
 
+            // 사용자 정보 갱신
+            refreshMembershipInfo(membershipInfo, "rp", reqCoin);
+
         return ReturnType.RTN_TYPE_BOARD_REPLY_SUCCESS;
     }
 
 
     @Override
     @Transactional
-    public ReturnType insertReplyListTechWithRhCoin(Map input_data) throws Exception {
+    public ReturnType insertReplyListTechWithRhCoin(Map input_data, MembershipInfo membershipInfo) throws Exception {
         logger.info("[Service][replyTechWithRhCoin]");
         try {
 
@@ -304,17 +316,13 @@ public class BoardServiceImpl implements BoardService {
             map.replace("profileSeq", input_data.get("replyProfileSeq"));
             map.replace("reqCoin", reqCoin * (-1));
             membershipDao.updateRhCoin(map);
+
+            // 사용자 정보 갱신
+            refreshMembershipInfo(membershipInfo, "coin", reqCoin);
         } catch (Exception e) {
             return ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST;
         }
         return ReturnType.RTN_TYPE_BOARD_REPLY_SUCCESS;
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public int findProfileSeqByBoardSeq(int boardSeq) {
-        logger.info("[Service][findProfileSeqByBoardSeq]");
-        return boardDao.findProfileSeqByBoardSeq(boardSeq);
     }
 
     @Override
@@ -332,7 +340,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional
-    public ReturnType sendDevWithRewardPower(Map input_data) throws Exception {
+    public ReturnType sendDevWithRewardPower(Map input_data, MembershipInfo membershipInfo) throws Exception {
         logger.info(("[Service][sendDevWithRewardPower]"));
         boardDao.findReplyIsRewarded((int)input_data.get("replySeq"));
 
@@ -373,11 +381,14 @@ public class BoardServiceImpl implements BoardService {
             logger.error("[updateSender][Exception] : {}", e.toString());
             return ReturnType.RTN_TYPE_NG;
         }
+
+        // 사용자 정보 갱신
+        refreshMembershipInfo(membershipInfo, "rp", reqCoin);
         return ReturnType.RTN_TYPE_OK;
     }
 
     @Override
-    public ReturnType sendDevWithRhCoin(Map input_data) throws Exception {
+    public ReturnType sendDevWithRhCoin(Map input_data, MembershipInfo membershipInfo) throws Exception {
         logger.info(("[Service][sendDevWithRhCoin]"));
         try {
             // 댓글 업데이트 (지급하는 코인의 양 추가)
@@ -415,7 +426,24 @@ public class BoardServiceImpl implements BoardService {
             logger.error("[updateSender][Exception] : {}", e.toString());
             return ReturnType.RTN_TYPE_NG;
         }
+
+        // 사용자 정보 갱신
+        refreshMembershipInfo(membershipInfo, "coin", reqCoin);
         return ReturnType.RTN_TYPE_OK;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public int findProfileSeqByBoardSeqTech(int boardSeq) throws Exception {
+        logger.info("[Service][findProfileSeqByBoardSeqTech]");
+        return boardDao.findProfileSeqByBoardSeqTech(boardSeq);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public int findProfileSeqByBoardSeqDev(int boardSeq) throws Exception {
+        logger.info("[Service][findProfileSeqByBoardSeqDev]");
+        return boardDao.findProfileSeqByBoardSeqDev(boardSeq);
     }
 
 
