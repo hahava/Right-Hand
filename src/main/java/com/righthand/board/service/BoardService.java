@@ -2,6 +2,7 @@ package com.righthand.board.service;
 
 import com.righthand.common.type.ReturnType;
 
+import com.righthand.membership.service.MembershipInfo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,17 +29,19 @@ public interface BoardService {
 
     Map<String, Object> getMyBoardList(int profileSeq, int page) throws Exception;
 
-    ReturnType insertReplyListTechWithRewardPower(Map input_data) throws Exception;
+    ReturnType insertReplyListTechWithRewardPower(Map input_data, MembershipInfo membershipInfo) throws Exception;
 
-    ReturnType insertReplyListTechWithRhCoin(Map input_data) throws Exception;
-
-    int findProfileSeqByBoardSeq(int boardSeq) throws Exception;
+    ReturnType insertReplyListTechWithRhCoin(Map input_data, MembershipInfo membershipInfo) throws Exception;
 
     ReturnType insertReplyListDev(Map params) throws Exception;
 
-    ReturnType sendDevWithRewardPower(Map input_data) throws Exception;
+    ReturnType sendDevWithRewardPower(Map input_data, MembershipInfo membershipInfo) throws Exception;
 
-    ReturnType sendDevWithRhCoin(Map input_data) throws Exception;
+    ReturnType sendDevWithRhCoin(Map input_data, MembershipInfo membershipInfo) throws Exception;
+
+    int findProfileSeqByBoardSeqTech(int boardSeq) throws Exception;
+
+    int findProfileSeqByBoardSeqDev(int boardSeq) throws Exception;
 
 //    ReturnType insertReplyListTech(Map input_data) throws Exception;
 }

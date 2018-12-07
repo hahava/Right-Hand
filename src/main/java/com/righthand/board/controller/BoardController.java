@@ -379,7 +379,16 @@ public class BoardController {
             }
             Map<String, Object> tempBoardData = new HashMap<>();
             try {
+
+                Integer profileSeq = (Integer) userInfo.get("profileSeq");
                 if (btype.equals("tech")) {
+                    // 로그인 유저와 작성자가 같은가?
+                    int boardProfileSeq = boardService.findProfileSeqByBoardSeqTech(boardSeq);
+                    tempBoardData.put("isWriter", true);
+                    if (profileSeq == null || (profileSeq != boardProfileSeq)) {
+                        tempBoardData.replace("isWriter", false);
+                    }
+
                     boardDetailData = boardService.showBoardDetailTech(boardSeq);
                     replyDetilData = boardService.showReplyBoardTech(boardSeq);
                     double totalRhCoin = addAllRhCoin(replyDetilData);
@@ -388,8 +397,7 @@ public class BoardController {
                     boardDetailData = boardService.showBoardDetailDev(boardSeq);
                     replyDetilData = boardService.showReplyBoardDev(boardSeq);
                     // 로그인 유저와 작성자가 같은가?
-                    Integer profileSeq = (Integer) userInfo.get("profileSeq");
-                    int boardProfileSeq = boardService.findProfileSeqByBoardSeq(boardSeq);
+                    int boardProfileSeq = boardService.findProfileSeqByBoardSeqDev(boardSeq);
                     tempBoardData.put("isWriter", true);
                     if (profileSeq == null || (profileSeq != boardProfileSeq)) {
                         tempBoardData.replace("isWriter", false);
@@ -450,7 +458,7 @@ public class BoardController {
 
     @ApiOperation("Dev Story 코인 전송")
     @PostMapping("/coin/dev")
-    public ResponseHandler<?> sendCoinInDev(@ApiParam(value = "코인 종류", example = "리워드 파워 = rp, 코인 = coin") @RequestParam(required = false) String ctype,
+    public ResponseHandler<?> sendCoinInDev(@ApiParam(value = "코인 종류") @RequestParam(required = false) String ctype,
                                             @ApiParam(value = "송금 하고자 하는 코인의 양") @RequestParam Double reqCoin,
                                             @ApiParam(value = "댓글 번호") @RequestParam int replySeq) {
         final ResponseHandler<?> result = new ResponseHandler<>();
@@ -512,13 +520,13 @@ public class BoardController {
             try {
                 // rewardPower를 보낸다.
                 if (ctype.equals("rp")) {
-                    rtn = boardService.sendDevWithRewardPower(params);
+                    rtn = boardService.sendDevWithRewardPower(params, membershipInfo);
                     result.setReturnCode(rtn);
                     return result;
                 }
                 //코인을 보낸다.
                 else {
-                    rtn = boardService.sendDevWithRhCoin(params);
+                    rtn = boardService.sendDevWithRhCoin(params, membershipInfo);
                     result.setReturnCode(rtn);
                     return result;
                 }
@@ -592,12 +600,12 @@ public class BoardController {
                     try {
                         // rewardPower를 보낸다.
                         if (ctype.equals("rp")) {
-                            rtn = boardService.insertReplyListTechWithRewardPower(params);
+                            rtn = boardService.insertReplyListTechWithRewardPower(params, membershipInfo);
                             result.setReturnCode(rtn);
                         }
                         //코인을 보낸다.
                         else {
-                            rtn = boardService.insertReplyListTechWithRhCoin(params);
+                            rtn = boardService.insertReplyListTechWithRhCoin(params, membershipInfo);
                             result.setReturnCode(rtn);
                         }
                     } catch (Exception e) {
