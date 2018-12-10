@@ -157,4 +157,34 @@
         UPDATE TB_PROFILE SET REWARD_POWER = REWARD_POWER + #{reqCoin} WHERE PROFILE_SEQ = #{profileSeq}
     </update>
 
+    <update id="updateRhPower" parameterType="map">
+        UPDATE TB_PROFILE SET RH_POWER = RH_POWER + #{reqPower} WHERE PROFILE_SEQ = #{profileSeq}
+    </update>
+
+    <select id="getLoginLimit" parameterType="int" resultType="int">
+        SELECT LOGIN_LIMIT FROM TB_PROFILE WHERE PROFILE_SEQ = #{profileSeq}
+    </select>
+
+    <update id="decreaseLoginLimit" parameterType="int">
+        UPDATE TB_PROFILE SET LOGIN_LIMIT = LOGIN_LIMIT - 1 WHERE PROFILE_SEQ = #{profileSeq}
+    </update>
+
+
+    <select id="getBoardWriteLimit" parameterType="int" resultType="int">
+        SELECT BOARD_WRITE_LIMIT FROM TB_PROFILE WHERE PROFILE_SEQ = #{profileSeq}
+    </select>
+
+    <update id="decreaseBoardWriteLimit" parameterType="int">
+        UPDATE TB_PROFILE SET BOARD_WRITE_LIMIT = BOARD_WRITE_LIMIT - 1 WHERE PROFILE_SEQ = #{profileSeq}
+    </update>
+
+
+    <select id="getReplyWriteLimit" parameterType="int" resultType="int">
+        SELECT REPLY_WRITE_LIMIT FROM TB_PROFILE WHERE PROFILE_SEQ = #{profileSeq}
+    </select>
+
+    <update id="decreaseReplyWriteLimit" parameterType="int">
+        UPDATE TB_PROFILE SET REPLY_WRITE_LIMIT= REPLY_WRITE_LIMIT - 1 WHERE PROFILE_SEQ = #{profileSeq}
+    </update>
+
 </mapper>
