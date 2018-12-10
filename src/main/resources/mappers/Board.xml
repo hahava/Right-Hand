@@ -108,7 +108,7 @@
     </insert>
 
     <select id="showReplyBoardTech" resultType="map" parameterType="com.righthand.board.dto.model.BoardDetailVO">
-        SELECT REPLY_DATE, REPLY_CONTENT, NICK_NAME, FILE_PATH, REPLY_RH_COIN
+        SELECT REPLY_DATE, REPLY_CONTENT, NICK_NAME, FILE_PATH, REPLY_RH_COIN, REPLY_SEQ
         FROM TB_IT_TECH_REPLY AS R,
         (select p.PROFILE_SEQ, p.NICK_NAME, f.FILE_PATH
         from TB_PROFILE p
@@ -137,7 +137,7 @@
     </select>
 
     <select id="showReplyBoardDev" resultType="map" parameterType="com.righthand.board.dto.model.BoardDetailVO">
-        SELECT REPLY_DATE, REPLY_CONTENT, NICK_NAME, FILE_PATH, REPLY_IS_REWARDED, REPLY_RH_COIN
+        SELECT REPLY_DATE, REPLY_CONTENT, NICK_NAME, FILE_PATH, REPLY_IS_REWARDED, REPLY_RH_COIN, REPLY_SEQ
         FROM TB_DEVELOP_STORY_REPLY AS R,
         (select p.PROFILE_SEQ, p.NICK_NAME, f.FILE_PATH
         from TB_PROFILE p

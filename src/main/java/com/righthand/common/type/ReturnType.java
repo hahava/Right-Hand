@@ -45,6 +45,7 @@ public enum ReturnType {
     RTN_TYPE_MEMBERSHIP_DATA_INVALID_PATTERN_NG(313, "데이터가 존재하지 않거나, 형식이 올바르지 않습니다."),
     RTN_TYPE_MEMBERSHIP_RECOMMENDER_NG(315, "추천인이 존재하지 않는 회원입니다."),
     RTN_TYPE_SIGNUP_REWARD_NG(316, "회원가입 보상에 실패했습니다."),
+    RTN_TYPE_ALREADY_LOGIN_REWARDED(317, "이미 로그인을 하여 RH 파워를 획득하였습니다."),
 
     // Activate
     RTN_TYPE_MEMBERSSHIP_ACTIVATE_NO_ID(220, ""),
@@ -79,7 +80,9 @@ public enum ReturnType {
     RTN_TYPE_BOARD_LIST_NG(317, "게시판에 글이 존재하지 않습니다."),
     RTN_TYPE_BOARD_REPLY_IS_REWARDED_NG(318, "이미 댓글에 코인을 지급하였습니다."),
     RTN_TYPE_BOARD_REPLY_IS_EMPTY_NG(319, "댓글을 입력하세요."),
-    RTN_TYPE_BOARD_REPLY_SUCCESS(319, "댓글 작성을 완료하였습니다."),
+    RTN_TYPE_BOARD_REPLY_SUCCESS(320, "댓글 작성을 완료하였습니다."),
+    RTN_TYPE_BOARD_ALL_REWARDED(321, "글 작성 보상이 모두 지급되었습니다."),
+    RTN_TYPE_REPLY_ALL_REWARDED(322, "댓글 작성 보상이 모두 지급되었습니다."),
 
     // COIN, POWER
     RTN_TYPE_COIN_TYPE_NG(500, "코인 지급 형식이 잘못되었습니다."),

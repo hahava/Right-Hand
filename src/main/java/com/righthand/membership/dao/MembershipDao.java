@@ -34,4 +34,18 @@ public interface MembershipDao
     Map getRewardPowerAndRhCoin(int profileSeq);
     void updateRhCoin(Map profileData);
     void updateRewardPower(Map map);
+
+    int getLoginLimit(int profileSeq);
+
+    void decreaseLoginLimit(int profileSeq);
+
+    void updateRhPower(Map map);
+
+    int getBoardWriteLimit(int profileSeq);
+
+    void decreaseBoardWriteLimit(int profileSeq);
+
+    int getReplyWriteLimit(int profileSeq);
+
+    void decreaseReplyWriteLimit(int profileSeq);
 }
