@@ -44,6 +44,22 @@ public class BoardServiceImpl implements BoardService {
         }
     }
 
+
+    /*
+    * 게시글 작성 갯수를 확인하여 RH파워 지급 후, LIMIT을 차감.
+    * */
+    private ReturnType giveRhPowerAndDecreaseLimit(MembershipInfo membershipInfo){
+        int profileSeq = membershipInfo.getProfileSeq();
+        int boardWriteAvailable = membershipDao.getBoardWriteLimit(profileSeq);
+        if(boardWriteAvailable == 0) return ReturnType.RTN_TYPE_BOARD_ALL_REWARDED;
+        Map<String, Object> map = new HashMap<>();
+        map.put("reqPower", 10);
+        map.put("profileSeq", profileSeq);
+        membershipDao.updateRhPower(map);
+        membershipDao.decreaseBoardWriteLimit(profileSeq);
+        return ReturnType.RTN_TYPE_OK;
+    }
+
     @Override
     public List<Map<String, Object>> selectBoardListTech(int page) throws Exception {
         int start;
@@ -231,31 +247,35 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public ReturnType insertBoardListTech(Map input_data) throws Exception {
+    public ReturnType insertBoardListTech(Map input_data, MembershipInfo membershipInfo) throws Exception {
         logger.info("[Service][boardTech]");
+        ReturnType rtn;
         boardSemaphore.acquire();
         try {
             boardDao.insertBoardListTech(input_data);
+            rtn = giveRhPowerAndDecreaseLimit(membershipInfo);
         } catch (Exception e) {
             boardSemaphore.release();
             return ReturnType.RTN_TYPE_BOARD_INSERT_NG;
         }
         boardSemaphore.release();
-        return ReturnType.RTN_TYPE_OK;
+        return rtn;
     }
 
     @Override
-    public ReturnType insertBoardListDev(Map input_data) throws Exception {
+    public ReturnType insertBoardListDev(Map input_data, MembershipInfo membershipInfo) throws Exception {
         logger.info("[Service][boardDev]");
+        ReturnType rtn;
         boardSemaphore.acquire();
         try {
             boardDao.insertBoardListDev(input_data);
+            rtn = giveRhPowerAndDecreaseLimit(membershipInfo);
         } catch (Exception e) {
             boardSemaphore.release();
             return ReturnType.RTN_TYPE_BOARD_INSERT_NG;
         }
         boardSemaphore.release();
-        return ReturnType.RTN_TYPE_OK;
+        return rtn;
     }
 
     /*

@@ -40,4 +40,8 @@ public interface MembershipDao
     void decreaseLoginLimit(int profileSeq);
 
     void updateRhPower(Map map);
+
+    int getBoardWriteLimit(int profileSeq);
+
+    void decreaseBoardWriteLimit(int profileSeq);
 }

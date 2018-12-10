@@ -19,8 +19,8 @@ public interface BoardService {
     Map<String, Object> showBoardDetailTech(int boardSeq) throws Exception;
     Map<String, Object> showBoardDetailDev(int boardSeq) throws Exception;
 
-    ReturnType insertBoardListTech(Map input_data) throws Exception;
-    ReturnType insertBoardListDev(Map<String, Object> params) throws Exception;
+    ReturnType insertBoardListTech(Map input_data, MembershipInfo membershipInfo) throws Exception;
+    ReturnType insertBoardListDev(Map input_data, MembershipInfo membershipInfo) throws Exception;
 
     List<Map<String, Object>> showReplyBoardTech(int boardSeq) throws Exception;
     List<Map<String, Object>> showReplyBoardDev(int boardSeq) throws Exception;

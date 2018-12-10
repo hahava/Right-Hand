@@ -328,7 +328,7 @@ public class BoardController {
                             ReturnType rtn;
                             if (btype.equals("tech")) {
                                 try {
-                                    rtn = boardService.insertBoardListTech(params);
+                                    rtn = boardService.insertBoardListTech(params, membershipInfo);
                                     result.setReturnCode(rtn);
                                 } catch (Exception e) {
                                     logger.error("[TechBoard][Exception] " + e.toString());
@@ -336,7 +336,7 @@ public class BoardController {
                                 }
                             } else if (btype.equals("dev")) {
                                 try {
-                                    rtn = boardService.insertBoardListDev(params);
+                                    rtn = boardService.insertBoardListDev(params, membershipInfo);
                                     result.setReturnCode(rtn);
                                 } catch (Exception e) {
                                     logger.error("[DevBoard][Exception] " + e.toString());
