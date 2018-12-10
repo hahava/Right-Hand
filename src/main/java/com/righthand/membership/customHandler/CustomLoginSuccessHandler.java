@@ -65,6 +65,10 @@ public class CustomLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
             membershipInfo.setRhCoin((double)map.get("RH_COIN"));
             membershipInfo.setRewardPower((double)map.get("REWARD_POWER"));
 
+
+            // 로그인 시, RhPower를 5개씩 준다.
+            membershipService.updateRhPower(membershipInfo.getProfileSeq());
+
             writer.write(getUserInfoWhenSuccessLogin());
             writer.flush();
         } catch (Exception e) {

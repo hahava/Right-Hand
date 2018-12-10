@@ -487,5 +487,15 @@ public class MembershipServiceImpl implements MembershipService {
         return membershipDao.getRewardPowerAndRhCoin(profileSeq);
     }
 
+    @Override
+    public ReturnType updateRhPower(int profileSeq) {
+        if(membershipDao.getLoginLimit(profileSeq) == 0) return ReturnType.RTN_TYPE_ALREADY_LOGIN_REWARDED;
+        Map<String, Object> map = new HashMap<>();
+        map.put("reqPower", 5); map.put("profileSeq", profileSeq);
+        membershipDao.updateRhPower(map);
+        membershipDao.decreaseLoginLimit(profileSeq);
+        return ReturnType.RTN_TYPE_OK;
+    }
+
 }
 
