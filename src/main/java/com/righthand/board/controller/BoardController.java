@@ -442,7 +442,7 @@ public class BoardController {
             params.put("replyProfileSeq", membershipInfo.getProfileSeq());
             params.put("replyContent", params.get("content"));
             try {
-                ReturnType rtn = boardService.insertReplyListDev(params);
+                ReturnType rtn = boardService.insertReplyListDev(params, membershipInfo);
                 result.setReturnCode(rtn);
                 return result;
             } catch (Exception e) {

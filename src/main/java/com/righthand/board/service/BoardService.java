@@ -33,7 +33,7 @@ public interface BoardService {
 
     ReturnType insertReplyListTechWithRhCoin(Map input_data, MembershipInfo membershipInfo) throws Exception;
 
-    ReturnType insertReplyListDev(Map params) throws Exception;
+    ReturnType insertReplyListDev(Map params, MembershipInfo membershipInfo) throws Exception;
 
     ReturnType sendDevWithRewardPower(Map input_data, MembershipInfo membershipInfo) throws Exception;
 

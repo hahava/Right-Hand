@@ -178,4 +178,13 @@
         UPDATE TB_PROFILE SET BOARD_WRITE_LIMIT = BOARD_WRITE_LIMIT - 1 WHERE PROFILE_SEQ = #{profileSeq}
     </update>
 
+
+    <select id="getReplyWriteLimit" parameterType="int" resultType="int">
+        SELECT REPLY_WRITE_LIMIT FROM TB_PROFILE WHERE PROFILE_SEQ = #{profileSeq}
+    </select>
+
+    <update id="decreaseReplyWriteLimit" parameterType="int">
+        UPDATE TB_PROFILE SET REPLY_WRITE_LIMIT= REPLY_WRITE_LIMIT - 1 WHERE PROFILE_SEQ = #{profileSeq}
+    </update>
+
 </mapper>

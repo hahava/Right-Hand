@@ -82,6 +82,7 @@ public enum ReturnType {
     RTN_TYPE_BOARD_REPLY_IS_EMPTY_NG(319, "댓글을 입력하세요."),
     RTN_TYPE_BOARD_REPLY_SUCCESS(320, "댓글 작성을 완료하였습니다."),
     RTN_TYPE_BOARD_ALL_REWARDED(321, "글 작성 보상이 모두 지급되었습니다."),
+    RTN_TYPE_REPLY_ALL_REWARDED(322, "댓글 작성 보상이 모두 지급되었습니다."),
 
     // COIN, POWER
     RTN_TYPE_COIN_TYPE_NG(500, "코인 지급 형식이 잘못되었습니다."),

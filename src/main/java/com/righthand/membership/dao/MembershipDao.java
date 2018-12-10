@@ -44,4 +44,8 @@ public interface MembershipDao
     int getBoardWriteLimit(int profileSeq);
 
     void decreaseBoardWriteLimit(int profileSeq);
+
+    int getReplyWriteLimit(int profileSeq);
+
+    void decreaseReplyWriteLimit(int profileSeq);
 }
