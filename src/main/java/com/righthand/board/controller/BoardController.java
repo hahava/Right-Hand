@@ -542,13 +542,16 @@ public class BoardController {
 
     @ApiOperation("IT STORY 댓글달기")
     @PostMapping("/reply/tech")
-    public ResponseHandler<?> writeReplyTech(@ApiParam(value = "코인 종류", example = "리워드 파워 = rp, 코인 = coin") @RequestParam(required = false) String ctype,
-                                             @ApiParam(value = "송금 하고자 하는 코인의 양") @RequestParam(required = false) Double coin,
+    public ResponseHandler<?> writeReplyTech(@ApiParam(value = "코인 종류", example = "리워드 파워 = rp, 코인 = coin") @RequestParam String ctype,
+                                             @ApiParam(value = "송금 하고자 하는 코인의 양") @RequestParam(required = false) Double reqCoin,
                                              @ApiParam(value = "댓글 내용") @Valid @RequestBody ReplyReq replyReq,
                                              BindingResult bindingResult) {
         final ResponseHandler<?> result = new ResponseHandler<>();
         ReturnType rtn;
-        if (coin < 0) {
+
+        if(reqCoin == null) reqCoin = 0.0;
+
+        if (reqCoin < 0) {
             result.setReturnCode(ReturnType.RTN_TYPE_COIN_MUST_POSITIVE_NUM_NG);
             return result;
         }
@@ -564,8 +567,6 @@ public class BoardController {
             params.put("replyContent", params.get("content"));
             if (checkCoinType(ctype)) {
                 // 보내고자 하는 코인의 양
-                double reqCoin = 0;
-                if (coin != null) reqCoin = coin;
                 params.put("reqCoin", reqCoin);
                 if (0 <= reqCoin) {
                     Map senderInfo = null;
