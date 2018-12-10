@@ -29,7 +29,8 @@ function getBoardContent(type, board_seq) {
                 "data": data.data,
                 "reply_list": data.replyDetailData,
                 "total_coin": data.totalRhCoin,
-                "writer": data.isWriter
+                "writer": data.isWriter,
+                "nickname": data.nickname
             };
         }, error: function () {
         }
@@ -63,9 +64,9 @@ function setBoardContentView(content) {
 
 
 function setReplyView(board_content) {
-    console.log(board_content.writer)
 
     var reply_list = board_content.reply_list;
+    var writer_nickname = board_content.nickname;
     var total_coin = board_content.total_coin != null ? board_content.total_coin : 0;
     $('#reply_count').text(reply_list.length + " 개의 댓글 (" + total_coin + "$)");
 
@@ -76,8 +77,9 @@ function setReplyView(board_content) {
         var reply_profile = (reply_list[temp].FILE_PATH != null) ? reply_list[temp].FILE_PATH : 'https://via.placeholder.com/128';
         var reply_coin_modal = '';
         var reply_coin = reply_list[temp].REPLY_RH_COIN;
-        if (reply_coin == 0 && type != 'tech' && board_content.writer) {
-            reply_coin_modal = '<button class="btn btn-sm pull-right" data-toggle="modal" data-target="#myModal" id="' + temp + '" onclick="setModalData(this)">+</button>';
+        var reply_seq = reply_list[temp].REPLY_SEQ;
+        if (reply_coin == 0 && type != 'tech' && board_content.writer && (writer_nickname != reply_nickName)) {
+            reply_coin_modal = '<button class="btn btn-sm pull-right" data-toggle="modal" data-target="#myModal" id="' + temp + '" onclick="setModalData(this,' + reply_seq + ')">+</button>';
         }
         var html = '<div class="media has-margin-bottom"><a class="pull-left" href="#none">' +
             ' <img class="media-object" alt="avatar" src=' + reply_profile + '> </a>' +
@@ -94,8 +96,10 @@ function setReplyView(board_content) {
     }
 }
 
-function setModalData(elem) {
+function setModalData(elem, reply_seq) {
     $('#myModalLabel').text('코인 보상을 하시겠습니까?');
+    $('#reply_seq').val(reply_seq);
+    console.log($('#reply_seq').val());
 }
 
 // <,> 등의 태그를 &lt, &gt 변환
@@ -145,7 +149,15 @@ function send_reply() {
             data: JSON.stringify(data),
             success: function (result) {
                 switch (result.code) {
-                    case 319 :
+                    case 319  :
+                        reply_success = true;
+                        alert("댓글 작성되었습니다.");
+                        break;
+                    case 320 :
+                        reply_success = true;
+                        alert("댓글 작성되었습니다.");
+                        break;
+                    case 322 :
                         reply_success = true;
                         alert("댓글 작성되었습니다.");
                         break;
@@ -202,7 +214,37 @@ function setToggle(elem) {
 }
 
 function sendCoin() {
-    $('#coin_send_btn').attr('data-dismiss', 'modal');
-    location.reload();
-    return true;
+    var coin_send;
+    var token;
+    var token_value = $('#coin_value').val() != null ? $('#coin_value').val() : 0;
+    if ($('#coin').hasClass('active')) {
+        token = 'coin';
+    } else {
+        token = 'rp';
+    }
+    $.ajax({
+        async: false,
+        url: "http://localhost:8080/coin/dev?ctype=" + token + "&reqCoin=" + token_value + "&replySeq=" + $('#reply_seq').val(),
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        success: function (result) {
+            switch (result.code) {
+                case 0 :
+                    coin_send = true;
+                    break;
+                default :
+                    coin_send = false;
+                    alert(result.message);
+            }
+        }, error: function (e) {
+        }
+    });
+    if (coin_send) {
+        $('#coin_send_btn').attr('data-dismiss', 'modal');
+        location.reload();
+    }
+    return coin_send;
 }
