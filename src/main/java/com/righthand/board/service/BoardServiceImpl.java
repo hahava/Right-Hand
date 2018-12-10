@@ -10,14 +10,14 @@ import com.righthand.board.dto.model.MyBoardVO;
 import com.righthand.common.type.ReturnType;
 import com.righthand.membership.dao.MembershipDao;
 import com.righthand.membership.service.MembershipInfo;
-import com.righthand.membership.service.MembershipService;
+import com.righthand.mypage.domain.myactivity.TbMyActivity;
+import com.righthand.mypage.domain.myactivity.TbMyActivityRepository;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,13 +25,14 @@ import java.util.Map;
 import java.util.concurrent.Semaphore;
 
 @Service
+@RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
 
-    @Autowired
-    BoardDao boardDao;
+    private final BoardDao boardDao;
 
-    @Autowired
-    MembershipDao membershipDao;
+    private final MembershipDao membershipDao;
+
+    private final TbMyActivityRepository tbMyActivityRepository;
 
     static Semaphore boardSemaphore = new Semaphore(1);
     private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -70,6 +71,29 @@ public class BoardServiceImpl implements BoardService {
         membershipDao.decreaseReplyWriteLimit(profileSeq);
         return ReturnType.RTN_TYPE_BOARD_REPLY_SUCCESS;
     }
+
+    private void insertMyActivity(Map input_data, MembershipInfo membershipInfo, String boardType){
+        /*
+         * <selectKey resultType="int" order="AFTER" keyProperty="BOARD_SEQ">
+         *    SELECT LAST_INSERT_ID();
+         * </selectKey>
+         * 의 결과 값은 파라미터로 전달한 map에 전달된다.
+         * */
+        final int boardSeq = (int) input_data.get("BOARD_SEQ");
+        final int profileSeq = membershipInfo.getProfileSeq();
+        final String boardTitle = (String) input_data.get("boardTitle");
+        tbMyActivityRepository.save(
+                TbMyActivity.builder()
+                        .activityType("게시글 작성")
+                        .activityProfileSeq((long) profileSeq)
+                        .rhPower((long)10)
+                        .content(boardTitle)
+                        .boardSeq((long) boardSeq)
+                        .boardType(boardType)
+                        .build()
+        );
+    }
+
 
 
         @Override
@@ -265,7 +289,13 @@ public class BoardServiceImpl implements BoardService {
             boardSemaphore.acquire();
             try {
                 boardDao.insertBoardListTech(input_data);
+
+                // 유저에게 Rh 파워를 주고 제한을 감소한다.
                 rtn = giveRhPowerAndDecreaseLimitAtBoard(membershipInfo);
+
+                // TB_MY_ACTIVITY DB의 데이터를 갱신한다.
+                insertMyActivity(input_data, membershipInfo, "tech");
+
             } catch (Exception e) {
                 boardSemaphore.release();
                 return ReturnType.RTN_TYPE_BOARD_INSERT_NG;
@@ -282,6 +312,7 @@ public class BoardServiceImpl implements BoardService {
             try {
                 boardDao.insertBoardListDev(input_data);
                 rtn = giveRhPowerAndDecreaseLimitAtBoard(membershipInfo);
+                insertMyActivity(input_data, membershipInfo, "dev");
             } catch (Exception e) {
                 boardSemaphore.release();
                 return ReturnType.RTN_TYPE_BOARD_INSERT_NG;

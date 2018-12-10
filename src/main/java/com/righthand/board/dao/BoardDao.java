@@ -29,8 +29,8 @@ public interface BoardDao {
 
     List<Map<String, Object>> showNewBoard();
 
-    void insertBoardListTech(Map boardData);
-    void insertBoardListDev(Map boardData);
+    int insertBoardListTech(Map boardData);
+    int insertBoardListDev(Map boardData);
 
     void insertReplyListTech(Map replyData);
     void insertReplyListDev(Map input_data);
