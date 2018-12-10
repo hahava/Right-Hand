@@ -11,17 +11,9 @@ $(document).ready(function () {
     var board_content = getBoardContent(type, board_seq);
     setBoardContentView(board_content.data);
     setReplyView(board_content);
-});
+    setReplyWriterView(board_content.writer);
 
-function setToggle(elem) {
-    if (elem.id == 'coin') {
-        $('#coin').attr('class', 'toggle btn btn-xs btn-success active');
-        $('#rh_power').attr('class', 'toggle btn btn-xs btn-default');
-    } else {
-        $('#rh_power').attr('class', 'toggle btn btn-xs btn-success active');
-        $('#coin').attr('class', 'toggle btn btn-xs btn-default');
-    }
-}
+});
 
 function getBoardContent(type, board_seq) {
     var content;
@@ -33,7 +25,12 @@ function getBoardContent(type, board_seq) {
         success: function (result) {
             var data = result.data;
             // 게시글 내용과 해당 게시글의 댓글
-            content = {"data": data.data, "reply_list": data.replyDetailData, "total_coin": data.totalRhCoin};
+            content = {
+                "data": data.data,
+                "reply_list": data.replyDetailData,
+                "total_coin": data.totalRhCoin,
+                "writer": data.isWriter
+            };
         }, error: function () {
         }
     });
@@ -66,23 +63,39 @@ function setBoardContentView(content) {
 
 
 function setReplyView(board_content) {
+    console.log(board_content.writer)
+
     var reply_list = board_content.reply_list;
-    $('#reply_count').text(reply_list.length + " 개의 댓글 (" + board_content.total_coin + "$)");
+    var total_coin = board_content.total_coin != null ? board_content.total_coin : 0;
+    $('#reply_count').text(reply_list.length + " 개의 댓글 (" + total_coin + "$)");
 
     for (var temp = 0; temp < reply_list.length; temp++) {
         var reply_content = reply_list[temp].REPLY_CONTENT;
         var reply_date = reply_list[temp].REPLY_DATE;
         var reply_nickName = reply_list[temp].NICK_NAME;
         var reply_profile = (reply_list[temp].FILE_PATH != null) ? reply_list[temp].FILE_PATH : 'https://via.placeholder.com/128';
+        var reply_coin_modal = '';
         var reply_coin = reply_list[temp].REPLY_RH_COIN;
-        $('#reply_list').append('<div class="media has-margin-bottom"><a class="pull-left" href="#none">' +
+        if (reply_coin == 0 && type != 'tech' && board_content.writer) {
+            reply_coin_modal = '<button class="btn btn-sm pull-right" data-toggle="modal" data-target="#myModal" id="' + temp + '" onclick="setModalData(this)">+</button>';
+        }
+        var html = '<div class="media has-margin-bottom"><a class="pull-left" href="#none">' +
             ' <img class="media-object" alt="avatar" src=' + reply_profile + '> </a>' +
-            '<div class="media-body"><h6 class="media-heading"><a class="link-reverse" href="#none">' + reply_nickName + '</a><span class="pull-right" id="reply_coin">' + reply_coin + '&nbsp;$</span></h6>' +
+            '<div class="media-body"><h6 class="media-heading">' +
+            '<a class="link-reverse" href="#none">' + reply_nickName + '</a>' +
+            '<span class="pull-right" id="reply_coin">' + reply_coin + '&nbsp;$</span></h6>' +
             ' <p class="text-muted" id="reply_date">' + reply_date.substr(0, 10) + '</p>' +
-            reply_content + '  </div>'
+            reply_content + reply_coin_modal + '</div></div>';
+        $('#reply_list').append(function () {
+                return html;
+            }
         );
 
     }
+}
+
+function setModalData(elem) {
+    $('#myModalLabel').text('코인 보상을 하시겠습니까?');
 }
 
 // <,> 등의 태그를 &lt, &gt 변환
@@ -96,7 +109,6 @@ function tagRemover(tag) {
 // 댓글 작성
 function send_reply() {
 
-
     var session = sessionChecker();
     var authorityLevel = session.data.authorityLevel;
     if ($('#reply_content').val().length < 1) {
@@ -106,7 +118,7 @@ function send_reply() {
     content = tagRemover(content);
 
     var token;
-    var token_value = $('#coin_value').val();
+    var token_value = $('#coin_value').val() != null ? $('#coin_value').val() : 0;
 
     if ($('#coin').hasClass('active')) {
         token = 'coin';
@@ -133,8 +145,9 @@ function send_reply() {
             data: JSON.stringify(data),
             success: function (result) {
                 switch (result.code) {
-                    case 0 :
+                    case 319 :
                         reply_success = true;
+                        alert("댓글 작성되었습니다.");
                         break;
                     default :
                         alert(result.message);
@@ -150,4 +163,46 @@ function send_reply() {
         alert("로그인 후 이용해주세요");
         return;
     }
+}
+
+function setReplyWriterView(isWriter) {
+
+
+    var html = " <div class='btn-group btn-toggle pull-right' style='margin-top: 4px;margin-left: 10px'>\n" +
+        "                            <button class='btn btn-xs btn-success active' onclick='setToggle(this)'\n" +
+        "                                    id='coin'>\n" +
+        "                                코인\n" +
+        "                            </button>\n" +
+        "                            <button class='btn btn-xs btn-default' onclick='setToggle(this)' id='rh_power'>\n" +
+        "                                RH파워\n" +
+        "                            </button>\n" +
+        "                        </div>\n" +
+        "                        <input class='form-control pull-right input-sm' id='coin_value' type=number min=0\n" +
+        "                               step=0.001\n" +
+        "                               max=10\n" +
+        "                               placeholder='코인' size='5'>";
+
+    console.log(type);
+    /* 작성자일 경우 코인을 전송하지 못하도록 한다.*/
+    if (!isWriter && type != 'dev') {
+        $('#coin_dev').append(function () {
+            return html;
+        });
+    }
+}
+
+function setToggle(elem) {
+    if (elem.id == 'coin') {
+        $('#coin').attr('class', 'toggle btn btn-xs btn-success active');
+        $('#rh_power').attr('class', 'toggle btn btn-xs btn-default');
+    } else {
+        $('#rh_power').attr('class', 'toggle btn btn-xs btn-success active');
+        $('#coin').attr('class', 'toggle btn btn-xs btn-default');
+    }
+}
+
+function sendCoin() {
+    $('#coin_send_btn').attr('data-dismiss', 'modal');
+    location.reload();
+    return true;
 }
