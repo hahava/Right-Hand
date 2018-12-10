@@ -97,14 +97,21 @@
         LIMIT 3
     </select>
 
-    <insert id="insertBoardListTech" parameterType="map" useGeneratedKeys="true" keyProperty="BOARD_SEQ">
+
+    <insert id="insertBoardListTech" parameterType="map">
         INSERT INTO TB_IT_TECH_BOARD(BOARD_TITLE, BOARD_CONTENT, BOARD_CONTENT4SEARCHING, BOARD_DATE, BOARD_PROFILE_SEQ)
         VALUES (#{boardTitle}, #{boardContent}, #{boardContent4Searching}, CURRENT_TIMESTAMP(6) , #{boardProfileSeq})
+        <selectKey resultType="int" order="AFTER" keyProperty="BOARD_SEQ">
+          SELECT LAST_INSERT_ID();
+        </selectKey>
     </insert>
 
-    <insert id="insertBoardListDev" parameterType="map" useGeneratedKeys="true" keyProperty="BOARD_SEQ">
+    <insert id="insertBoardListDev" parameterType="map">
         INSERT INTO TB_DEVELOP_STORY_BOARD(BOARD_TITLE, BOARD_CONTENT, BOARD_CONTENT4SEARCHING, BOARD_DATE, BOARD_PROFILE_SEQ)
         VALUES (#{boardTitle}, #{boardContent}, #{boardContent4Searching}, CURRENT_TIMESTAMP(6) , #{boardProfileSeq})
+        <selectKey resultType="int" order="AFTER" keyProperty="BOARD_SEQ">
+            SELECT LAST_INSERT_ID();
+        </selectKey>
     </insert>
 
     <select id="showReplyBoardTech" resultType="map" parameterType="com.righthand.board.dto.model.BoardDetailVO">

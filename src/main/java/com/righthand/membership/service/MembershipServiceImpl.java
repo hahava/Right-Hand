@@ -9,6 +9,9 @@ import com.righthand.common.type.ReturnType;
 import com.righthand.membership.config.ConfigMembership;
 import com.righthand.membership.dao.MembershipDao;
 import com.righthand.membership.dto.model.UserVO;
+import com.righthand.mypage.domain.myactivity.TbMyActivity;
+import com.righthand.mypage.domain.myactivity.TbMyActivityRepository;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,26 +39,26 @@ import java.util.concurrent.Semaphore;
  *
  */
 @Service
+@RequiredArgsConstructor
 public class MembershipServiceImpl implements MembershipService {
+
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    MembershipDao membershipDao;
+    private final MembershipDao membershipDao;
 
-    @Autowired
-    ConfigMembership configMembership;
+    private final ConfigMembership configMembership;
 
-    @Autowired
-    PasswordHandler passwordHandler;
+    private final PasswordHandler passwordHandler;
 
-    @Autowired
-    ConfigValidationCheck configValidationCheck;
+    private final ConfigValidationCheck configValidationCheck;
 
-    @Autowired
-    CheckData checkData;
+    private final CheckData checkData;
 
-    @Autowired
-    GetNowTime getNowTime;
+    private final GetNowTime getNowTime;
+
+    private final TbMyActivityRepository tbMyActivityRepository;
+
+
 
     static Semaphore membershipSemaphore = new Semaphore(1);
 
@@ -470,6 +473,7 @@ public class MembershipServiceImpl implements MembershipService {
     }
 
     @Override
+    @Transactional
     public ReturnType updateFileSeq(Map input_data) throws Exception {
         try {
             membershipDao.updateFileSeq(input_data);
@@ -488,12 +492,21 @@ public class MembershipServiceImpl implements MembershipService {
     }
 
     @Override
+    @Transactional
     public ReturnType updateRhPower(int profileSeq) {
         if(membershipDao.getLoginLimit(profileSeq) == 0) return ReturnType.RTN_TYPE_ALREADY_LOGIN_REWARDED;
         Map<String, Object> map = new HashMap<>();
         map.put("reqPower", 5); map.put("profileSeq", profileSeq);
         membershipDao.updateRhPower(map);
         membershipDao.decreaseLoginLimit(profileSeq);
+        tbMyActivityRepository.save(
+                TbMyActivity.builder()
+                        .content("로그인 보너스")
+                        .rhPower((long) 5)
+                        .activityType("로그인")
+                        .activityProfileSeq((long) profileSeq)
+                        .build()
+        );
         return ReturnType.RTN_TYPE_OK;
     }
 
