@@ -114,15 +114,16 @@ function tagRemover(tag) {
 function send_reply() {
 
     var session = sessionChecker();
+
     var authorityLevel = session.data.authorityLevel;
     if ($('#reply_content').val().length < 1) {
         alert("빈칸으로 제출할수 없습니다.");
     }
     var content = $('#reply_content').val();
     content = tagRemover(content);
-
     var token;
     var token_value = $('#coin_value').val() != null ? $('#coin_value').val() : 0;
+    console.log(token_value);
 
     if ($('#coin').hasClass('active')) {
         token = 'coin';
@@ -130,7 +131,6 @@ function send_reply() {
         token = 'rp';
     }
 
-    console.log(token);
 
     if (authorityLevel == 1 || authorityLevel == 103) {
         var data = {
@@ -140,7 +140,7 @@ function send_reply() {
         var reply_success = false;
         $.ajax({
             async: false,
-            url: "http://localhost:8080/reply/" + type + "?ctype=" + token + "&coin=" + token_value,
+            url: "http://localhost:8080/reply/" + type + "?ctype=" + token + "&reqCoin=" + parseFloat(token_value),
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
