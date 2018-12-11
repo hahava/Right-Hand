@@ -5,6 +5,8 @@ $(document).ready(function () {
     }
     $('#myPage').attr('class', 'active');
     getUserActivity(page);
+    resizeFooterTag();
+
 });
 
 function getUserActivity(page) {

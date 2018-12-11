@@ -1,6 +1,8 @@
 $(document).ready(function () {
     setNavActive('userInfo');
     getUserInfo();
+    resizeFooterTag();
+
 });
 
 function getUserInfo() {

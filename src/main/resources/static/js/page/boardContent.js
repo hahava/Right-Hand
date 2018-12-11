@@ -12,6 +12,7 @@ $(document).ready(function () {
     setBoardContentView(board_content.data);
     setReplyView(board_content);
     setReplyWriterView(board_content.writer);
+    resizeFooterTag();
 
 });
 

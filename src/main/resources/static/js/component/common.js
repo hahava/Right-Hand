@@ -99,3 +99,15 @@ function setSubPageText(type) {
     }
     setSubpageParam(board_title, board_info);
 }
+
+$(window).on("resize", resizeFooterTag);
+
+function resizeFooterTag() {
+    if ($("html").height() > window.innerHeight) {
+        $("#footer").css("position", "relative");
+        $("#footer").css("bottom", "0px");
+    } else {
+        $("#footer").css("position", "absolute");
+        $("#footer").css("bottom", "0px");
+    }
+}

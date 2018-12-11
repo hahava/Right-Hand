@@ -28,4 +28,6 @@ $(document).ready(function () {
     }
     var board_list = getNewBoardList();
     setBoardList(board_list.data, "content");
+    resizeFooterTag();
+
 });

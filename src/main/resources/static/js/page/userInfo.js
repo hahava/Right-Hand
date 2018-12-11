@@ -16,6 +16,7 @@ $(document).ready(function () {
         setUserInfoTableView($('#user_info_list').attr('id'));
         var userInfoData = getUserInfo();
         setUserInfoTableData(userInfoData);
+        resizeFooterTag();
 
     }
 
