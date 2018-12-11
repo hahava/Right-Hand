@@ -68,7 +68,12 @@ function setReplyView(board_content) {
     var reply_list = board_content.reply_list;
     var writer_nickname = board_content.nickname;
     var total_coin = board_content.total_coin != null ? board_content.total_coin : 0;
-    $('#reply_count').text(reply_list.length + " 개의 댓글 (" + total_coin + "$)");
+    if (type == 'dev') {
+        $('#reply_count').text(reply_list.length + " 개의 댓글");
+    } else {
+        $('#reply_count').text(reply_list.length + " 개의 댓글 (" + total_coin + "$)");
+
+    }
 
     for (var temp = 0; temp < reply_list.length; temp++) {
         var reply_content = reply_list[temp].REPLY_CONTENT;
