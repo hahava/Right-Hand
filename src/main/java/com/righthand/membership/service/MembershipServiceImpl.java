@@ -31,12 +31,10 @@ import java.util.concurrent.Semaphore;
 
 
 /**
- *
  * 회원정보 처리를 위한 클래스
  * 로그인 - Spring Security form login 기능 사용
  * 회원가입 - REST Api 방식 사용
  * 세션 정보 확인 , 계정 권한 등 회원정보를 위한 기본적인 기능을 제공 한다.
- *
  */
 @Service
 @RequiredArgsConstructor
@@ -59,7 +57,6 @@ public class MembershipServiceImpl implements MembershipService {
     private final TbMyActivityRepository tbMyActivityRepository;
 
 
-
     static Semaphore membershipSemaphore = new Semaphore(1);
 
     /**
@@ -69,7 +66,7 @@ public class MembershipServiceImpl implements MembershipService {
      * @param params
      * @return ReturnType
      */
-    private boolean checkExistInUser(Map params) throws  Exception{
+    private boolean checkExistInUser(Map params) throws Exception {
 
         // user 데이터에서 찾기
         Map resMemberData = membershipDao.selectUser(params);
@@ -86,43 +83,40 @@ public class MembershipServiceImpl implements MembershipService {
         return false;
     }
 
-    public ReturnType checkUserIdDup(Map input_data){
+    public ReturnType checkUserIdDup(Map input_data) {
         // user 데이터에서 찾기
         int userCount = membershipDao.countID(input_data);
-        if(userCount > 0) {
+        if (userCount > 0) {
             return ReturnType.RTN_TYPE_MEMBERSSHIP_USERID_EXIST_NG;
         }
         return ReturnType.RTN_TYPE_OK;
     }
 
-    public boolean getRecommender(Map input_data) throws Exception{
+    public boolean getRecommender(Map input_data) throws Exception {
         int count = membershipDao.getRecommender(input_data);
-        if(count == 0) {
+        if (count == 0) {
             return false;
         }
         return true;
     }
 
     private int getUserSeq(String id) {
-       int seq = membershipDao.getUserSeq(id);
-       return seq;
+        int seq = membershipDao.getUserSeq(id);
+        return seq;
     }
 
     /**
-     *
      * @param
      * @return
      * @throws Exception
-     *
      * @Transactional(rollbackFor = Exception.class)
      * try, catch -> TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
      * 설명) Exception이 발생하면 Rollback 시킨다.
-     *
+     * <p>
      * By Danny
-     *
      */
     @Transactional(rollbackFor = Exception.class)
-    public ReturnType signUp(Map input_data) throws Exception{
+    public ReturnType signUp(Map input_data) throws Exception {
 
         String userId = null;
         String recommenderId = null;
@@ -146,8 +140,8 @@ public class MembershipServiceImpl implements MembershipService {
             }
 
             // 별도의 로그인 타입이 설정 되어 있지 않으면, 기본 호빈 이메일 로그인 타입으로 설정 한다.
-            if((checkData.isExist(input_data.get("loginType")) == false ) ||
-                    ( Integer.parseInt(input_data.get("loginType").toString())== configMembership.getLoginTypeEmail()) ) {
+            if ((checkData.isExist(input_data.get("loginType")) == false) ||
+                    (Integer.parseInt(input_data.get("loginType").toString()) == configMembership.getLoginTypeEmail())) {
                 input_data.put("loginType", configMembership.getLoginTypeEmail());
                 input_data.put("email", userId);
             }
@@ -160,12 +154,13 @@ public class MembershipServiceImpl implements MembershipService {
             logger.info("[Service][SignUp] USER ID OK");
 
             recommenderId = (String) input_data.get("recommender");
-            if(recommenderId == null) logger.info("**** recommenderId Not EXIST ****");
+            if (recommenderId == null) logger.info("**** recommenderId Not EXIST ****");
             recommenderParam.put("recommender", recommenderId);
 
-            if(recommenderId != null && !recommenderId.trim().equals("")) {
-                if(configValidationCheck.checkEmail(recommenderId) != 0) return ReturnType.RTN_TYPE_MEMBERSSHIP_EMAIL_PATTERN_NG;
-                if(!getRecommender(recommenderParam)) {
+            if (recommenderId != null && !recommenderId.trim().equals("")) {
+                if (configValidationCheck.checkEmail(recommenderId) != 0)
+                    return ReturnType.RTN_TYPE_MEMBERSSHIP_EMAIL_PATTERN_NG;
+                if (!getRecommender(recommenderParam)) {
                     input_data.remove("recommender");
                     System.out.println("Recommender null");
                     return ReturnType.RTN_TYPE_MEMBERSHIP_RECOMMENDER_NG;
@@ -182,8 +177,7 @@ public class MembershipServiceImpl implements MembershipService {
             pwd = (String) input_data.get("userPwd");
 
             // 2) Id의 pattern
-            if(configValidationCheck.checkPwd(pwd) != 0)
-            {
+            if (configValidationCheck.checkPwd(pwd) != 0) {
                 return ReturnType.RTN_TYPE_MEMBERSSHIP_PASSWORD_PATTERN_NG;
             }
 
@@ -210,12 +204,12 @@ public class MembershipServiceImpl implements MembershipService {
 
 
             // 활동 알림 받기 설정이 별도로 설저되지 않을 경우 '예'로 설정.
-            if(checkData.isExist(input_data.get("actAlertYn")) == false ) {
+            if (checkData.isExist(input_data.get("actAlertYn")) == false) {
                 input_data.put("actAlertYn", "Y");
             }
 
             // 공사 알림 동의 설정이 별도로 없을 경우 '예'로 설정.
-            if(checkData.isExist(input_data.get("workingAlertYn")) == false ) {
+            if (checkData.isExist(input_data.get("workingAlertYn")) == false) {
                 input_data.put("workingAlertYn", "Y");
             }
 
@@ -240,28 +234,42 @@ public class MembershipServiceImpl implements MembershipService {
             try {
                 membershipDao.insertUser(input_data);
                 membershipDao.insertProfile(input_data);
-            }catch (Exception e){
+            } catch (Exception e) {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return ReturnType.RTN_TYPE_NG;
             }
 
-            if(recommenderId != null && !recommenderId.trim().equals("")) {
+            if (recommenderId != null && !recommenderId.trim().equals("")) {
                 Map<String, Object> recommendData = new HashMap<>();
                 recommendData.put("userSeq", getUserSeq(userId));
                 recommendData.put("recommenderSeq", getUserSeq(recommenderId));
                 try {
-                    membershipDao.rewardRecommendProfile(recommendData);
                     membershipDao.rewardRecommendPromote(recommendData);
+                    membershipDao.rewardRecommendProfile(recommendData);
                 } catch (Exception e) {
                     return ReturnType.RTN_TYPE_SIGNUP_REWARD_NG;
                 }
             }
 
+            /**
+             * @author: DANNY
+             * @date: 2018.11.12
+             * comment: 회원가입 혜택 RH 파워 200을 TB_MY_ACTIVITY에 기록한다.
+             * */
+            long profileSeq = (int) input_data.get("PROFILE_SEQ");
+            tbMyActivityRepository.save(
+                    TbMyActivity.builder()
+                    .activityProfileSeq(profileSeq)
+                    .content("회원가입 보너스")
+                    .activityType("회원가입")
+                    .rhPower((long) 200)
+                    .build()
+            );
+
 
             ///////////////////////////////////////////////////////////////////////////////////////////////
-        }
-        catch (Exception e) {
-            throw new Exception(e);
+        } catch (Exception e) {
+            logger.error("[SignUp][Exception] : {}", e);
         }
         return ReturnType.RTN_TYPE_OK;
     }
@@ -271,7 +279,7 @@ public class MembershipServiceImpl implements MembershipService {
         membershipSemaphore.acquire();
         try {
             membershipDao.resign(reason);
-        }catch (Exception e) {
+        } catch (Exception e) {
             membershipSemaphore.release();
             return ReturnType.RTN_TYPE_MEMBERSHIP_RESIGN_NG;
         }
@@ -282,9 +290,9 @@ public class MembershipServiceImpl implements MembershipService {
     @Override
     public ReturnType changePwd(UserVO userVO) throws Exception {
         membershipSemaphore.acquire();
-        try{
+        try {
             membershipDao.changePwd(userVO);
-        }catch (Exception e){
+        } catch (Exception e) {
             membershipSemaphore.release();
             return ReturnType.RTN_TYPE_MEMBERSSHIP_PASSWORD_CHANGE_NG;
         }
@@ -320,10 +328,9 @@ public class MembershipServiceImpl implements MembershipService {
         member.setUsername(tempUser.get("USER_ID").toString());
 
 
-        if(checkData.isNotEmpty(tempUser.get("PENDING_YN")) && tempUser.get("PENDING_YN").toString().equals("Y")) {
+        if (checkData.isNotEmpty(tempUser.get("PENDING_YN")) && tempUser.get("PENDING_YN").toString().equals("Y")) {
             member.setAccountNonLocked(false);
-        }
-        else {
+        } else {
             member.setAccountNonLocked(true);
         }
 
@@ -336,7 +343,7 @@ public class MembershipServiceImpl implements MembershipService {
         member.setLoginTime(getNowTime.getTimeByDate());
 
         logger.info("[Service][LogIn]");
-        logger.info(member.getUsername() + "/"  + member.getName());
+        logger.info(member.getUsername() + "/" + member.getName());
 
         // 권한 저장
         member.setAuthorities(getAuthorities(Integer.parseInt(tempUser.get("AUTHORITY").toString())));
@@ -363,8 +370,7 @@ public class MembershipServiceImpl implements MembershipService {
         // Check : unauthority
         if (authorityLevel == configMembership.getSelectUnauthorityUserNo()) {
             authorities.add(new SimpleGrantedAuthority(configMembership.getSelectUnauthorityUserStr()));
-        }
-        else {
+        } else {
 
             // Check : General User authority
             if ((authorityLevel & configMembership.getSelectAuthorityUserNo()) > 0) {
@@ -395,21 +401,21 @@ public class MembershipServiceImpl implements MembershipService {
      */
     public MembershipInfo currentSessionUserInfo() throws Exception {
 
-        if(!checkData.isExist(SecurityContextHolder.getContext())) {
+        if (!checkData.isExist(SecurityContextHolder.getContext())) {
             return null;
         }
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if(!checkData.isExist(authentication)) {
+        if (!checkData.isExist(authentication)) {
             return null;
         }
 
-        if(authentication.getPrincipal() == null) {
+        if (authentication.getPrincipal() == null) {
             return null;
         }
 
-        if(authentication.getPrincipal().equals("anonymousUser") ||
+        if (authentication.getPrincipal().equals("anonymousUser") ||
                 (authentication.getPrincipal() == null)) {
             return null;
         }
@@ -450,10 +456,10 @@ public class MembershipServiceImpl implements MembershipService {
     }
 
     /*
-    * @author: Danny
-    * @date: 2018.11.30
-    * Comment: file group seq 가져오기
-    * */
+     * @author: Danny
+     * @date: 2018.11.30
+     * Comment: file group seq 가져오기
+     * */
     @Override
     @Transactional(readOnly = true)
     public Integer checkFileGrpSeq(int profileSeq) throws Exception {
@@ -463,9 +469,9 @@ public class MembershipServiceImpl implements MembershipService {
     @Override
     @Transactional
     public ReturnType saveFileGrpSeq(Map input_data) throws Exception {
-        try{
+        try {
             membershipDao.saveFileGrpSeq(input_data);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("[SaveFileGrpSeq][Exception] : {}", e.toString());
             return ReturnType.RTN_TYPE_NG;
         }
@@ -477,8 +483,7 @@ public class MembershipServiceImpl implements MembershipService {
     public ReturnType updateFileSeq(Map input_data) throws Exception {
         try {
             membershipDao.updateFileSeq(input_data);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             logger.error("[UpdateFileSeq][Exception] : {}", e.toString());
             return ReturnType.RTN_TYPE_NG;
         }
@@ -494,9 +499,10 @@ public class MembershipServiceImpl implements MembershipService {
     @Override
     @Transactional
     public ReturnType updateRhPower(int profileSeq) {
-        if(membershipDao.getLoginLimit(profileSeq) == 0) return ReturnType.RTN_TYPE_ALREADY_LOGIN_REWARDED;
+        if (membershipDao.getLoginLimit(profileSeq) == 0) return ReturnType.RTN_TYPE_ALREADY_LOGIN_REWARDED;
         Map<String, Object> map = new HashMap<>();
-        map.put("reqPower", 5); map.put("profileSeq", profileSeq);
+        map.put("reqPower", 5);
+        map.put("profileSeq", profileSeq);
         membershipDao.updateRhPower(map);
         membershipDao.decreaseLoginLimit(profileSeq);
         tbMyActivityRepository.save(

@@ -6,6 +6,10 @@ import com.righthand.common.type.ReturnType;
 import com.righthand.membership.config.ConfigMembership;
 import com.righthand.membership.service.MembershipInfo;
 import com.righthand.membership.service.MembershipService;
+import com.righthand.mypage.domain.myactivity.TbMyActivity;
+import com.righthand.mypage.domain.myactivity.TbMyActivityRepository;
+import com.righthand.mypage.service.TbMyActivityService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,9 +32,6 @@ public class CustomLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
 
     @Autowired
     MembershipService membershipService;
-
-    @Autowired
-    ConfigMembership configMembership;
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -59,9 +60,6 @@ public class CustomLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
             MembershipInfo membershipInfo = (MembershipInfo)authentication.getPrincipal();
             membershipInfo.setProfileSeq(membershipService.getProfileSeq(membershipInfo.getUserSeq()));
             membershipInfo.setNickname(membershipService.getProfileNickname(membershipInfo.getUserSeq()));
-
-            // 코인과 파워를 가져온다
-            Map map = membershipService.getRewardPowerAndCoin(membershipInfo.getProfileSeq());
 
             // 로그인 시, RhPower를 5개씩 준다.
             membershipService.updateRhPower(membershipInfo.getProfileSeq());

@@ -299,12 +299,10 @@ public class MypageController {
         long profileSeq = membershipInfo.getProfileSeq();
         final Page<TbMyActivity> allByActivityProfileSeq = tbMyActivityService.findAllByActivityProfileSeq(profileSeq, page, size);
         if(allByActivityProfileSeq.hasContent()){
-            int totalPages = allByActivityProfileSeq.getTotalPages();
-            long totalElements = allByActivityProfileSeq.getTotalElements();
+            long total= allByActivityProfileSeq.getTotalElements();
             final List<HashMap<String, Object>> datas = transform(allByActivityProfileSeq, page, size);
             Map<String, Object> rhPowerBreakdownInfo = new HashMap<>();
-            rhPowerBreakdownInfo.put("totalElements", totalElements);
-            rhPowerBreakdownInfo.put("totalPages", totalPages);
+            rhPowerBreakdownInfo.put("total", total);
             rhPowerBreakdownInfo.put("datas", datas);
 
             // 사용자의 전체 획득 RH Power
