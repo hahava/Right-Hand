@@ -323,7 +323,7 @@ public class BoardController {
                         changedText = ConvertUtil.eliminateHtmlTags(changedText);
                         changedText = ConvertUtil.eliminateMarkdown(changedText);
                         params.put("boardContent4Searching", changedText);
-                        if (checkBoardType(btype) == true) {
+                        if (checkBoardType(btype)) {
                             params.put("boardProfileSeq", membershipInfo.getProfileSeq());
                             ReturnType rtn;
                             if (btype.equals("tech")) {
