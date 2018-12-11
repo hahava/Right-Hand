@@ -1,20 +1,15 @@
-function login_checker() {
+function loginChecker() {
     var user_nickname;
-    var rhCoin;
-    var rewardPower;
     $.ajax({
         type: 'POST',
-        url: 'http://localhost:8080/api/membership/check/live/session',
+        url: 'http://localhost:8080/api/membership/coin',
         async: false,
         success: function (result) {
             var auth = result.code;
             switch (auth) {
                 case 0:
-                    user_nickname = result.data.nickName;
-                    rhCoin = result.data.rhCoin;
-                    rewardPower = result.data.rewardPower;
-                    var data = {'user_nickname': user_nickname, 'rhCoin': rhCoin, 'rewardPower': rewardPower};
-                    loginUser(data);
+                    data = {"rhCoin": result.data.rhCoin, "rewardPower": result.data.rewardPower};
+                    setLoginUserNavbar(data);
                     break;
                 default:
                     notLogin();
@@ -25,7 +20,7 @@ function login_checker() {
     });
 }
 
-function loginUser(data) {
+function setLoginUserNavbar(data) {
 
     $('#modalOpener').remove();
     $('#registerOpener').remove();
