@@ -183,4 +183,12 @@
     <select id="findReplyIsRewarded" parameterType="int" resultType="int">
         SELECT REPLY_IS_REWARDED FROM TB_DEVELOP_STORY_REPLY WHERE REPLY_SEQ = #{replySeq}
     </select>
+
+    <select id="findBoardTitleDev" parameterType="int" resultType="String">
+        SELECT BOARD_TITLE FROM TB_DEVELOP_STORY_BOARD WHERE BOARD_SEQ = #{boardSeq}
+    </select>
+
+    <select id="findBoardTitleTech" parameterType="int" resultType="String">
+        SELECT BOARD_TITLE FROM TB_IT_TECH_BOARD WHERE BOARD_SEQ = #{boardSeq}
+    </select>
 </mapper>

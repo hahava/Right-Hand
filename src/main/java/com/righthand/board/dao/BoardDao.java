@@ -53,4 +53,7 @@ public interface BoardDao {
     int findProfileSeqByBoardSeqDev(int boardSeq);
 
     int findProfileSeqByBoardSeqTech(int boardSeq);
+
+    String findBoardTitleDev(int boardSeq);
+    String findBoardTitleTech(int boardSeq);
 }

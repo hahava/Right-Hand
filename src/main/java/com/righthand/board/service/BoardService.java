@@ -43,5 +43,4 @@ public interface BoardService {
 
     int findProfileSeqByBoardSeqDev(int boardSeq) throws Exception;
 
-//    ReturnType insertReplyListTech(Map input_data) throws Exception;
 }
