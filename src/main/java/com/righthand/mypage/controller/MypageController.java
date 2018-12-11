@@ -10,9 +10,11 @@ import com.righthand.file.service.FileService;
 import com.righthand.membership.service.MembershipInfo;
 import com.righthand.membership.service.MembershipService;
 import com.righthand.mypage.domain.file.TbFileGrp;
+import com.righthand.mypage.domain.myactivity.TbMyActivity;
 import com.righthand.mypage.dto.req.PasswordReq;
 import com.righthand.mypage.dto.req.UserReq;
 import com.righthand.mypage.service.TbFileGrpService;
+import com.righthand.mypage.service.TbMyActivityService;
 import com.righthand.mypage.service.TbUserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -20,6 +22,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.data.domain.Page;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,6 +42,29 @@ public class MypageController {
     private BoardService boardService;
     private FileService fileService;
     private TbFileGrpService tbFileGrpService;
+    private TbMyActivityService tbMyActivityService;
+
+
+    private List<HashMap<String, Object>> transform(Page<TbMyActivity> params, int page, int size){
+        List<HashMap<String, Object>> datas = new ArrayList<HashMap<String, Object>>();
+        int count = (page - 1) * size + 1;
+        log.info("total Element : {}", params.getTotalElements());
+        log.info("number of elements : {}", params.getNumberOfElements());
+        for (int i = 0, n = params.getNumberOfElements(); i < n; i++) {
+            HashMap<String, Object> map = new HashMap<>();
+            TbMyActivity tbMyActivity = params.getContent().get(i);
+            map.put("activityDate", tbMyActivity.getActivityDate());
+            map.put("activityType", tbMyActivity.getActivityType());
+            map.put("rhPower", tbMyActivity.getRhPower());
+            map.put("boardType", tbMyActivity.getBoardType());
+            map.put("boardSeq", tbMyActivity.getBoardSeq());
+            map.put("content", tbMyActivity.getContent());
+            map.put("count", count);
+            datas.add(i, map);
+            count++;
+        }
+        return datas;
+    }
 
     @ApiOperation("내가 작성한 게시물")
     @GetMapping("/myBoard")
@@ -232,7 +258,7 @@ public class MypageController {
     @DeleteMapping("/img/profile")
     public ResponseHandler<?> deleteProfileImg(){
         final ResponseHandler<Object> result = new ResponseHandler<>();
-        MembershipInfo membershipInfo = null;
+        MembershipInfo membershipInfo;
         try {
             membershipInfo = membershipService.currentSessionUserInfo();
             if(membershipInfo == null) throw new Exception();
@@ -253,6 +279,42 @@ public class MypageController {
             return result;
         }
         result.setReturnCode(ReturnType.RTN_TYPE_OK);
+        return result;
+    }
+
+    @ApiOperation("RH 파워 지급 내역")
+    @GetMapping("/rhpower")
+    public ResponseHandler<?> showRhPowerBreakdown(int page){
+        final ResponseHandler<Object> result = new ResponseHandler<>();
+        final int size = 7;
+        MembershipInfo membershipInfo;
+        try {
+            membershipInfo = membershipService.currentSessionUserInfo();
+            if(membershipInfo == null) throw new Exception();
+        } catch (Exception e) {
+            log.error("[Session][Exception] : {}", e.toString());
+            result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
+            return result;
+        }
+        long profileSeq = membershipInfo.getProfileSeq();
+        final Page<TbMyActivity> allByActivityProfileSeq = tbMyActivityService.findAllByActivityProfileSeq(profileSeq, page, size);
+        if(allByActivityProfileSeq.hasContent()){
+            int totalPages = allByActivityProfileSeq.getTotalPages();
+            long totalElements = allByActivityProfileSeq.getTotalElements();
+            final List<HashMap<String, Object>> datas = transform(allByActivityProfileSeq, page, size);
+            Map<String, Object> rhPowerBreakdownInfo = new HashMap<>();
+            rhPowerBreakdownInfo.put("totalElements", totalElements);
+            rhPowerBreakdownInfo.put("totalPages", totalPages);
+            rhPowerBreakdownInfo.put("datas", datas);
+
+            // 사용자의 전체 획득 RH Power
+            rhPowerBreakdownInfo.put("totalRhPower", tbMyActivityService.getSumRhPower(profileSeq));
+
+            result.setData(rhPowerBreakdownInfo);
+            result.setReturnCode(ReturnType.RTN_TYPE_OK);
+        }else{
+            result.setReturnCode(ReturnType.RTN_TYPE_NO_RH_POWER_BREAKDOWN);
+        }
         return result;
     }
 

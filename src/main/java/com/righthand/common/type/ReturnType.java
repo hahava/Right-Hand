@@ -94,7 +94,8 @@ public enum ReturnType {
     RTN_TYPE_GET_COIN_POWER_NG(506, "코인과 리워드 파워를 가져오는데 실패하였습니다."),
     RTN_TYPE_COIN_MUST_POSITIVE_NUM_NG(507, "코인은 음수값을 가질 수 없습니다."),
     RTN_TYPE_COIN_SEND_NG(508, "코인 전송에 실패했습니다."),
-    RTN_TYPE_REQ_COIN_NOT_ENOUGH_NG(509, "0보다 많은 코인을 전송해야 합니다.");
+    RTN_TYPE_REQ_COIN_NOT_ENOUGH_NG(509, "0보다 많은 코인을 전송해야 합니다."),
+    RTN_TYPE_NO_RH_POWER_BREAKDOWN(510, "RH 파워 지급 내역이 존재하지 않습니다.");
 
 
     private int code;
