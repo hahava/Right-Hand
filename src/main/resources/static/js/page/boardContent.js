@@ -123,12 +123,14 @@ function send_reply() {
     var authorityLevel = session.data.authorityLevel;
     if ($('#reply_content').val().length < 1) {
         alert("빈칸으로 제출할수 없습니다.");
+        return;
     }
     var content = $('#reply_content').val();
     content = tagRemover(content);
     var token;
-    var token_value = $('#coin_value').val() != null ? $('#coin_value').val() : 0;
-    console.log(token_value);
+    var token_value = $('#coin_value').val().length != 0 ? $('#coin_value').val() : 0;
+    console.log(token_value.length);
+    console.log(typeof token_value);
 
     if ($('#coin').hasClass('active')) {
         token = 'coin';
@@ -154,20 +156,18 @@ function send_reply() {
             data: JSON.stringify(data),
             success: function (result) {
                 switch (result.code) {
-                    case 319  :
-                        reply_success = true;
-                        alert("댓글 작성되었습니다.");
-                        break;
                     case 320 :
                         reply_success = true;
+                        console.log(result.code);
                         alert("댓글 작성되었습니다.");
                         break;
                     case 322 :
                         reply_success = true;
+                        console.log(result.code);
                         alert("댓글 작성되었습니다.");
                         break;
                     default :
-                        alert(result.message);
+                        alert(result.message + result.code);
                         reply_success = false;
                 }
             }, error: function (e) {
@@ -197,7 +197,7 @@ function setReplyWriterView(isWriter) {
         "                        <input class='form-control pull-right input-sm' id='coin_value' type=number min=0\n" +
         "                               step=0.001\n" +
         "                               max=10\n" +
-        "                               placeholder='코인' size='5'>";
+        "                               placeholder='코인' size='5' value='0' />";
 
     console.log(type);
     /* 작성자일 경우 코인을 전송하지 못하도록 한다.*/
