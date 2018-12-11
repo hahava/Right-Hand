@@ -20,4 +20,9 @@ public class TbMyActivityService {
         Pageable pageable = new PageRequest(page - 1, size, new Sort(Sort.Direction.DESC, "activityDate"));
         return tbMyActivityRepository.findAllByActivityProfileSeq(id, pageable);
     }
+
+    @Transactional(readOnly = true)
+    public int getSumRhPower(Long id){
+        return tbMyActivityRepository.getSumRhPower(id);
+    }
 }

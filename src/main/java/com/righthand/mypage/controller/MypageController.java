@@ -301,10 +301,15 @@ public class MypageController {
         if(allByActivityProfileSeq.hasContent()){
             int totalPages = allByActivityProfileSeq.getTotalPages();
             long totalElements = allByActivityProfileSeq.getTotalElements();
+            final List<HashMap<String, Object>> datas = transform(allByActivityProfileSeq, page, size);
             Map<String, Object> rhPowerBreakdownInfo = new HashMap<>();
             rhPowerBreakdownInfo.put("totalElements", totalElements);
             rhPowerBreakdownInfo.put("totalPages", totalPages);
-            rhPowerBreakdownInfo.put("data", transform(allByActivityProfileSeq, page, size));
+            rhPowerBreakdownInfo.put("datas", datas);
+
+            // 사용자의 전체 획득 RH Power
+            rhPowerBreakdownInfo.put("totalRhPower", tbMyActivityService.getSumRhPower(profileSeq));
+
             result.setData(rhPowerBreakdownInfo);
             result.setReturnCode(ReturnType.RTN_TYPE_OK);
         }else{
