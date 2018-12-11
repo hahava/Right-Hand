@@ -42,4 +42,10 @@ public class TbProfile {
 
     @Column(name = "FILE_SEQ")
     private Long fileSeq;
+
+    @Column(name = "RH_COIN")
+    private Double rhCoin;
+
+    @Column(name = "REWARD_POWER")
+    private Double rewardPower;
 }

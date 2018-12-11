@@ -14,9 +14,12 @@ import com.righthand.membership.dto.res.UserIdRes;
 import com.righthand.membership.dto.res.SessionRes;
 import com.righthand.membership.service.MembershipInfo;
 import com.righthand.membership.service.MembershipService;
+import com.righthand.mypage.domain.profile.TbProfile;
+import com.righthand.mypage.service.TbProfileService;
 import com.righthand.mypage.service.TbUserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,31 +41,21 @@ import java.util.Random;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping(value = "/api/membership")
 public class MembershipController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    private ConfigMembership configMembership;
+    private final MembershipService membershipService;
 
-    @Autowired
-    MembershipService membershipService;
+    private final PasswordHandler passwordHandler;
 
-    @Autowired
-    MembershipDao membershipDao;
+    private final EmailService emailService;
 
-    @Autowired
-    PasswordHandler passwordHandler;
+    private final TbUserService tbUserService;
 
-    @Autowired
-    CheckData checkData;
-
-    @Autowired
-    EmailService emailService;
-
-    @Autowired
-    TbUserService tbUserService;
+    private final TbProfileService tbProfileService;
 
     /**
      * 회원 가입
@@ -194,8 +187,6 @@ public class MembershipController {
         return res;
     }
 
-    // 세라가 변경해야함!
-    // 흥 시른뒈~시른뒈시른뒈시른뒈~~~~
     @ApiOperation("닉네임 중복확인")
     @PostMapping("/check/nick/dup")
     public ResponseHandler<?> checkNickDup(@Valid @RequestBody final NicknameReq _params, BindingResult bindingResult) {
@@ -319,4 +310,28 @@ public class MembershipController {
         out.flush();
         out.close();
     }
+
+    @ApiOperation("RH 코인과 리워드 파워 조회")
+    @PostMapping("/coin")
+    public ResponseHandler<?> showRhCoinAndRewardPower(){
+        final ResponseHandler<Object> res = new ResponseHandler<>();
+        MembershipInfo membershipInfo = null;
+        try {
+            membershipInfo = membershipService.currentSessionUserInfo();
+            if(membershipInfo == null) throw new Exception();
+        } catch (Exception e) {
+            log.error("[Session][Exception] : ", e.toString());
+            res.setReturnCode(ReturnType.RTN_TYPE_SESSION);
+            return res;
+        }
+        long profileSeq = membershipInfo.getProfileSeq();
+        TbProfile tbProfile = tbProfileService.getOne(profileSeq);
+        Map<String, Object> coinInfo = new HashMap<>();
+        coinInfo.put("rhCoin", tbProfile.getRhCoin());
+        coinInfo.put("rewardPower", tbProfile.getRewardPower());
+        res.setReturnCode(ReturnType.RTN_TYPE_OK);
+        res.setData(coinInfo);
+        return res;
+    }
+
 }
