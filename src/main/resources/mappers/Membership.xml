@@ -13,6 +13,9 @@
         INSERT INTO
         TB_PROFILE( FILE_GRP_SEQ, INTRODUCTION, NICK_NAME, USER_NAME, GENDER, TEL, BIRTH_YEAR, CHILDREN_YN, DEPARTMENT, DUTY_POSITION, ROLE, MARKETING_ADV_YN, ACT_ALERT_YN, WORKING_ALERT_YN, LANG, DEL_YN, CRE_ID, CRE_DT, UPD_ID, UPD_DT, USER_SEQ)
         VALUES(  #{fileGrpSeq}, #{introduction}, #{nickName}, #{userName}, #{gender}, #{tel}, #{birthYear}, #{childrenYn}, #{department},  #{dutyPosition}, #{role}, #{marketingAdvYn}, #{actAlertYn}, #{workingAlertYn}, #{lang}, 'N',  #{userSeq}, UTC_TIMESTAMP(), #{userSeq}, UTC_TIMESTAMP(), #{userSeq} )
+        <selectKey resultType="int" order="AFTER" keyProperty="PROFILE_SEQ">
+            SELECT LAST_INSERT_ID();
+        </selectKey>
     </insert>
 
     <update id="resign" parameterType="map">

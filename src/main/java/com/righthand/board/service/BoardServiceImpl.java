@@ -68,21 +68,24 @@ public class BoardServiceImpl implements BoardService {
     private void insertMyActivity(Map input_data, MembershipInfo membershipInfo, String boardType, char activityType) {
         int boardSeq;
         String boardTitle;
+        String type;
         final int profileSeq = membershipInfo.getProfileSeq();
         if (activityType == 'r') {
             boardSeq = (int) input_data.get("boardSeq");
-            if(boardType.equals("dev")){
+            if (boardType.equals("dev")) {
                 boardTitle = boardDao.findBoardTitleDev(boardSeq);
-            }else{
+            } else {
                 boardTitle = boardDao.findBoardTitleTech(boardSeq);
             }
+            type = "댓글 작성";
         } else {
             boardSeq = (int) input_data.get("BOARD_SEQ");
             boardTitle = (String) input_data.get("boardTitle");
+            type = "게시글 작성";
         }
         tbMyActivityRepository.save(
                 TbMyActivity.builder()
-                        .activityType("게시글 작성")
+                        .activityType(type)
                         .activityProfileSeq((long) profileSeq)
                         .rhPower((long) 10)
                         .content(boardTitle)
