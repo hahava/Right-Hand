@@ -4,27 +4,7 @@ $(document).ready(function () {
         page = 1;
     }
     $('#myPage').attr('class', 'active');
-    getUserActivity(page);
     resizeFooterTag();
 
 });
 
-function getUserActivity(page) {
-    $.ajax({
-        type: 'GET',
-        url: '/myBoard?page=' + page,
-        dataType: 'json',
-        async: false,
-        success: function (result) {
-            var data = result.data;
-            var total = data.total;
-
-            setBoardList(data);
-
-            var addr = {"default": "/user/board"};
-            set_page(data, page, addr);
-        },
-        error: function () {
-        }
-    })
-}

@@ -33,7 +33,7 @@ function searchResult() {
             $('#pageNation').empty();
 
             var addr = {"default": "/board/search", "type": type, "searchedWord": keyword};
-            set_page(data, page, addr);
+            set_page(data, page, addr, 5);
 
             $('#keyword_info').text(keyword);
             $('#total_info').text(total);
