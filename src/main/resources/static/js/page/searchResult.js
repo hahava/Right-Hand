@@ -11,6 +11,7 @@ $(document).ready(function () {
     setNavActive(type);
     setSubPageText(type);
     searchResult();
+    resizeFooterTag();
 });
 
 

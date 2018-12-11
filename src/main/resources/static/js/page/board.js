@@ -12,19 +12,9 @@ $(document).ready(function () {
     if ((authorityLevel == 101 || authorityLevel == 0) && type == 'notice') {
         $('#board_writer').remove();
     }
-    resize();
+    resizeFooterTag();
 });
-$(window).on("resize", resize);
 
-function resize() {
-    if ($("html").height() > window.innerHeight) {
-        $("#footer").css("position", "relative");
-        $("#footer").css("bottom", "0px");
-    } else {
-        $("#footer").css("position", "absolute");
-        $("#footer").css("bottom", "0px");
-    }
-}
 
 /*현재 페이지 정보*/
 

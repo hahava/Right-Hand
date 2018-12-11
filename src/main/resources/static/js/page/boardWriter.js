@@ -20,7 +20,9 @@ $(document).ready(function () {
     /*초기화*/
     $('#writer_title').attr('value', '');
 
-    imageFinder()
+    imageFinder();
+    resizeFooterTag();
+
 });
 
 // 기본은 dev 게시판
