@@ -262,7 +262,7 @@ public class MembershipServiceImpl implements MembershipService {
                     .activityProfileSeq(profileSeq)
                     .content("회원가입 보너스")
                     .activityType("회원가입")
-                    .rhPower((long) 200)
+                    .rhPower((long) 100)
                     .build()
             );
 
