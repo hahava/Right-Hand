@@ -1,17 +1,16 @@
 /*
-*   totalpage= 전체 페이지 개수
 *   전체 데이터가 41 개 라면, 가능한 페이지는 9
 *   전체 데이터가 40 개 라면, 가능한 페이지는 8 이다.
 *   stand를 수정하면 페이지 개수 수정이 가능하다.
 * */
-function set_page(data, requested_page, addr) {
-
+function set_page(data, requested_page, addr, page_count) {
 
     var address = setPageAddress(addr);
-
     var total = data.total;
-    var stand = 5;
-    var totalPage = (total % 5 == 0) ? (total / 5) : (parseInt(total / 5) + 1);
+
+    console.log(total);
+    var stand = page_count;
+    var totalPage = (total % stand == 0) ? (total / stand) : (parseInt(total / stand) + 1);
     var startNum = parseInt((requested_page - 1) / stand) * stand + 1;
     var endNum;
     if (startNum + (stand - 1) >= totalPage) {

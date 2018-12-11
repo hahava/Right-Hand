@@ -45,7 +45,7 @@ function req_page(requested_page) {
             setBoardList(data, 'content');
 
             var addr = {"default": "/board/list", "type": type};
-            set_page(data, page, addr);
+            set_page(data, page, addr, 5);
             window.scrollTo(0, 0);
         },
         error: function () {

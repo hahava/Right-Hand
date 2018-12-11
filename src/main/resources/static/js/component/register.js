@@ -19,6 +19,8 @@ function registerUser() {
             "userPwd": $('#register_pw').val(),
             "recommender": $('#register_recommender').val()
         };
+
+        console.log(member);
         $.ajax({
             type: 'POST',
             url: "http://localhost:8080/api/membership/signUp",

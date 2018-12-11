@@ -96,6 +96,9 @@ function setSubPageText(type) {
         case "userToken":
             board_title = "MyPage";
             board_info = "토큰사용내역";
+        case "userActivity":
+            board_title = "MyPage";
+            board_info = "RH파워 획득 내역";
     }
     setSubpageParam(board_title, board_info);
 }
