@@ -144,9 +144,7 @@ public class MembershipController {
                 SessionRes sessionRes = new SessionRes();
                 sessionRes.setUserSeq(sessionInfo.getUserSeq());
                 sessionRes.setAuthorityLevel(sessionInfo.getAuthoritiesLevel());
-                sessionRes.setRewardPower(sessionInfo.getRewardPower());
                 sessionRes.setNickName(sessionInfo.getNickname());
-                sessionRes.setRhCoin(sessionInfo.getRhCoin());
                 result.setData(sessionRes);
 
             } else {

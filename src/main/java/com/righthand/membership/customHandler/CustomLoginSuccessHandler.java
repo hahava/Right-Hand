@@ -62,9 +62,6 @@ public class CustomLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
 
             // 코인과 파워를 가져온다
             Map map = membershipService.getRewardPowerAndCoin(membershipInfo.getProfileSeq());
-            membershipInfo.setRhCoin((double)map.get("RH_COIN"));
-            membershipInfo.setRewardPower((double)map.get("REWARD_POWER"));
-
 
             // 로그인 시, RhPower를 5개씩 준다.
             membershipService.updateRhPower(membershipInfo.getProfileSeq());

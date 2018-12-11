@@ -33,26 +33,6 @@ public class MembershipInfo implements  UserDetails{
     private List<String> authoritiesStr;
     private int authoritiesLevel;
 
-    private double rhCoin;
-    private double rewardPower;
-
-    public double getRhCoin() {
-        return rhCoin;
-    }
-
-    public void setRhCoin(double rhCoin) {
-        this.rhCoin = rhCoin;
-    }
-
-    public double getRewardPower() {
-        return rewardPower;
-    }
-
-    public void setRewardPower(double rewardPower) {
-        this.rewardPower = rewardPower;
-    }
-
-
     public int getProfileSeq() {
         return profileSeq;
     }

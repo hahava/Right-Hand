@@ -38,15 +38,6 @@ public class BoardServiceImpl implements BoardService {
     static Semaphore boardSemaphore = new Semaphore(1);
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private void refreshMembershipInfo(MembershipInfo membershipInfo, String cType, double reqCoin) {
-        if (cType.equals("coin")) {
-            membershipInfo.setRhCoin(membershipInfo.getRhCoin() - reqCoin);
-        } else if (cType.equals("rp")) {
-            membershipInfo.setRewardPower(membershipInfo.getRewardPower() - reqCoin);
-        }
-    }
-
-
     /*
      * 게시글 작성 갯수를 확인하여 RH파워 지급 후, LIMIT을 차감.
      * */
@@ -356,9 +347,6 @@ public class BoardServiceImpl implements BoardService {
         map.replace("reqCoin", reqCoin * (-1));
         membershipDao.updateRewardPower(map);
 
-        // 사용자 정보 갱신
-        refreshMembershipInfo(membershipInfo, "rp", reqCoin);
-
         rtn = giveRhPowerAndDecreaseLimitAtReply(membershipInfo);
 
         insertMyActivity(input_data, membershipInfo, "tech", 'r');
@@ -390,9 +378,6 @@ public class BoardServiceImpl implements BoardService {
             map.replace("profileSeq", input_data.get("replyProfileSeq"));
             map.replace("reqCoin", reqCoin * (-1));
             membershipDao.updateRhCoin(map);
-
-            // 사용자 정보 갱신
-            refreshMembershipInfo(membershipInfo, "coin", reqCoin);
 
             rtn = giveRhPowerAndDecreaseLimitAtReply(membershipInfo);
 
@@ -463,8 +448,6 @@ public class BoardServiceImpl implements BoardService {
             return ReturnType.RTN_TYPE_NG;
         }
 
-        // 사용자 정보 갱신
-        refreshMembershipInfo(membershipInfo, "rp", reqCoin);
         return ReturnType.RTN_TYPE_OK;
     }
 
@@ -507,9 +490,6 @@ public class BoardServiceImpl implements BoardService {
             logger.error("[updateSender][Exception] : {}", e.toString());
             return ReturnType.RTN_TYPE_NG;
         }
-
-        // 사용자 정보 갱신
-        refreshMembershipInfo(membershipInfo, "coin", reqCoin);
         return ReturnType.RTN_TYPE_OK;
     }
 
