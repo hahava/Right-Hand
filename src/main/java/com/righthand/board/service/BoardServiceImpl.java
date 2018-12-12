@@ -106,11 +106,12 @@ public class BoardServiceImpl implements BoardService {
      * @author: Danny
      * Comment: RH 코인에 대한 내역 삽입
      * */
-    private void insertRhcBreakdown(Map input_data, long receiverProfileSeq, String senderType){
+    private void insertRhcBreakdown(Map input_data, long receiverProfileSeq, String boardType, String senderType){
         final String receiverType = "RH 코인 획득";
-        final String boardType = "tech";
         final long boardSeq = (long) input_data.get("boardSeq");
-        final String boardTitle = boardDao.findBoardTitleTech((int)boardSeq);
+        String boardTitle;
+        if(boardType.equals("tech")) boardTitle = boardDao.findBoardTitleTech((int)boardSeq);
+        else boardTitle = boardDao.findBoardTitleDev((int)boardSeq);
         final double rhCoin = (double) input_data.get("reqCoin");
         final long senderProfileSeq = (long) input_data.get("replyProfileSeq");
         // Sender의 지출 내역
@@ -405,7 +406,7 @@ public class BoardServiceImpl implements BoardService {
         /**
          * RH 코인 획득 내역 삽입
          * */
-        insertRhcBreakdown(input_data, (long) receiverProfileSeq, "리워드 파워 지급");
+        insertRhcBreakdown(input_data, (long) receiverProfileSeq, "tech", "리워드 파워 지급");
 
 
         return rtn;
@@ -447,7 +448,7 @@ public class BoardServiceImpl implements BoardService {
             /**
              * RH 코인 획득 내역 삽입
              * */
-            insertRhcBreakdown(input_data, (long) receiverProfileSeq, "RH 코인 지급");
+            insertRhcBreakdown(input_data, (long) receiverProfileSeq, "tech", "RH 코인 지급");
 
         } catch (Exception e) {
             return ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST;
@@ -463,7 +464,12 @@ public class BoardServiceImpl implements BoardService {
         try {
             boardDao.insertReplyListDev(input_data);
             rtn = giveRhPowerAndDecreaseLimitAtReply(membershipInfo);
+
+            /**
+             * RH 파워 획득 내역 삽입
+             * */
             insertRhpBreakdown(input_data, membershipInfo, "dev", 'r');
+
         } catch (Exception e) {
             logger.error("[InsertReplyListDev][Exception] : {}", e.toString());
             return ReturnType.RTN_TYPE_BOARD_REPLY_NG;
@@ -515,6 +521,11 @@ public class BoardServiceImpl implements BoardService {
             return ReturnType.RTN_TYPE_NG;
         }
 
+        /**
+         * RH 코인 획득 내역 삽입
+         * */
+        insertRhcBreakdown(input_data, receiverProfileSeq, "dev", "리워드 파워 지급");
+
         return ReturnType.RTN_TYPE_OK;
     }
 
@@ -557,6 +568,11 @@ public class BoardServiceImpl implements BoardService {
             logger.error("[updateSender][Exception] : {}", e.toString());
             return ReturnType.RTN_TYPE_NG;
         }
+
+        /**
+         * RH 코인 획득 내역 삽입
+         * */
+        insertRhcBreakdown(input_data, receiverProfileSeq, "dev", "RH 코인 지급");
         return ReturnType.RTN_TYPE_OK;
     }
 
