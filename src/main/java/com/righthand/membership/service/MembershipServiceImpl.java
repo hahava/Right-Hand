@@ -516,5 +516,11 @@ public class MembershipServiceImpl implements MembershipService {
         return ReturnType.RTN_TYPE_OK;
     }
 
+    @Override
+    @Transactional
+    public int checkTel(Map params) throws Exception {
+        return membershipDao.checkTel(params);
+    }
+
 }
 
