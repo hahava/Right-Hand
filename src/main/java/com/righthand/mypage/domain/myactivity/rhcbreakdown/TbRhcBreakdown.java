@@ -1,5 +1,6 @@
-package com.righthand.mypage.domain.myactivity;
+package com.righthand.mypage.domain.myactivity.rhcbreakdown;
 
+import com.righthand.mypage.domain.myactivity.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,8 +11,8 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-@Table(name = "TB_MY_ACTIVITY")
-public class TbMyActivity extends BaseTimeEntity{
+@Table(name = "TB_RHC_BREAKDOWN")
+public class TbRhcBreakdown extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,14 +22,14 @@ public class TbMyActivity extends BaseTimeEntity{
     @Column(name = "ACTIVITY_TYPE")
     private String activityType;
 
-    @Column(name = "RH_POWER")
-    private Long rhPower;
+    @Column(name = "RH_COIN")
+    private double rhCoin;
 
     @Column(name = "CONTENT")
     private String content;
 
-    @Column(name="ACTIVITY_PROFILE_SEQ")
-    private Long activityProfileSeq;
+    @Column(name="RHC_PROFILE_SEQ")
+    private Long rhcProfileSeq;
 
     @Column(name = "BOARD_TYPE")
     private String boardType;
@@ -36,14 +37,17 @@ public class TbMyActivity extends BaseTimeEntity{
     @Column(name = "BOARD_SEQ")
     private Long boardSeq;
 
+    @Column(name = "IS_SENDER")
+    private boolean isSender;
+
     @Builder
-    public TbMyActivity(String activityType, Long rhPower, String content, Long activityProfileSeq,
-        String boardType, Long boardSeq) {
+    public TbRhcBreakdown(String activityType, double rhCoin, String content, Long rhcProfileSeq, String boardType, Long boardSeq, boolean isSender) {
         this.activityType = activityType;
-        this.rhPower = rhPower;
+        this.rhCoin = rhCoin;
         this.content = content;
-        this.activityProfileSeq = activityProfileSeq;
+        this.rhcProfileSeq = rhcProfileSeq;
         this.boardType = boardType;
-        this. boardSeq = boardSeq;
+        this.boardSeq = boardSeq;
+        this.isSender = isSender;
     }
 }

@@ -1,15 +1,8 @@
 package com.righthand.membership.customHandler;
 
 import com.righthand.common.GetClientProfile;
-import com.righthand.common.dto.res.ResponseHandler;
-import com.righthand.common.type.ReturnType;
-import com.righthand.membership.config.ConfigMembership;
 import com.righthand.membership.service.MembershipInfo;
 import com.righthand.membership.service.MembershipService;
-import com.righthand.mypage.domain.myactivity.TbMyActivity;
-import com.righthand.mypage.domain.myactivity.TbMyActivityRepository;
-import com.righthand.mypage.service.TbMyActivityService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
