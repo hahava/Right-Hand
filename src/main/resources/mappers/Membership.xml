@@ -115,7 +115,7 @@
         SELECT USER_SEQ FROM TB_USER WHERE USER_ID = #{id}
     </select>
     <update id="rewardRecommendProfile" parameterType="map">
-        UPDATE TB_PROFILE SET TB_PROFILE.RECOMMEND = TB_PROFILE.RECOMMEND + 50 WHERE TB_PROFILE.USER_SEQ = #{userSeq} OR TB_PROFILE.USER_SEQ = #{recommenderSeq}
+        UPDATE TB_PROFILE SET TB_PROFILE.RH_COIN = TB_PROFILE.RH_COIN + 50 WHERE TB_PROFILE.USER_SEQ = #{userSeq} OR TB_PROFILE.USER_SEQ = #{recommenderSeq}
     </update>
     <update id="rewardRecommendPromote" parameterType="map">
         UPDATE TB_PROMOTE SET TB_PROMOTE.RECOMMENDER = TB_PROMOTE.RECOMMENDER - 100 WHERE SEQUENCE = 1
