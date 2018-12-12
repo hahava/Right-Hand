@@ -46,6 +46,8 @@ public enum ReturnType {
     RTN_TYPE_MEMBERSHIP_RECOMMENDER_NG(315, "추천인이 존재하지 않는 회원입니다."),
     RTN_TYPE_SIGNUP_REWARD_NG(316, "회원가입 보상에 실패했습니다."),
     RTN_TYPE_ALREADY_LOGIN_REWARDED(317, "이미 로그인을 하여 RH 파워를 획득하였습니다."),
+    RTN_TYPE_MEMBERSHIP_TELEPHONE_DUPLICATE(318, "전화번호가 이미 존재합니다."),
+    RTN_TYPE_MEMBERSHIP_TELEPHONE_INVALID(319, "전화번호를 다시 한번 확인해주세요."),
 
     // Activate
     RTN_TYPE_MEMBERSSHIP_ACTIVATE_NO_ID(220, ""),
