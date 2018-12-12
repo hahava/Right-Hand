@@ -1,8 +1,6 @@
 package com.righthand.mypage.controller;
 
-import com.righthand.board.controller.BoardController;
 import com.righthand.board.service.BoardService;
-import com.righthand.common.GetClientProfile;
 import com.righthand.common.dto.res.ResponseHandler;
 import com.righthand.common.type.ReturnType;
 import com.righthand.common.util.ConvertUtil;
@@ -10,25 +8,22 @@ import com.righthand.file.service.FileService;
 import com.righthand.membership.service.MembershipInfo;
 import com.righthand.membership.service.MembershipService;
 import com.righthand.mypage.domain.file.TbFileGrp;
-import com.righthand.mypage.domain.myactivity.TbMyActivity;
+import com.righthand.mypage.domain.myactivity.rhpbreakdown.TbRhpBreakdown;
 import com.righthand.mypage.dto.req.PasswordReq;
 import com.righthand.mypage.dto.req.UserReq;
 import com.righthand.mypage.service.TbFileGrpService;
-import com.righthand.mypage.service.TbMyActivityService;
+import com.righthand.mypage.service.TbRhpBreakdwonService;
 import com.righthand.mypage.service.TbUserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 //import sun.reflect.annotation.ExceptionProxy;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.*;
 
@@ -42,23 +37,23 @@ public class MypageController {
     private BoardService boardService;
     private FileService fileService;
     private TbFileGrpService tbFileGrpService;
-    private TbMyActivityService tbMyActivityService;
+    private TbRhpBreakdwonService tbRhpBreakdwonService;
 
 
-    private List<HashMap<String, Object>> transform(Page<TbMyActivity> params, int page, int size){
+    private List<HashMap<String, Object>> transform(Page<TbRhpBreakdown> params, int page, int size){
         List<HashMap<String, Object>> datas = new ArrayList<HashMap<String, Object>>();
         int count = (page - 1) * size + 1;
         log.info("total Element : {}", params.getTotalElements());
         log.info("number of elements : {}", params.getNumberOfElements());
         for (int i = 0, n = params.getNumberOfElements(); i < n; i++) {
             HashMap<String, Object> map = new HashMap<>();
-            TbMyActivity tbMyActivity = params.getContent().get(i);
-            map.put("activityDate", tbMyActivity.getActivityDate());
-            map.put("activityType", tbMyActivity.getActivityType());
-            map.put("rhPower", tbMyActivity.getRhPower());
-            map.put("boardType", tbMyActivity.getBoardType());
-            map.put("boardSeq", tbMyActivity.getBoardSeq());
-            map.put("content", tbMyActivity.getContent());
+            TbRhpBreakdown tbRhpBreakdown = params.getContent().get(i);
+            map.put("activityDate", tbRhpBreakdown.getActivityDate());
+            map.put("activityType", tbRhpBreakdown.getActivityType());
+            map.put("rhPower", tbRhpBreakdown.getRhPower());
+            map.put("boardType", tbRhpBreakdown.getBoardType());
+            map.put("boardSeq", tbRhpBreakdown.getBoardSeq());
+            map.put("content", tbRhpBreakdown.getContent());
             map.put("count", count);
             datas.add(i, map);
             count++;
@@ -297,7 +292,7 @@ public class MypageController {
             return result;
         }
         long profileSeq = membershipInfo.getProfileSeq();
-        final Page<TbMyActivity> allByActivityProfileSeq = tbMyActivityService.findAllByActivityProfileSeq(profileSeq, page, size);
+        final Page<TbRhpBreakdown> allByActivityProfileSeq = tbRhpBreakdwonService.findAllByRhpProfileSeq(profileSeq, page, size);
         if(allByActivityProfileSeq.hasContent()){
             long total= allByActivityProfileSeq.getTotalElements();
             final List<HashMap<String, Object>> datas = transform(allByActivityProfileSeq, page, size);
@@ -306,7 +301,7 @@ public class MypageController {
             rhPowerBreakdownInfo.put("datas", datas);
 
             // 사용자의 전체 획득 RH Power
-            rhPowerBreakdownInfo.put("totalRhPower", tbMyActivityService.getSumRhPower(profileSeq));
+            rhPowerBreakdownInfo.put("totalRhPower", tbRhpBreakdwonService.getSumRhPower(profileSeq));
 
             result.setData(rhPowerBreakdownInfo);
             result.setReturnCode(ReturnType.RTN_TYPE_OK);

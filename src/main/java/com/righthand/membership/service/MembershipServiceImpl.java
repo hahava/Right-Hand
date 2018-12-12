@@ -4,17 +4,15 @@ import com.righthand.common.CheckData;
 import com.righthand.common.GetNowTime;
 import com.righthand.common.PasswordHandler;
 import com.righthand.common.VaildationCheck.ConfigValidationCheck;
-import com.righthand.common.dto.res.ResponseHandler;
 import com.righthand.common.type.ReturnType;
 import com.righthand.membership.config.ConfigMembership;
 import com.righthand.membership.dao.MembershipDao;
 import com.righthand.membership.dto.model.UserVO;
-import com.righthand.mypage.domain.myactivity.TbMyActivity;
-import com.righthand.mypage.domain.myactivity.TbMyActivityRepository;
+import com.righthand.mypage.domain.myactivity.rhpbreakdown.TbRhpBreakdown;
+import com.righthand.mypage.domain.myactivity.rhpbreakdown.TbRhpBreakdownRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -54,7 +52,7 @@ public class MembershipServiceImpl implements MembershipService {
 
     private final GetNowTime getNowTime;
 
-    private final TbMyActivityRepository tbMyActivityRepository;
+    private final TbRhpBreakdownRepository tbRhpBreakdownRepository;
 
 
     static Semaphore membershipSemaphore = new Semaphore(1);
@@ -257,9 +255,9 @@ public class MembershipServiceImpl implements MembershipService {
              * comment: 회원가입 혜택 RH 파워 200을 TB_MY_ACTIVITY에 기록한다.
              * */
             long profileSeq = (int) input_data.get("PROFILE_SEQ");
-            tbMyActivityRepository.save(
-                    TbMyActivity.builder()
-                    .activityProfileSeq(profileSeq)
+            tbRhpBreakdownRepository.save(
+                    TbRhpBreakdown.builder()
+                    .rhpProfileSeq(profileSeq)
                     .content("회원가입 보너스")
                     .activityType("회원가입")
                     .rhPower((long) 100)
@@ -505,12 +503,12 @@ public class MembershipServiceImpl implements MembershipService {
         map.put("profileSeq", profileSeq);
         membershipDao.updateRhPower(map);
         membershipDao.decreaseLoginLimit(profileSeq);
-        tbMyActivityRepository.save(
-                TbMyActivity.builder()
+        tbRhpBreakdownRepository.save(
+                TbRhpBreakdown.builder()
                         .content("로그인 보너스")
                         .rhPower((long) 5)
                         .activityType("로그인")
-                        .activityProfileSeq((long) profileSeq)
+                        .rhpProfileSeq((long) profileSeq)
                         .build()
         );
         return ReturnType.RTN_TYPE_OK;
