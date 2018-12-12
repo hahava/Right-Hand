@@ -25,8 +25,8 @@ function setLoginUserNavbar(data) {
     $('#modalOpener').remove();
     $('#registerOpener').remove();
 
-    $('#navbar').append('<li><a href="#none">Coin <span class="badge">' + data.rhCoin + '</span></a></li>' +
-        '<li><a href="#none">Rp <span class="badge">' + data.rewardPower + '</span></a></li>');
+    $('#navbar').append('<li><a href="#none" class="tooltipp"><span class="tooltiptext ">RH코인</span>Coin <span class="badge">' + data.rhCoin + '</span></a></li>' +
+        '<li><a href="#none" class="tooltipp"><span class="tooltiptext">ReWard 파워</span>RP<span class="badge">' + data.rewardPower + '</span></a></li>');
 
     $('#navbar').append('<li class="dropdown" id="myPage"><a href="#none" class="dropdown-toggle" data-toggle="dropdown">MyPage <span class="caret"></span></a>  ' +
         '<ul class="dropdown-menu dropdown-menu-left" role="menu">\n' +
