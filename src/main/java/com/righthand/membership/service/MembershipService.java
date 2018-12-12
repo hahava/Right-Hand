@@ -52,4 +52,6 @@ public interface MembershipService extends UserDetailsService {
     Map getRewardPowerAndCoin(int profileSeq) throws Exception;
 
     ReturnType updateRhPower(int profileSeq) throws Exception;
+
+    int checkTel(Map<String, Object> params) throws Exception;
 }

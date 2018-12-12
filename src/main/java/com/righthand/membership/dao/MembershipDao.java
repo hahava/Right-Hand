@@ -48,4 +48,6 @@ public interface MembershipDao
     int getReplyWriteLimit(int profileSeq);
 
     void decreaseReplyWriteLimit(int profileSeq);
+
+    int checkTel(Map params);
 }

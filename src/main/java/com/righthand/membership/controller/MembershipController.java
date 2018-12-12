@@ -88,7 +88,7 @@ public class MembershipController {
     public ResponseHandler<UserIdRes> checkIdDup(@Valid @RequestBody final UserIdReq _params,
                                                  BindingResult bindingResult) {
         final ResponseHandler<UserIdRes> result = new ResponseHandler<>();
-        if(!bindingResult.hasErrors()) {
+        if (!bindingResult.hasErrors()) {
             Map<String, Object> params = ConvertUtil.convertObjectToMap(_params);
             ReturnType rtn;
             try {
@@ -112,7 +112,7 @@ public class MembershipController {
     @PostMapping(value = "/signUp")
     public ResponseHandler<?> signUp(@Valid @RequestBody final SignupReq _params, BindingResult bindingResult) {
         final ResponseHandler<?> result = new ResponseHandler<>();
-        if(bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             result.setReturnCode(ReturnType.RTN_TYPE_MEMBERSHIP_DATA_INVALID_PATTERN_NG);
             return result;
         }
@@ -189,7 +189,7 @@ public class MembershipController {
     @PostMapping("/check/nick/dup")
     public ResponseHandler<?> checkNickDup(@Valid @RequestBody final NicknameReq _params, BindingResult bindingResult) {
         final ResponseHandler<?> res = new ResponseHandler<>();
-        if(!bindingResult.hasErrors()) {
+        if (!bindingResult.hasErrors()) {
             Map<String, Object> params = ConvertUtil.convertObjectToMap(_params);
             ReturnType rtn;
             try {
@@ -213,7 +213,7 @@ public class MembershipController {
     @PostMapping("/check/pwd/dup")
     public ResponseHandler<?> checkPwdDup(@Valid @RequestBody final PwdReq _params, BindingResult bindingResult) {
         final ResponseHandler<?> res = new ResponseHandler<>();
-        if(!bindingResult.hasErrors()) {
+        if (!bindingResult.hasErrors()) {
             Map<String, Object> params = ConvertUtil.convertObjectToMap(_params);
             MembershipInfo membershipInfo = null;
             try {
@@ -245,6 +245,30 @@ public class MembershipController {
         res.setReturnCode(ReturnType.RTN_TYPE_NO_DATA);
         return res;
     }
+
+    @ApiOperation("전화번호 중복확인")
+    @PostMapping("/check/tel/dup")
+    public ResponseHandler<?> checkTelDup(@Valid @RequestBody final TelReq _params, BindingResult bindingResult) {
+        final ResponseHandler<?> res = new ResponseHandler<>();
+        if(!bindingResult.hasErrors()){
+            Map<String, Object> params = ConvertUtil.convertObjectToMap(_params);
+            try {
+                int count = membershipService.checkTel(params);
+                if(count > 0) {
+                    res.setReturnCode(ReturnType.RTN_TYPE_MEMBERSHIP_TELEPHONE_DUPLICATE);
+                    return res;
+                }else{
+                    res.setReturnCode(ReturnType.RTN_TYPE_OK);
+                    return res;
+                }
+            } catch (Exception e) {
+                log.error("[checkTel][Exception] : {}", e);
+            }
+        }
+        res.setReturnCode(ReturnType.RTN_TYPE_MEMBERSHIP_TELEPHONE_INVALID);
+        return res;
+    }
+
 
     @ApiOperation("아이디 찾기")
     @GetMapping("/email")
@@ -311,12 +335,12 @@ public class MembershipController {
 
     @ApiOperation("RH 코인과 리워드 파워 조회")
     @PostMapping("/coin")
-    public ResponseHandler<?> showRhCoinAndRewardPower(){
+    public ResponseHandler<?> showRhCoinAndRewardPower() {
         final ResponseHandler<Object> res = new ResponseHandler<>();
         MembershipInfo membershipInfo = null;
         try {
             membershipInfo = membershipService.currentSessionUserInfo();
-            if(membershipInfo == null) throw new Exception();
+            if (membershipInfo == null) throw new Exception();
         } catch (Exception e) {
             log.error("[Session][Exception] : ", e.toString());
             res.setReturnCode(ReturnType.RTN_TYPE_SESSION);
