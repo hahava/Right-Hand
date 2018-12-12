@@ -4,11 +4,17 @@
 <mapper namespace="com.righthand.board.dao.BoardDao">
 
     <select id="selectCountListTech" resultType="int">
-        SELECT COUNT(*) FROM TB_IT_TECH_BOARD
+        SELECT COUNT(*) FROM TB_IT_TECH_BOARD, TB_PROFILE, TB_USER
+        WHERE TB_IT_TECH_BOARD.BOARD_PROFILE_SEQ = TB_PROFILE.PROFILE_SEQ
+        AND TB_PROFILE.USER_SEQ = TB_USER.USER_SEQ
+        AND TB_USER.RESIGN_YN = "N"
     </select>
 
     <select id="selectCountListDev" resultType="int">
-        SELECT COUNT(*) FROM TB_DEVELOP_STORY_BOARD
+        SELECT COUNT(*) FROM TB_DEVELOP_STORY_BOARD, TB_PROFILE, TB_USER
+        WHERE TB_DEVELOP_STORY_BOARD.BOARD_PROFILE_SEQ = TB_PROFILE.PROFILE_SEQ
+        AND TB_PROFILE.USER_SEQ = TB_USER.USER_SEQ
+        AND TB_USER.RESIGN_YN = "N"
     </select>
 
     <select id="selectSearchedCountListTech" resultType="int" parameterType="com.righthand.board.dto.model.BoardSearchVO">
@@ -30,7 +36,10 @@
       FROM
       TB_IT_TECH_BOARD AS BOARD
       , TB_PROFILE AS PROFILE
+      , TB_USER AS USER
       WHERE BOARD.BOARD_PROFILE_SEQ = PROFILE.PROFILE_SEQ
+      AND PROFILE.USER_SEQ = USER.USER_SEQ
+      AND USER.RESIGN_YN = "N"
       ORDER BY BOARD_DATE DESC, BOARD_SEQ DESC
       LIMIT #{start}, #{offset}
     </select>
@@ -40,6 +49,7 @@
       FROM
       TB_DEVELOP_STORY_BOARD AS BOARD
       , TB_PROFILE AS PROFILE
+      , TB_USER AS USER
       WHERE BOARD.BOARD_PROFILE_SEQ = PROFILE.PROFILE_SEQ
       ORDER BY BOARD_DATE DESC
       LIMIT #{start}, #{offset}

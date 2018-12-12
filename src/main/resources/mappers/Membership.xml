@@ -46,7 +46,7 @@
         ,UPD_DT
         FROM TB_USER
         WHERE DEL_YN ="N"
-            AND RESIGN_YN = "N"
+        AND RESIGN_YN = "N"
         <if test="userSeq != null">
             AND USER_SEQ = #{userSeq}
         </if>
@@ -100,10 +100,10 @@
         </if>
     </select>
     <select id="countID" resultType="int" parameterType="map">
-        SELECT COUNT(*) FROM TB_USER WHERE USER_ID = #{userId}
+        SELECT COUNT(*) FROM TB_USER WHERE USER_ID = #{userId} AND RESIGN_YN = "N"
     </select>
     <select id="getRecommender" resultType="int" parameterType="map">
-        SELECT COUNT(*) FROM TB_USER WHERE USER_ID = #{recommender}
+        SELECT COUNT(*) FROM TB_USER WHERE USER_ID = #{recommender} AND RESIGN_YN = "N"
     </select>
     <select id="getProfileSeq" resultType="int" parameterType="int">
         SELECT PROFILE_SEQ FROM TB_PROFILE WHERE USER_SEQ = #{userSeq}
