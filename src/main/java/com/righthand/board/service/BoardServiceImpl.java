@@ -10,6 +10,8 @@ import com.righthand.board.dto.model.MyBoardVO;
 import com.righthand.common.type.ReturnType;
 import com.righthand.membership.dao.MembershipDao;
 import com.righthand.membership.service.MembershipInfo;
+import com.righthand.mypage.domain.myactivity.rhcbreakdown.TbRhcBreakdown;
+import com.righthand.mypage.domain.myactivity.rhcbreakdown.TbRhcBreakdownRepository;
 import com.righthand.mypage.domain.myactivity.rhpbreakdown.TbRhpBreakdown;
 import com.righthand.mypage.domain.myactivity.rhpbreakdown.TbRhpBreakdownRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +35,8 @@ public class BoardServiceImpl implements BoardService {
     private final MembershipDao membershipDao;
 
     private final TbRhpBreakdownRepository tbRhpBreakdownRepository;
+
+    private final TbRhcBreakdownRepository tbRhcBreakdownRepository;
 
     static Semaphore boardSemaphore = new Semaphore(1);
     private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -64,7 +68,11 @@ public class BoardServiceImpl implements BoardService {
         return ReturnType.RTN_TYPE_BOARD_REPLY_SUCCESS;
     }
 
-    private void insertMyActivity(Map input_data, MembershipInfo membershipInfo, String boardType, char activityType) {
+    /**
+     * @author: Danny
+     * Comment: RH 파워에 대한 내역 삽입
+     * */
+    private void insertRhpBreakdown(Map input_data, MembershipInfo membershipInfo, String boardType, char activityType) {
         int boardSeq;
         String boardTitle;
         String type;
@@ -90,6 +98,44 @@ public class BoardServiceImpl implements BoardService {
                         .content(boardTitle)
                         .boardSeq((long) boardSeq)
                         .boardType(boardType)
+                        .build()
+        );
+    }
+
+    /**
+     * @author: Danny
+     * Comment: RH 코인에 대한 내역 삽입
+     * */
+    private void insertRhcBreakdown(Map input_data, long receiverProfileSeq, String senderType){
+        final String receiverType = "RH 코인 획득";
+        final String boardType = "tech";
+        final long boardSeq = (long) input_data.get("boardSeq");
+        final String boardTitle = boardDao.findBoardTitleTech((int)boardSeq);
+        final double rhCoin = (double) input_data.get("reqCoin");
+        final long senderProfileSeq = (long) input_data.get("replyProfileSeq");
+        // Sender의 지출 내역
+        tbRhcBreakdownRepository.save(
+                TbRhcBreakdown.builder()
+                        .activityType(senderType)
+                        .boardSeq((long) input_data.get("boardSeq"))
+                        .boardType(boardType)
+                        .content(boardTitle)
+                        .rhCoin(rhCoin)
+                        .rhcProfileSeq(senderProfileSeq)
+                        .isSender(true)
+                        .build()
+        );
+
+        // Receiver의 지출 내역
+        tbRhcBreakdownRepository.save(
+                TbRhcBreakdown.builder()
+                        .activityType(receiverType)
+                        .boardSeq((long) input_data.get("boardSeq"))
+                        .boardType(boardType)
+                        .content(boardTitle)
+                        .rhCoin(rhCoin)
+                        .rhcProfileSeq(receiverProfileSeq)
+                        .isSender(false)
                         .build()
         );
     }
@@ -293,7 +339,7 @@ public class BoardServiceImpl implements BoardService {
             rtn = giveRhPowerAndDecreaseLimitAtBoard(membershipInfo);
 
             // TB_MY_ACTIVITY DB의 데이터를 갱신한다.
-            insertMyActivity(input_data, membershipInfo, "tech", 'b');
+            insertRhpBreakdown(input_data, membershipInfo, "tech", 'b');
 
         } catch (Exception e) {
             boardSemaphore.release();
@@ -311,7 +357,7 @@ public class BoardServiceImpl implements BoardService {
         try {
             boardDao.insertBoardListDev(input_data);
             rtn = giveRhPowerAndDecreaseLimitAtBoard(membershipInfo);
-            insertMyActivity(input_data, membershipInfo, "dev", 'b');
+            insertRhpBreakdown(input_data, membershipInfo, "dev", 'b');
         } catch (Exception e) {
             boardSemaphore.release();
             return ReturnType.RTN_TYPE_BOARD_INSERT_NG;
@@ -351,7 +397,17 @@ public class BoardServiceImpl implements BoardService {
 
         rtn = giveRhPowerAndDecreaseLimitAtReply(membershipInfo);
 
-        insertMyActivity(input_data, membershipInfo, "tech", 'r');
+        /**
+         * RH 파워 획득 내역 삽입
+         * */
+        insertRhpBreakdown(input_data, membershipInfo, "tech", 'r');
+
+        /**
+         * RH 코인 획득 내역 삽입
+         * */
+        insertRhcBreakdown(input_data, (long) receiverProfileSeq, "리워드 파워 지급");
+
+
         return rtn;
     }
 
@@ -383,7 +439,16 @@ public class BoardServiceImpl implements BoardService {
 
             rtn = giveRhPowerAndDecreaseLimitAtReply(membershipInfo);
 
-            insertMyActivity(input_data, membershipInfo, "tech", 'r');
+            /**
+             * RH 파워 획득 내역 삽입
+             * */
+            insertRhpBreakdown(input_data, membershipInfo, "tech", 'r');
+
+            /**
+             * RH 코인 획득 내역 삽입
+             * */
+            insertRhcBreakdown(input_data, (long) receiverProfileSeq, "RH 코인 지급");
+
         } catch (Exception e) {
             return ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST;
         }
@@ -398,7 +463,7 @@ public class BoardServiceImpl implements BoardService {
         try {
             boardDao.insertReplyListDev(input_data);
             rtn = giveRhPowerAndDecreaseLimitAtReply(membershipInfo);
-            insertMyActivity(input_data, membershipInfo, "dev", 'r');
+            insertRhpBreakdown(input_data, membershipInfo, "dev", 'r');
         } catch (Exception e) {
             logger.error("[InsertReplyListDev][Exception] : {}", e.toString());
             return ReturnType.RTN_TYPE_BOARD_REPLY_NG;
