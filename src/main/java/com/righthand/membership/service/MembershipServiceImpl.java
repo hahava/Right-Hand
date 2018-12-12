@@ -8,6 +8,8 @@ import com.righthand.common.type.ReturnType;
 import com.righthand.membership.config.ConfigMembership;
 import com.righthand.membership.dao.MembershipDao;
 import com.righthand.membership.dto.model.UserVO;
+import com.righthand.mypage.domain.myactivity.rhcbreakdown.TbRhcBreakdown;
+import com.righthand.mypage.domain.myactivity.rhcbreakdown.TbRhcBreakdownRepository;
 import com.righthand.mypage.domain.myactivity.rhpbreakdown.TbRhpBreakdown;
 import com.righthand.mypage.domain.myactivity.rhpbreakdown.TbRhpBreakdownRepository;
 import lombok.RequiredArgsConstructor;
@@ -53,6 +55,8 @@ public class MembershipServiceImpl implements MembershipService {
     private final GetNowTime getNowTime;
 
     private final TbRhpBreakdownRepository tbRhpBreakdownRepository;
+
+    private final TbRhcBreakdownRepository tbRhcBreakdownRepository;
 
 
     static Semaphore membershipSemaphore = new Semaphore(1);
@@ -101,6 +105,34 @@ public class MembershipServiceImpl implements MembershipService {
     private int getUserSeq(String id) {
         int seq = membershipDao.getUserSeq(id);
         return seq;
+    }
+
+    /**
+     * @author: Danny
+     * Comment: RH 코인에 대한 내역 삽입
+     * */
+    private void insertRhcBreakdown(long profileSeq, long recommenderProfileSeq){
+        // 가입자의 정보
+        tbRhcBreakdownRepository.save(
+                TbRhcBreakdown.builder()
+                        .activityType("추천인 가입")
+                        .content("추천인 가입으로 인한 RH 코인 획득")
+                        .rhCoin(50)
+                        .rhcProfileSeq(profileSeq)
+                        .isSender(true)
+                        .build()
+        );
+
+        // 추천인의 정보
+        tbRhcBreakdownRepository.save(
+                TbRhcBreakdown.builder()
+                        .activityType("추천인 가입")
+                        .content("추천인 가입으로 인한 RH 코인 획득")
+                        .rhCoin(50)
+                        .rhcProfileSeq(recommenderProfileSeq)
+                        .isSender(false)
+                        .build()
+        );
     }
 
     /**
@@ -239,11 +271,20 @@ public class MembershipServiceImpl implements MembershipService {
 
             if (recommenderId != null && !recommenderId.trim().equals("")) {
                 Map<String, Object> recommendData = new HashMap<>();
-                recommendData.put("userSeq", getUserSeq(userId));
-                recommendData.put("recommenderSeq", getUserSeq(recommenderId));
+                final int userSeq = getUserSeq(userId);
+                final int recommenderSeq = getUserSeq(recommenderId);
+                recommendData.put("userSeq", userSeq);
+                recommendData.put("recommenderSeq", recommenderSeq);
                 try {
+                    /** TB_PROMOTE의 Recommend를 감소시킴*/
                     membershipDao.rewardRecommendPromote(recommendData);
+                    /** TB_PROMOTE의 Recommend를 감소시킴*/
                     membershipDao.rewardRecommendProfile(recommendData);
+
+                    /** 추천인 가입 이후 토큰 내역에 기록 삽입*/
+                    int profileSeq = membershipDao.getProfileSeq(userSeq);
+                    int recommenderProfileSeq = membershipDao.getProfileSeq(recommenderSeq);
+                    insertRhcBreakdown(profileSeq, recommenderProfileSeq);
                 } catch (Exception e) {
                     return ReturnType.RTN_TYPE_SIGNUP_REWARD_NG;
                 }
