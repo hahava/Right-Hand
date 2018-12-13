@@ -23,7 +23,7 @@ import java.io.PrintWriter;
 @Component
 public class CustomLogoutHandler implements LogoutSuccessHandler {
 
-    @CacheEvict(value = "findUserAndProfileCache", key = "#{userSeq}")
+    @CacheEvict(value = "findUserAndProfileCache", key = "#userSeq")
     public void refreshCache(int userSeq) {
         log.info("[Cache][Refresing] userSeq : " + userSeq);
     }

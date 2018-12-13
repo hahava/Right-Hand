@@ -8,10 +8,12 @@ import com.righthand.file.service.FileService;
 import com.righthand.membership.service.MembershipInfo;
 import com.righthand.membership.service.MembershipService;
 import com.righthand.mypage.domain.file.TbFileGrp;
+import com.righthand.mypage.domain.myactivity.rhcbreakdown.TbRhcBreakdown;
 import com.righthand.mypage.domain.myactivity.rhpbreakdown.TbRhpBreakdown;
 import com.righthand.mypage.dto.req.PasswordReq;
 import com.righthand.mypage.dto.req.UserReq;
 import com.righthand.mypage.service.TbFileGrpService;
+import com.righthand.mypage.service.TbRhcBreakdownService;
 import com.righthand.mypage.service.TbRhpBreakdwonService;
 import com.righthand.mypage.service.TbUserService;
 import io.swagger.annotations.ApiOperation;
@@ -38,9 +40,9 @@ public class MypageController {
     private FileService fileService;
     private TbFileGrpService tbFileGrpService;
     private TbRhpBreakdwonService tbRhpBreakdwonService;
+    private TbRhcBreakdownService tbRhcBreakdownService;
 
-
-    private List<HashMap<String, Object>> transform(Page<TbRhpBreakdown> params, int page, int size){
+    private List<HashMap<String, Object>> transformRhPower(Page<TbRhpBreakdown> params, int page, int size){
         List<HashMap<String, Object>> datas = new ArrayList<HashMap<String, Object>>();
         int count = (page - 1) * size + 1;
         log.info("total Element : {}", params.getTotalElements());
@@ -54,6 +56,28 @@ public class MypageController {
             map.put("boardType", tbRhpBreakdown.getBoardType());
             map.put("boardSeq", tbRhpBreakdown.getBoardSeq());
             map.put("content", tbRhpBreakdown.getContent());
+            map.put("count", count);
+            datas.add(i, map);
+            count++;
+        }
+        return datas;
+    }
+
+    private List<HashMap<String, Object>> transformRhCoin(Page<TbRhcBreakdown> params, int page, int size){
+        List<HashMap<String, Object>> datas = new ArrayList<>();
+        int count = (page - 1) * size + 1;
+        log.info("total Element : {}", params.getTotalElements());
+        log.info("number of elements : {}", params.getNumberOfElements());
+        for (int i = 0, n = params.getNumberOfElements(); i < n; i++) {
+            HashMap<String, Object> map = new HashMap<>();
+            TbRhcBreakdown tbRhcBreakdown = params.getContent().get(i);
+            map.put("activityDate", tbRhcBreakdown.getActivityDate());
+            map.put("activityType", tbRhcBreakdown.getActivityType());
+            map.put("rhCoin", tbRhcBreakdown.getRhCoin());
+            map.put("boardType", tbRhcBreakdown.getBoardType());
+            map.put("boardSeq", tbRhcBreakdown.getBoardSeq());
+            map.put("content", tbRhcBreakdown.getContent());
+            map.put("isSender", tbRhcBreakdown.isSender());
             map.put("count", count);
             datas.add(i, map);
             count++;
@@ -292,10 +316,10 @@ public class MypageController {
             return result;
         }
         long profileSeq = membershipInfo.getProfileSeq();
-        final Page<TbRhpBreakdown> allByActivityProfileSeq = tbRhpBreakdwonService.findAllByRhpProfileSeq(profileSeq, page, size);
-        if(allByActivityProfileSeq.hasContent()){
-            long total= allByActivityProfileSeq.getTotalElements();
-            final List<HashMap<String, Object>> datas = transform(allByActivityProfileSeq, page, size);
+        final Page<TbRhpBreakdown> allByRhpProfileSeq = tbRhpBreakdwonService.findAllByRhpProfileSeq(profileSeq, page, size);
+        if(allByRhpProfileSeq.hasContent()){
+            long total= allByRhpProfileSeq.getTotalElements();
+            final List<HashMap<String, Object>> datas = transformRhPower(allByRhpProfileSeq, page, size);
             Map<String, Object> rhPowerBreakdownInfo = new HashMap<>();
             rhPowerBreakdownInfo.put("total", total);
             rhPowerBreakdownInfo.put("datas", datas);
@@ -307,6 +331,36 @@ public class MypageController {
             result.setReturnCode(ReturnType.RTN_TYPE_OK);
         }else{
             result.setReturnCode(ReturnType.RTN_TYPE_NO_RH_POWER_BREAKDOWN);
+        }
+        return result;
+    }
+
+    @ApiOperation("코인 내역")
+    @GetMapping("/coin")
+    public ResponseHandler<?> showRhCoinBreakdown(int page){
+        final ResponseHandler<Object> result = new ResponseHandler<>();
+        final int size = 7;
+        MembershipInfo membershipInfo;
+        try {
+            membershipInfo = membershipService.currentSessionUserInfo();
+            if(membershipInfo == null) throw new Exception();
+        } catch (Exception e) {
+            log.error("[Session][Exception] : {}", e.toString());
+            result.setReturnCode(ReturnType.RTN_TYPE_SESSION);
+            return result;
+        }
+        long profileSeq = membershipInfo.getProfileSeq();
+        Page<TbRhcBreakdown> allByRhcProfileSeq = tbRhcBreakdownService.findAllByRhcProfileSeq(profileSeq, page, size);
+        if(allByRhcProfileSeq.hasContent()){
+            long total = allByRhcProfileSeq.getTotalElements();
+            final List<HashMap<String, Object>> datas = transformRhCoin(allByRhcProfileSeq, page, size);
+            Map<String, Object> rhCoinBreakdownInfo = new HashMap<>();
+            rhCoinBreakdownInfo.put("total", total);
+            rhCoinBreakdownInfo.put("datas", datas);
+            result.setData(rhCoinBreakdownInfo);
+            result.setReturnCode(ReturnType.RTN_TYPE_OK);
+        }else{
+            result.setReturnCode(ReturnType.RTN_TYPE_NO_RH_COIN_BREAKDOWN);
         }
         return result;
     }

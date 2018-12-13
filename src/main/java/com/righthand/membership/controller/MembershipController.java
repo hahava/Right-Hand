@@ -163,7 +163,6 @@ public class MembershipController {
 
     @ApiOperation("회원탈퇴")
     @PutMapping("/resign")
-    @CacheEvict(value = "findUserAndProfileCache", key = "#{userSeq}")
     public ResponseHandler<?> resign(@ApiParam("탈퇴사유") @Valid @RequestBody(required = false) final ResignReq _params,
                                      HttpServletRequest request) {
         final ResponseHandler<?> res = new ResponseHandler<>();
