@@ -106,23 +106,23 @@ public class BoardServiceImpl implements BoardService {
      * @author: Danny
      * Comment: RH 코인에 대한 내역 삽입
      * */
-    private void insertRhcBreakdown(Map input_data, long receiverProfileSeq, String boardType, String senderType){
+    void insertRhcBreakdown(Map input_data, long receiverProfileSeq, String boardType, String senderType){
         final String receiverType = "RH 코인 획득";
-        final long boardSeq = (long) input_data.get("boardSeq");
+        final int boardSeq = (int) input_data.get("boardSeq");
         String boardTitle;
-        if(boardType.equals("tech")) boardTitle = boardDao.findBoardTitleTech((int)boardSeq);
-        else boardTitle = boardDao.findBoardTitleDev((int)boardSeq);
+        if(boardType.equals("tech")) boardTitle = boardDao.findBoardTitleTech(boardSeq);
+        else boardTitle = boardDao.findBoardTitleDev(boardSeq);
         final double rhCoin = (double) input_data.get("reqCoin");
-        final long senderProfileSeq = (long) input_data.get("replyProfileSeq");
+        final int senderProfileSeq = (int) input_data.get("senderSeq");
         // Sender의 지출 내역
         tbRhcBreakdownRepository.save(
                 TbRhcBreakdown.builder()
                         .activityType(senderType)
-                        .boardSeq((long) input_data.get("boardSeq"))
+                        .boardSeq((long) boardSeq)
                         .boardType(boardType)
                         .content(boardTitle)
                         .rhCoin(rhCoin)
-                        .rhcProfileSeq(senderProfileSeq)
+                        .rhcProfileSeq((long)senderProfileSeq)
                         .isSender(true)
                         .build()
         );
@@ -131,7 +131,7 @@ public class BoardServiceImpl implements BoardService {
         tbRhcBreakdownRepository.save(
                 TbRhcBreakdown.builder()
                         .activityType(receiverType)
-                        .boardSeq((long) input_data.get("boardSeq"))
+                        .boardSeq((long) boardSeq)
                         .boardType(boardType)
                         .content(boardTitle)
                         .rhCoin(rhCoin)
@@ -406,7 +406,9 @@ public class BoardServiceImpl implements BoardService {
         /**
          * RH 코인 획득 내역 삽입
          * */
-        insertRhcBreakdown(input_data, (long) receiverProfileSeq, "tech", "리워드 파워 지급");
+        /** insertRhcBreakdown에서 senderSeq를 필요로하기 때문!*/
+        input_data.put("senderSeq", input_data.get("replyProfileSeq"));
+        insertRhcBreakdown(input_data, receiverProfileSeq, "tech", "리워드 파워 지급");
 
 
         return rtn;
@@ -448,7 +450,9 @@ public class BoardServiceImpl implements BoardService {
             /**
              * RH 코인 획득 내역 삽입
              * */
-            insertRhcBreakdown(input_data, (long) receiverProfileSeq, "tech", "RH 코인 지급");
+            /** insertRhcBreakdown에서 senderSeq를 필요로하기 때문!*/
+            input_data.put("senderSeq", input_data.get("replyProfileSeq"));
+            insertRhcBreakdown(input_data, receiverProfileSeq, "tech", "RH 코인 지급");
 
         } catch (Exception e) {
             return ReturnType.RTN_TYPE_BOARD_LIST_NO_EXIST;
@@ -530,6 +534,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    @Transactional
     public ReturnType sendDevWithRhCoin(Map input_data, MembershipInfo membershipInfo) throws Exception {
         logger.info(("[Service][sendDevWithRhCoin]"));
         try {
@@ -559,7 +564,7 @@ public class BoardServiceImpl implements BoardService {
             logger.error("[updateReceiver][Exception] : {}", e.toString());
             return ReturnType.RTN_TYPE_NG;
         }
-        // 발신자 ***리워드 파워*** 차감
+        // 발신자 ***코인 차감*** 차감
         map.replace("profileSeq", input_data.get("senderSeq"));
         map.replace("reqCoin", reqCoin * (-1));
         try {
@@ -568,6 +573,8 @@ public class BoardServiceImpl implements BoardService {
             logger.error("[updateSender][Exception] : {}", e.toString());
             return ReturnType.RTN_TYPE_NG;
         }
+
+        logger.info("boardSeq : {}", input_data.get("boardSeq"));
 
         /**
          * RH 코인 획득 내역 삽입

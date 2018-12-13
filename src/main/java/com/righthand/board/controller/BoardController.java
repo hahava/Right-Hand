@@ -487,6 +487,8 @@ public class BoardController {
             params.put("reqCoin", reqCoin);
             //댓글의 Sequence
             params.put("replySeq", replySeq);
+            int boardSeq = boardDao.findBoardSeqByReplySeq(replySeq);
+            params.put("boardSeq", boardSeq);
             Map senderInfo;
             try {
                 senderInfo = membershipService.getRewardPowerAndCoin(membershipInfo.getProfileSeq());
@@ -517,24 +519,32 @@ public class BoardController {
                     return result;
                 }
             }
-            try {
-                // rewardPower를 보낸다.
-                if (ctype.equals("rp")) {
+
+            // rewardPower를 보낸다.
+            if (ctype.equals("rp")) {
+                try {
                     rtn = boardService.sendDevWithRewardPower(params, membershipInfo);
-                    result.setReturnCode(rtn);
+                } catch (Exception e) {
+                    logger.error("[sendRewardPowerInDev][Exception] " + e.toString());
+                    result.setReturnCode(ReturnType.RTN_TYPE_COIN_SEND_NG);
                     return result;
                 }
-                //코인을 보낸다.
-                else {
-                    rtn = boardService.sendDevWithRhCoin(params, membershipInfo);
-                    result.setReturnCode(rtn);
-                    return result;
-                }
-            } catch (Exception e) {
-                logger.error("[sendCoinInDev][Exception] " + e.toString());
-                result.setReturnCode(ReturnType.RTN_TYPE_COIN_SEND_NG);
+                result.setReturnCode(rtn);
                 return result;
             }
+            //코인을 보낸다.
+            else {
+                try {
+                    rtn = boardService.sendDevWithRhCoin(params, membershipInfo);
+                } catch (Exception e) {
+                    logger.error("[sendRhCoinInDev][Exception] " + e.toString());
+                    result.setReturnCode(ReturnType.RTN_TYPE_COIN_SEND_NG);
+                    return result;
+                }
+                result.setReturnCode(rtn);
+                return result;
+            }
+
         }
         result.setReturnCode(ReturnType.RTN_TYPE_COIN_TYPE_NG);
         return result;
