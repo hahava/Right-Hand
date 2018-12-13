@@ -5,30 +5,57 @@
 <head>
     <init th:replace="fragment/head"/>
     <title>Hoi</title>
+
 </head>
 <body>
 
-<navbar th:replace="fragment/navbar"/>
+<!--Register Modal-->
+<RegisterModal th:replace="fragment/registerModal"/>
+<!--LoginModal-->
+<LoginModal th:replace="fragment/loginModal"/>
+<!-- Navigation Bar -->
+<NavigationBar th:replace="fragment/navbar"/>
 
 <!--SUBPAGE HEAD-->
 <div class="subpage-head has-margin-bottom">
     <div class="container">
-        <h3 id="board_title"></h3>
-        <span id="board_date"></span>&nbsp;&nbsp;<a href="#" class="link-reverse" id="nick_name"></a>
+        <h3 id="page_title"></h3>
+        <p id="page_info" class="lead"></p>
     </div>
 </div>
-<!-- // END SUBPAGE HEAD -->
+<!--///SUBPAGE HEAD///-->
 
 <div class="container">
     <div class="row">
-        <div class="col-md-9 has-margin-bottom">
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
 
-            <div id="viewerSection"></div>
+            <h4 style="margin-bottom:3px" id="board_title"></h4>
+        </div>
+        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="vertical-align:middle">
+            <div class="pull-right">
+                <div>
+                    <a class="pull-left" href="#none" style="margin-right:5px">
+                        <img class="media-object" alt="avatar" id="board_user_profile">
+                    </a>
+                    <div class="media-body"><h6 class="media-heading"><a class="link-reverse" href="#none"
+                                                                         id="nick_name"></a>
+                    </h6>
+                        <p class="text-muted" id="board_date"></p></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-9 has-margin-bottom">
+            <hr>
+            <div id="viewerSection" style="min-height: 450px;"></div>
 
             <!--Reply-->
 
+            <hr>
             <section class="comments-block">
-                <h3 class="comments-head" id="reply_count"></h3>
+                <h4 id="reply_count" style="margin-bottom: 20px"></h4>
                 <div id="reply_list">
                 </div>
             </section>
@@ -36,7 +63,15 @@
 
 
             <section class="post-comment-form">
-                <h3 class="comments-head">댓글을 작성해 주세요</h3>
+                <div class="row">
+                    <hr>
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <h4>댓글을 작성해 주세요</h4>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 form-inline" id="coin_dev">
+
+                    </div>
+                </div>
                 <form class="form" role="form">
                     <div class="row">
                         <div class="form-group col-md-12">
@@ -55,10 +90,42 @@
     </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel"></h4>
+            </div>
+            <div class="modal-body" style="min-height: 100px;">
+                <div class="btn-group btn-toggle" style="margin-bottom: 10px;">
+                    <button class='btn btn-xs btn-success active' onclick='setToggle(this)' id='coin'>
+                        코인
+                    </button>
+                    <button class='btn btn-xs btn-default' onclick='setToggle(this)' id='rh_power'>
+                        RP
+                    </button>
+                </div>
+                <input class='form-control pull-right input-sm' id='coin_value' type=number min=0
+                       step=0.001\n"
+                       max=10\n"
+                       placeholder='코인' size='5'>
+                <input type="hidden" id="reply_seq" value=""/>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+                <a type="button" id="coin_send_btn" class="btn btn-primary" onclick="sendCoin();">전송</a>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!--footer-->
 <footer th:replace="fragment/footer"/>
 <script th:replace="fragment/commonScript"/>
-<script th:src="@{../js/custom/boardContent.js}"></script>
+<script th:src="@{../js/page/boardContent.js}"></script>
 
 </body>
 </html>

@@ -8,14 +8,15 @@
 </head>
 
 <body>
-
-
+<!--Register Modal-->
+<RegisterModal th:replace="fragment/registerModal"/>
+<!--LoginModal-->
+<LoginModal th:replace="fragment/loginModal"/>
 <!-- Navigation Bar -->
-<navbar th:replace="fragment/navbar"/>
+<NavigationBar th:replace="fragment/navbar"/>
 
 <!-- BANNER SLIDER-->
 <div id="myCarousel" class="carousel slide" data-ride="carousel">
-    <!-- Indicators -->
     <ol class="carousel-indicators">
         <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
         <li data-target="#myCarousel" data-slide-to="1"></li>
@@ -55,8 +56,8 @@
 </div>
 <!-- ///END Banner Slider/// -->
 <Br/>
-<!--/// Board LIST /// -->
-<div class="container has-margin-bottom">
+<!--/// Board Section /// -->
+<div class="container has-margin-top has-margin-bottom">
     <div class="row">
         <div class="col-md-12 has-margin-bottom">
             <div class="section-title left-align-desktop">
@@ -64,13 +65,10 @@
             </div>
         </div>
     </div>
-
-    <div class="row" id="board_list">
-        <!--Blog list-->
-    </div>
-
+    <!--Board list-->
+    <div id="tempEditor" style="display: none"></div>
+    <div class="row" id="board_list"></div>
 </div>
-<!-- ///END Board LIST /// -->
 <hr>
 <!--Board info-->
 <div class="container has-margin-bottom">
@@ -83,117 +81,36 @@
 
         <div class="row has-margin-bottom">
             <div class="col-md-5 col-sm-5   bulletin">
-                <a href="blog-single.html"><h4 class="media-heading te">Dev. Story </h4></a>
+                <a href="/board/list?type=dev&page=1"><h4 class="media-heading te">Dev. Story </h4></a>
                 <Br>
                 <p class="media-content ">개발 중 어려운 점이 있다면, 언제든지 무엇이든 질문하세요!
                     만약, 원하는 답변을 찾았다면 RHT로 고마움을 표현하세요. </p>
             </div>
             <div class="col-md-5 col-sm-5 col-md-offset-1 col-sm-offset-1">
-                <img class="img-responsive center-block" src="images/gallery/img_gallery_8.jpg">
+                <img class="img-responsive center-block" th:src="@{../images/it_board.jpg}">
             </div>
         </div>
     </div>
 
     <div class="row has-margin-bottom">
         <div class="col-md-5 col-sm-5">
-            <img class="img-responsive center-block" src="images/gallery/img_gallery_8.jpg">
+            <img class="img-responsive center-block" th:src="@{../images/dev_board.jpg}">
         </div>
         <div class="col-md-5 col-sm-5 col-md-offset-1 col-sm-offset-1   bulletin">
-            <a href="blog-single.html"><h4 class="media-heading">IT. Story </h4></a>
+            <a href="/board/list?type=tech&page=1"><h4 class="media-heading">IT. Story </h4></a>
             <Br>
             <p class="media-content">공유하고싶은 지식과 정보를 작성해보세요.
-                또한, 소개하고 싶은 IT 제품에 대한 글을 남겨보세요."</p>
+                또한, 소개하고 싶은 IT 제품에 대한 글을 남겨보세요.</p>
         </div>
     </div>
 </div>
 
-<!--///END Board info///-->
+<!--Footer-->
 <footer th:replace="fragment/footer"/>
+<!--Script for functions-->
 <script th:replace="fragment/commonScript"/>
-<script th:src="@{../js/custom/index.js}" type="text/javascript"></script>
-<!--회원가입 스크립트-->
-<script>
-    function register() {
-        var pw = $('#register_pw').val();
-        var check_pw = $('#register_pw_check').val();
-        var check = regex_checker(pw, check_pw);
-        var register_success = false;
-
-        if (check) {
-            var member = {
-                "userId": $('#register_email').val(),
-                "userPwd": $('#register_pw').val(),
-                "nickName": $('#register_nickname').val(),
-                "email": $('#register_email').val()
-            };
-
-            $.ajax({
-                type: 'POST',
-                url: "http://localhost:8080/api/membership/signUp",
-                async: false,
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                /*반드시 JSON 변환을 거쳐서 요청 보낼 것*/
-                data: JSON.stringify(member),
-                success: function (data) {
-                    loginOk = true;
-                    /*모달 속성 변경 후 Reload*/
-                    $('#register_submit').attr('data-dismiss', 'modal');
-                    register_success = true;
-                    window.reload();
-                    return true;
-                }
-                ,
-                error: function (data) {
-                    alert(data.toString());
-                    register_success = false;
-                    return false;
-                }
-            });
-            return true;
-        }
-        return register_success;
-    };
-
-    /*회원가입 데이터 유효성 검증 */
-    var input_checker = function () {
-        if ($('#register_email').val().length == 0 || $('#register_email').val() == "") {
-            $('#register_email').focus();
-            return false;
-        }
-    };
-
-    var regex_checker = function (pw, check_pw) {
-
-        var regex = /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/;
-
-
-        // 암호 길이
-        if (pw.length < 8 || pw.length > 16) {
-            alert("비빌번호는 8자 이상 15자 이하로 해주세요!");
-            return false;
-        }
-
-        //암호 형식
-        if (!regex.test(pw)) {
-            alert("비빌번호는 대소문자와 특수문자를 포함해야 합니다.");
-            return false;
-        }
-
-        //암호 2번 입력
-        if (pw != check_pw) {
-            alert("비밀번호가 일치 하지 않습니다.");
-            $('#register_pw_check').focus();
-            return false;
-        }
-        alert("성공이다!");
-        return true;
-    };
-
-</script>
-
-
+<script th:src="@{../js/component/board_component.js}" type="text/javascript"></script>
+<!--Script for page-->
+<script th:src="@{../js/page/index.js}" type="text/javascript"></script>
 </body>
 </html>

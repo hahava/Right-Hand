@@ -5,14 +5,17 @@
 
     <insert id="insertUser" parameterType="map" useGeneratedKeys="true" keyProperty="userSeq">
         INSERT INTO
-        TB_USER( LOGIN_TYPE, DEVICE, USER_ID, EMAIL, USER_PWD, AUTHORITY, RESIGN_YN, RESIGN_REASON, RESIGN_DT, PENDING_YN, PENDING_DT, PENDING_PERIOD, DEL_YN, CRE_ID, CRE_DT, UPD_ID, UPD_DT)
-        VALUES(  #{loginType}, #{device}, #{userId}, #{email}, #{userPwd}, #{authority}, 'N', #{resignReason}, #{resingDt},  #{pendingYn}, #{pendingDt}, #{pendingPeriod}, 'N', #{creId}, UTC_TIMESTAMP(), #{updId}, UTC_TIMESTAMP() )
+        TB_USER( LOGIN_TYPE, DEVICE, USER_ID, EMAIL, USER_PWD, AUTHORITY, RESIGN_YN, RESIGN_REASON, RESIGN_DT, PENDING_YN, PENDING_DT, PENDING_PERIOD, DEL_YN, CRE_ID, CRE_DT, UPD_ID, UPD_DT, RECOMMENDER)
+        VALUES(  #{loginType}, #{device}, #{userId}, #{email}, #{userPwd}, #{authority}, 'N', #{resignReason}, #{resingDt},  #{pendingYn}, #{pendingDt}, #{pendingPeriod}, 'N', #{creId}, UTC_TIMESTAMP(), #{updId}, UTC_TIMESTAMP(), #{recommender} )
     </insert>
 
     <insert id="insertProfile" parameterType="map">
         INSERT INTO
         TB_PROFILE( FILE_GRP_SEQ, INTRODUCTION, NICK_NAME, USER_NAME, GENDER, TEL, BIRTH_YEAR, CHILDREN_YN, DEPARTMENT, DUTY_POSITION, ROLE, MARKETING_ADV_YN, ACT_ALERT_YN, WORKING_ALERT_YN, LANG, DEL_YN, CRE_ID, CRE_DT, UPD_ID, UPD_DT, USER_SEQ)
         VALUES(  #{fileGrpSeq}, #{introduction}, #{nickName}, #{userName}, #{gender}, #{tel}, #{birthYear}, #{childrenYn}, #{department},  #{dutyPosition}, #{role}, #{marketingAdvYn}, #{actAlertYn}, #{workingAlertYn}, #{lang}, 'N',  #{userSeq}, UTC_TIMESTAMP(), #{userSeq}, UTC_TIMESTAMP(), #{userSeq} )
+        <selectKey resultType="int" order="AFTER" keyProperty="PROFILE_SEQ">
+            SELECT LAST_INSERT_ID();
+        </selectKey>
     </insert>
 
     <update id="resign" parameterType="map">
@@ -43,7 +46,7 @@
         ,UPD_DT
         FROM TB_USER
         WHERE DEL_YN ="N"
-            AND RESIGN_YN = "N"
+        AND RESIGN_YN = "N"
         <if test="userSeq != null">
             AND USER_SEQ = #{userSeq}
         </if>
@@ -96,14 +99,99 @@
             AND UPD_DT = #{updDt}
         </if>
     </select>
-    <select id="countEmail" resultType="int" parameterType="map">
-        SELECT COUNT(*) FROM TB_USER WHERE EMAIL = #{email}
+    <select id="countID" resultType="int" parameterType="map">
+        SELECT COUNT(*) FROM TB_USER WHERE USER_ID = #{userId} AND RESIGN_YN = "N"
+    </select>
+    <select id="getRecommender" resultType="int" parameterType="map">
+        SELECT COUNT(*) FROM TB_USER WHERE USER_ID = #{recommender} AND RESIGN_YN = "N"
     </select>
     <select id="getProfileSeq" resultType="int" parameterType="int">
         SELECT PROFILE_SEQ FROM TB_PROFILE WHERE USER_SEQ = #{userSeq}
     </select>
-
+    <select id="getProfileSeqByBoardSeq" resultType="int" parameterType="int">
+        SELECT BOARD_PROFILE_SEQ FROM TB_IT_TECH_BOARD WHERE BOARD_SEQ = #{boardSeq}
+    </select>
+    <select id="getUserSeq" resultType="int" parameterType="String">
+        SELECT USER_SEQ FROM TB_USER WHERE USER_ID = #{id}
+    </select>
+    <update id="rewardRecommendProfile" parameterType="map">
+        UPDATE TB_PROFILE SET TB_PROFILE.RH_COIN = TB_PROFILE.RH_COIN + 50 WHERE TB_PROFILE.USER_SEQ = #{userSeq} OR TB_PROFILE.USER_SEQ = #{recommenderSeq}
+    </update>
+    <update id="rewardRecommendPromote" parameterType="map">
+        UPDATE TB_PROMOTE SET TB_PROMOTE.RECOMMENDER = TB_PROMOTE.RECOMMENDER - 100 WHERE SEQUENCE = 1
+    </update>
     <select id="getProfileNickname" resultType="String" parameterType="int">
         SELECT NICK_NAME FROM TB_PROFILE WHERE USER_SEQ = #{userSeq}
     </select>
+
+    <select id="checkNickname" parameterType="map" resultType="int">
+        SELECT COUNT(*) FROM TB_PROFILE WHERE NICK_NAME = #{nickName}
+    </select>
+
+    <select id="getUserPwd" parameterType="int" resultType="String">
+        SELECT USER_PWD FROM TB_USER WHERE USER_SEQ = #{userSeq}
+    </select>
+
+    <update id="changePwd" parameterType="com.righthand.membership.dto.model.UserVO">
+        UPDATE TB_USER SET USER_PWD = #{pwd} WHERE USER_ID=#{userId}
+    </update>
+
+    <select id="checkFileGrpSeq" parameterType="int" resultType="Integer">
+        SELECT FILE_GRP_SEQ FROM TB_PROFILE WHERE PROFILE_SEQ = #{profileSeq}
+    </select>
+
+    <update id="saveFileGrpSeq" parameterType="map">
+        UPDATE TB_PROFILE SET  FILE_GRP_SEQ = #{fileGrpSeq} WHERE PROFILE_SEQ = #{profileSeq}
+    </update>
+
+    <update id="updateFileSeq" parameterType="map">
+        UPDATE TB_PROFILE SET FILE_SEQ = #{fileSeq} WHERE PROFILE_SEQ = #{profileSeq}
+    </update>
+
+    <select id="getRewardPowerAndRhCoin" parameterType="int" resultType="map">
+        SELECT REWARD_POWER, RH_COIN FROM TB_PROFILE WHERE PROFILE_SEQ = #{profileSeq}
+    </select>
+
+    <update id="updateRhCoin" parameterType="map">
+        UPDATE TB_PROFILE SET RH_COIN = RH_COIN + #{reqCoin} WHERE PROFILE_SEQ = #{profileSeq}
+    </update>
+
+    <update id="updateRewardPower" parameterType="map">
+        UPDATE TB_PROFILE SET REWARD_POWER = REWARD_POWER + #{reqCoin} WHERE PROFILE_SEQ = #{profileSeq}
+    </update>
+
+    <update id="updateRhPower" parameterType="map">
+        UPDATE TB_PROFILE SET RH_POWER = RH_POWER + #{reqPower} WHERE PROFILE_SEQ = #{profileSeq}
+    </update>
+
+    <select id="getLoginLimit" parameterType="int" resultType="int">
+        SELECT LOGIN_LIMIT FROM TB_PROFILE WHERE PROFILE_SEQ = #{profileSeq}
+    </select>
+
+    <update id="decreaseLoginLimit" parameterType="int">
+        UPDATE TB_PROFILE SET LOGIN_LIMIT = LOGIN_LIMIT - 1 WHERE PROFILE_SEQ = #{profileSeq}
+    </update>
+
+
+    <select id="getBoardWriteLimit" parameterType="int" resultType="int">
+        SELECT BOARD_WRITE_LIMIT FROM TB_PROFILE WHERE PROFILE_SEQ = #{profileSeq}
+    </select>
+
+    <update id="decreaseBoardWriteLimit" parameterType="int">
+        UPDATE TB_PROFILE SET BOARD_WRITE_LIMIT = BOARD_WRITE_LIMIT - 1 WHERE PROFILE_SEQ = #{profileSeq}
+    </update>
+
+
+    <select id="getReplyWriteLimit" parameterType="int" resultType="int">
+        SELECT REPLY_WRITE_LIMIT FROM TB_PROFILE WHERE PROFILE_SEQ = #{profileSeq}
+    </select>
+
+    <update id="decreaseReplyWriteLimit" parameterType="int">
+        UPDATE TB_PROFILE SET REPLY_WRITE_LIMIT= REPLY_WRITE_LIMIT - 1 WHERE PROFILE_SEQ = #{profileSeq}
+    </update>
+
+    <select id="checkTel" parameterType="map" resultType="int">
+        SELECT COUNT(*) FROM TB_PROFILE WHERE TEL = #{tel}
+    </select>
+
 </mapper>

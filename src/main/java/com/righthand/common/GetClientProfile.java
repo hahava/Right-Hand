@@ -12,15 +12,17 @@ import java.util.Map;
 
 public class GetClientProfile {
 
-    public static Map<String, Object> getUserInfo(MembershipService membershipService){
+    public static Map<String, Object> getUserInfo(MembershipService membershipService) throws Exception{
         Map<String, Object> map = new HashMap<>();
         try {
             MembershipInfo membershipInfo = membershipService.currentSessionUserInfo();
             map.put("authority", membershipInfo.getAuthoritiesLevel());
             map.put("nickname", membershipInfo.getNickname());
+            map.put("profileSeq",membershipInfo.getProfileSeq());
         } catch (Exception e) {
             map.put("authority", 0);
             map.put("nickname", null);
+            map.put("profileSeq", null);
         }
         return map;
     }

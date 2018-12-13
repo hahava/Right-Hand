@@ -1,7 +1,5 @@
 package com.righthand.notice.domain.boards;
 
-import com.righthand.notice.boards.TbNoticeBoard;
-import com.righthand.notice.boards.TbNoticeBoardRepository;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,8 +32,8 @@ public class TbNoticeBoardRepositoryTest {
     public void 게시글저장_불러오기() {
         //given
         tbNoticeBoardRepository.save(TbNoticeBoard.builder()
-                .boardTitle("테스트 게시글")
-                .boardContent("테스트 본문")
+                .boardTitle("Test")
+                .boardContent("Content")
                 .build());
 
         //when
@@ -43,8 +41,8 @@ public class TbNoticeBoardRepositoryTest {
 
         //then
         TbNoticeBoard tbNoticeBoard = tbNoticeBoardList.get(0);
-        assertThat(tbNoticeBoard.getBoardTitle(), is("테스트 게시글"));
-        assertThat(tbNoticeBoard.getBoardContent(), is("테스트 본문"));
+        assertThat(tbNoticeBoard.getBoardTitle(), is("Test"));
+        assertThat(tbNoticeBoard.getBoardContent(), is("Content"));
     }
 
 }

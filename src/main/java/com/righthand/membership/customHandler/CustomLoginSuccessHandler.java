@@ -1,11 +1,9 @@
 package com.righthand.membership.customHandler;
 
 import com.righthand.common.GetClientProfile;
-import com.righthand.common.dto.res.ResponseHandler;
-import com.righthand.common.type.ReturnType;
-import com.righthand.membership.config.ConfigMembership;
 import com.righthand.membership.service.MembershipInfo;
 import com.righthand.membership.service.MembershipService;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,16 +17,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 public class CustomLoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
     @Autowired
     MembershipService membershipService;
-
-    @Autowired
-    ConfigMembership configMembership;
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -36,7 +31,12 @@ public class CustomLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
     private RequestCache requestCache = new HttpSessionRequestCache();
 
     private String getUserInfoWhenSuccessLogin(){
-        Map<String, Object> userInfo = GetClientProfile.getUserInfo(membershipService);
+        Map<String, Object> userInfo= null;
+        try {
+            userInfo = GetClientProfile.getUserInfo(membershipService);
+        } catch (Exception e) {
+            log.error("[getUserInfo][Exception]" + e.toString());
+        }
         String jsonText = "{ \"authority : \" : " + String.valueOf(userInfo.get("authority")) + ", \"nickname\" : \"" + userInfo.get("nickname") + "\"}";
         return jsonText;
     }
@@ -52,6 +52,10 @@ public class CustomLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
             MembershipInfo membershipInfo = (MembershipInfo)authentication.getPrincipal();
             membershipInfo.setProfileSeq(membershipService.getProfileSeq(membershipInfo.getUserSeq()));
             membershipInfo.setNickname(membershipService.getProfileNickname(membershipInfo.getUserSeq()));
+
+            // 로그인 시, RhPower를 5개씩 준다.
+            membershipService.updateRhPower(membershipInfo.getProfileSeq());
+
             writer.write(getUserInfoWhenSuccessLogin());
             writer.flush();
         } catch (Exception e) {

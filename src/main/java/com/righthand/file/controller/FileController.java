@@ -2,7 +2,6 @@ package com.righthand.file.controller;
 
 import com.righthand.common.CheckData;
 import com.righthand.common.type.ReturnType;
-import com.righthand.file.config.ConfigFile;
 import com.righthand.file.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,9 +20,6 @@ public class FileController {
 
     @Autowired
     FileService fileService;
-
-    @Autowired
-    ConfigFile configFile;
 
     @Autowired
     CheckData checkData;

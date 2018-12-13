@@ -886,13 +886,11 @@ a.list-group-item:hover, a.list-group-item:focus {
 }
 
 .blockquote-centered:before {
-    background: url(../images/quote-1.png) no-repeat;
     left: 0;
     top: 0;
 }
 
 .blockquote-centered:after {
-    background: url(../images/quote-2.png) no-repeat;
     right: 0;
     bottom: 0;
 }
@@ -940,6 +938,11 @@ footer {
     background: #53504c;
     color: #f9f1e6;
     padding-top: 5px;
+    position: inherit;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    padding-bottom: 0;
 }
 
 footer h5 {

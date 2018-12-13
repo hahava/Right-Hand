@@ -1,0 +1,52 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ko">
+<!--thymeleaf added-->
+<head>
+    <init th:replace="fragment/head"/>
+    <title>Hoi</title>
+</head>
+<body>
+
+<!--Register Modal-->
+<RegisterModal th:replace="fragment/registerModal"/>
+<!--LoginModal-->
+<LoginModal th:replace="fragment/loginModal"/>
+<!-- Navigation Bar -->
+<NavigationBar th:replace="fragment/navbar"/>
+
+
+<!--SUBPAGE HEAD-->
+<div class="subpage-head has-margin-bottom">
+    <div class="container">
+        <h3 id="board_title">MyPage</h3>
+        <span id="board_date"></span>회원정보 수정<a href="#" class="link-reverse" id="nick_name"></a>
+    </div>
+</div>
+<!-- // END SUBPAGE HEAD -->
+
+<div class="container has-margin-bottom has-margin-top" style="height: 500px" id="user_info_list">
+    <div class="row">
+        <div class="col-sm-4 col-sm-offset-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">암호를 입력해주세요</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <input type="password" class="form-control"/>
+                        <button class="btn btn-primary btn-sm pull-right">확인</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Script for functions-->
+<footer th:replace="fragment/footer"/>
+<script th:replace="fragment/commonScript"/>
+<!--Script for page-->
+<script th:src="@{../js/page/userPwCheck.js}"></script>
+
+</body>
+</html>

@@ -194,41 +194,85 @@
 			<version>2.0.0</version>
 		</dependency>
 
-		<!-- JPA (DANNY ADD)-->
+		<!-- JPA -->
+        <!-- Danny Add -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 			<version>2.1.0.RELEASE</version>
 		</dependency>
 
-		<!-- H2 (DANNY ADD)-->
+		<!-- H2 -->
+		<!-- Danny Add -->
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<scope>test</scope>
 		</dependency>
 
-		<!-- querydsl (DANNY ADD)-->
+        <!-- Danny Add -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>5.1.0.RELEASE</version>
+		</dependency>
+
+		<!-- spring-boot-starter-mail (DANNY ADD) -->
+		<!-- Danny Add -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+
+
+		<!-- querydsl -->
+		<!-- Danny Add -->
 		<!--<dependency>-->
 			<!--<groupId>com.querydsl</groupId>-->
 			<!--<artifactId>querydsl-jpa</artifactId>-->
 		<!--</dependency>-->
 
-		<!-- redis (DANNY ADD)-->
+		<!-- redis -->
+		<!-- Danny Add -->
 		<!--<dependency>-->
 			<!--<groupId>org.springframework.boot</groupId>-->
 			<!--<artifactId>spring-boot-starter-data-redis</artifactId>-->
 			<!--<version>2.1.0.RELEASE</version>-->
 		<!--</dependency>-->
 
-		<!-- session-redis (DANNY ADD)-->
+		<!-- session-redis -->
+		<!-- Danny Add -->
 		<!--<dependency>-->
 			<!--<groupId>org.springframework.session</groupId>-->
 			<!--<artifactId>spring-session-data-redis</artifactId>-->
 			<!--<version>2.1.1.RELEASE</version>-->
 		<!--</dependency>-->
 
+		<!-- ehcache -->
+		<!-- Danny Add -->
+        <dependency>
+            <groupId>net.sf.ehcache</groupId>
+            <artifactId>ehcache</artifactId>
+            <version>2.10.6</version>
+        </dependency>
 
+		<!-- https://mvnrepository.com/artifact/com.querydsl/querydsl-jpa -->
+		<dependency>
+			<groupId>com.querydsl</groupId>
+			<artifactId>querydsl-jpa</artifactId>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.querydsl/querydsl-apt -->
+		<dependency>
+			<groupId>com.querydsl</groupId>
+			<artifactId>querydsl-apt</artifactId>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.querydsl/querydsl-core -->
+		<dependency>
+			<groupId>com.querydsl</groupId>
+			<artifactId>querydsl-core</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -236,6 +280,22 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>com.mysema.maven</groupId>
+				<artifactId>apt-maven-plugin</artifactId>
+				<version>1.1.3</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>process</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>target/generated-sources/java</outputDirectory>
+							<processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

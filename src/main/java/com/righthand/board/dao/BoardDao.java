@@ -3,6 +3,7 @@ package com.righthand.board.dao;
 import com.righthand.board.dto.model.BoardCountVO;
 import com.righthand.board.dto.model.BoardDetailVO;
 import com.righthand.board.dto.model.BoardSearchVO;
+import com.righthand.board.dto.model.MyBoardVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Repository;
@@ -28,8 +29,8 @@ public interface BoardDao {
 
     List<Map<String, Object>> showNewBoard();
 
-    void insertBoardListTech(Map boardData);
-    void insertBoardListDev(Map boardData);
+    int insertBoardListTech(Map boardData);
+    int insertBoardListDev(Map boardData);
 
     void insertReplyListTech(Map replyData);
     void insertReplyListDev(Map input_data);
@@ -40,5 +41,21 @@ public interface BoardDao {
     int selectSearchedCountListTech(BoardSearchVO vo);
     int selectSearchedCountListDev(BoardSearchVO vo);
 
+    List<Map<String, Object>> getMyBoardList(MyBoardVO vo);
+    int countMyBoard(int profileSeq);
 
+    void updateReplyListDev(Map input_data);
+
+    int findProfileSeqByReplySeq(int replySeq);
+
+    int findReplyIsRewarded(int replySeq);
+
+    int findProfileSeqByBoardSeqDev(int boardSeq);
+
+    int findProfileSeqByBoardSeqTech(int boardSeq);
+
+    String findBoardTitleDev(int boardSeq);
+    String findBoardTitleTech(int boardSeq);
+
+    int findBoardSeqByReplySeq(int replySeq);
 }

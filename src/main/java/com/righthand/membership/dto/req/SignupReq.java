@@ -3,6 +3,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiParam;
 import lombok.Data;
+import org.springframework.lang.Nullable;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -20,45 +21,31 @@ public class SignupReq implements Serializable {
     @ApiModelProperty(value = "이메일")
     private String email;
 
-    @ApiParam(value = "비밀번호", format = "password")
+    @ApiParam(value = "비밀번호", format = "password", required = true)
+    @NotNull
     private String userPwd; //  userPwd
 
-    @ApiModelProperty(value = "이름(닉네임)")
+    @ApiModelProperty(value = "이름(닉네임)", required = true)
     @NotNull
     private String nickName; //  userName
 
-//    @ApiModelProperty(value = "로그인 타입")
-//    private String loginType;
-
-    @ApiModelProperty(value = "성별")
+    @ApiModelProperty(value = "성별", required = true)
     @NotNull
     private String gender; //  gender
 
-    @ApiModelProperty(value = "생년")
+    @ApiModelProperty(value = "생년", required = true)
     @NotNull
     private int birthYear;
 
-    @ApiModelProperty(value = "이름")
+    @ApiModelProperty(value = "이름", required = true)
     @NotNull
     private String userName;
 
-    @ApiModelProperty(value = "핸드폰번호")
+    @ApiModelProperty(value = "핸드폰번호", required = true)
     @NotNull
     private String tel;
-//
-//    @ApiModelProperty(value = "자녀여부")
-//    @NotNull
-//    private String childrenYn; //
-//
-//    @ApiModelProperty(value = "마켓팅 동의 여부")
-//    private String marketingAdvYn;
-//
-//    @ApiModelProperty(value = "서드파티 이미지 패스")
-//    private String profileImgPath;
-//
-//    @ApiModelProperty(value = "언어")
-//    private String lang;
-//
-//    private int authority; //
+
+    @ApiModelProperty(value = "추천인 아이디")
+    private String recommender;
 
 }
