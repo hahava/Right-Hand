@@ -331,12 +331,12 @@ public class BoardController {
                                     rtn = boardService.insertBoardListTech(params, membershipInfo);
                                     Map<String, Object> data = new HashMap<>();
                                     if (rtn.equals(ReturnType.RTN_TYPE_OK)) {
-                                        data.put("isSuccess", "Success");
+                                        data.put("isSuccess", "true");
                                     } else if (rtn.equals(ReturnType.RTN_TYPE_BOARD_ALL_REWARDED)) {
-                                        data.put("isSuccess", "Success");
+                                        data.put("isSuccess", "true");
                                     }
                                     else {
-                                        data.put("isSuccess", "Failed");
+                                        data.put("isSuccess", "false");
                                     }
                                     result.setData(data);
                                     result.setReturnCode(rtn);
