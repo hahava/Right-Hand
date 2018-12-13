@@ -37,7 +37,7 @@ function setUserInfoTableView(tag_id) {
     $(tag).replaceWith(' <div class="row" id="' + tag_id + '">\n' +
         '        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 has-margin-top">' +
         '<div class="outer">\n' +
-        '     <img data-src="holder.js/200x200" class="img-responsive image" alt="200x200" id="user_profile_photo" \n' +
+        '     <img data-src="holder.js/200x200" class="img-responsive" alt="200x200" id="user_profile_photo" \n' +
         '                   style="width: 200px; height: 200px;"> \n' +
         '  </div></div>\n' +
         '        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">\n' +
@@ -162,7 +162,7 @@ function checkPwDup(next_page) {
                         setUserInfoTableView($('#user_info_list').attr('id'));
                         var userInfoData = getUserInfo();
                         setUserInfoTableData(userInfoData);
-                        $('.outer').append(' <div class="middle"> <input class="form-control "  id="profile_image" type="file" name="image" onchange="encodeImagetoBase64(this)"/></div><div class="text-center"><button class="btn btn-default btn-sm" style="margin-top: 5px" onclick="resetProfile()">초기화\n' +
+                        $('.outer').append(' <div class="middle"> <span class="btn btn-primary btn-file">프로필 변경<input  id="profile_image" type="file" name="image" onchange="encodeImagetoBase64(this)"/></span></div><div class="text-center"><button class="btn btn-default btn-sm" style="margin-top: 5px" onclick="resetProfile()">초기화\n' +
                             '</button></div>');
                         var user_tel = $('#user_tel').text();
                         var user_nickname = $('#user_nickname').text();

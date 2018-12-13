@@ -192,7 +192,7 @@ function setReplyWriterView(isWriter) {
         "                                코인\n" +
         "                            </button>\n" +
         "                            <button class='btn btn-xs btn-default' onclick='setToggle(this)' id='rh_power'>\n" +
-        "                                RH파워\n" +
+        "                                RP\n" +
         "                            </button>\n" +
         "                        </div>\n" +
         "                        <input class='form-control pull-right input-sm' id='coin_value' type=number min=0\n" +
@@ -237,14 +237,13 @@ function sendCoin() {
             'Content-Type': 'application/json'
         },
         success: function (result) {
-            switch (result.code) {
-                case 0 :
-                    coin_send = true;
-                    break;
-                default :
-                    coin_send = false;
-                    alert(result.message);
+            console.log(result);
+            if (result.code == 511 || result.code == 512) {
+                coin_send = true;
+            } else {
+                coin_send = false;
             }
+            alert(result.message);
         }, error: function (e) {
         }
     });
