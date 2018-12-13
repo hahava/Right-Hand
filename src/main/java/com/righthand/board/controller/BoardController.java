@@ -302,7 +302,7 @@ public class BoardController {
     public ResponseHandler<?> writeBoard(@ApiParam(value = "게시물 제목, 내용") @Valid @RequestBody BoardReq _params, BindingResult bindingResult,
                                          @ApiParam(value = "게시판 종류") @PathVariable String btype
     ) {
-        final ResponseHandler<?> result = new ResponseHandler<>();
+        final ResponseHandler<Object> result = new ResponseHandler<>();
         if (!bindingResult.hasFieldErrors()) {
             try {
                 MembershipInfo membershipInfo = membershipService.currentSessionUserInfo();
@@ -329,6 +329,16 @@ public class BoardController {
                             if (btype.equals("tech")) {
                                 try {
                                     rtn = boardService.insertBoardListTech(params, membershipInfo);
+                                    Map<String, Object> data = new HashMap<>();
+                                    if (rtn.equals(ReturnType.RTN_TYPE_OK)) {
+                                        data.put("isSuccess", "Success");
+                                    } else if (rtn.equals(ReturnType.RTN_TYPE_BOARD_ALL_REWARDED)) {
+                                        data.put("isSuccess", "Success");
+                                    }
+                                    else {
+                                        data.put("isSuccess", "Failed");
+                                    }
+                                    result.setData(data);
                                     result.setReturnCode(rtn);
                                 } catch (Exception e) {
                                     logger.error("[TechBoard][Exception] " + e.toString());
