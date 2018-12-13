@@ -13,7 +13,7 @@ public class UserReq {
 
     @ApiParam(value = "닉네임", required = true)
     @NotBlank
-    @Pattern(regexp = "^[a-zA-Z0-9ㄱ-ㅎ가-힣ㅏ-ㅣ_]*$")
+//    @Pattern(regexp = "^[a-zA-Z0-9ㄱ-ㅎ가-힣ㅏ-ㅣ_]*$")
     private String nickname;
 
     @ApiParam(value = "전화번호", required = true)
