@@ -192,7 +192,7 @@ function setReplyWriterView(isWriter) {
         "                                코인\n" +
         "                            </button>\n" +
         "                            <button class='btn btn-xs btn-default' onclick='setToggle(this)' id='rh_power'>\n" +
-        "                                RH파워\n" +
+        "                                RP\n" +
         "                            </button>\n" +
         "                        </div>\n" +
         "                        <input class='form-control pull-right input-sm' id='coin_value' type=number min=0\n" +
@@ -237,9 +237,11 @@ function sendCoin() {
             'Content-Type': 'application/json'
         },
         success: function (result) {
+            console.log(result);
             switch (result.code) {
                 case 0 :
                     coin_send = true;
+                    alert(result.message);
                     break;
                 default :
                     coin_send = false;
