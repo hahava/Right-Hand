@@ -109,6 +109,7 @@ function hasSameId(register_id) {
             'Content-Type': 'application/json'
         },
         success: function (data) {
+            console.log(data);
             if (data.code == 202) {
                 isSameId = true;
             } else {
