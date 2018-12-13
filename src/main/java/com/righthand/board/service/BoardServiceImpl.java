@@ -530,7 +530,7 @@ public class BoardServiceImpl implements BoardService {
          * */
         insertRhcBreakdown(input_data, receiverProfileSeq, "dev", "리워드 파워 지급");
 
-        return ReturnType.RTN_TYPE_OK;
+        return ReturnType.RTN_TYPE_SEND_REWARD_POWER;
     }
 
     @Override
@@ -580,7 +580,7 @@ public class BoardServiceImpl implements BoardService {
          * RH 코인 획득 내역 삽입
          * */
         insertRhcBreakdown(input_data, receiverProfileSeq, "dev", "RH 코인 지급");
-        return ReturnType.RTN_TYPE_OK;
+        return ReturnType.RTN_TYPE_SEND_RH_COIN;
     }
 
     @Override
