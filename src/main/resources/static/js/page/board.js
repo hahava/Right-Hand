@@ -7,11 +7,13 @@ $(document).ready(function () {
     setNavActive(type);
     setSubPageText(type);
 
+    // 공지사항은 관리자 권한만 글 작성 버튼이 보인다.
+    if (authorityLevel == 1 && type == 'notice') {
+        $('#board_writer_btn').remove();
+    }
     // 해당 페이지 게시글 요청
     req_page(page);
-    if ((authorityLevel == 101 || authorityLevel == 0) && type == 'notice') {
-        $('#board_writer').remove();
-    }
+
     resizeFooterTag();
 });
 
