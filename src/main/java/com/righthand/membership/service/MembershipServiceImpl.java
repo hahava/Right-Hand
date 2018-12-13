@@ -119,7 +119,7 @@ public class MembershipServiceImpl implements MembershipService {
                         .content("추천인 가입으로 인한 RH 코인 획득")
                         .rhCoin(50)
                         .rhcProfileSeq(profileSeq)
-                        .isSender(true)
+                        .isSender(false)
                         .build()
         );
 

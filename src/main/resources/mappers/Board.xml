@@ -214,4 +214,8 @@
     <select id="findBoardTitleTech" parameterType="int" resultType="String">
         SELECT BOARD_TITLE FROM TB_IT_TECH_BOARD WHERE BOARD_SEQ = #{boardSeq}
     </select>
+
+    <select id="findBoardSeqByReplySeq" parameterType="int" resultType="int">
+        SELECT REPLY_BOARD_SEQ FROM TB_DEVELOP_STORY_REPLY WHERE REPLY_SEQ = #{replySeq}
+    </select>
 </mapper>
