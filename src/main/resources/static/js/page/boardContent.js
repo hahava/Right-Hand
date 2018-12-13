@@ -238,15 +238,12 @@ function sendCoin() {
         },
         success: function (result) {
             console.log(result);
-            switch (result.code) {
-                case 0 :
-                    coin_send = true;
-                    alert(result.message);
-                    break;
-                default :
-                    coin_send = false;
-                    alert(result.message);
+            if (result.code == 511 || result.code == 512) {
+                coin_send = true;
+            } else {
+                coin_send = false;
             }
+            alert(result.message);
         }, error: function (e) {
         }
     });
