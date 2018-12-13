@@ -37,7 +37,7 @@ function setBoardList(data, list_type) {
         $('#board_list').append('  <div class="row has-margin-bottom">' +
             '<div class="col-md-12 col-sm-12">' + '<div class="col-md-2 col-sm-2 title_image">' + board.first_image + '</div>' +
             '<div class="col-md-8 col-sm-8 bulletin" style="text-overflow: ellipsis;  overflow : hidden;">' +
-            '<a href=' + address + '><h4 class="media-heading" id="title">' + board.title + ' </h4></a>' +
+            '<a href=' + address + '><h4 class="media-heading" id="title" style="display: inline-block">' + board.title + ' </h4><span class="badge" style="margin-left: 5px;">4</span></a>' +
             '<p>' + board.date + ' <a href="#" class="link-reverse">' + board.nick_name + '</a></p>' +
             '<p>' + board.content + '</p></div></div>');
 

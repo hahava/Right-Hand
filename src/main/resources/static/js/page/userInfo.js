@@ -286,7 +286,7 @@ function reqModifiedUserInfo() {
     var user_tel = $('#user_tel').val();
     var user_nickname = $('#user_nickname').val();
     var data = {"nickname": user_nickname, "tel": user_tel};
-
+    console.log(data);
     $.ajax({
         type: 'PUT',
         url: "http://localhost:8080/profile",
@@ -301,9 +301,10 @@ function reqModifiedUserInfo() {
             if (result.code === 0) {
                 alert("수정되었습니다.");
                 location.href = "/user/info";
+                console.log(result);
             }
             else {
-                alert(data.code);
+                console.log(result)
             }
         }, error: function (e) {
         }
@@ -333,9 +334,4 @@ function reqModifiedUserPw() {
         }, error: function (e) {
         }
     });
-}
-
-/* TODO : user정보 객체 */
-function UserInfo() {
-
 }

@@ -85,7 +85,7 @@ function setReplyView(board_content) {
         var reply_coin = reply_list[temp].REPLY_RH_COIN;
         var reply_seq = reply_list[temp].REPLY_SEQ;
         if (reply_coin == 0 && type != 'tech' && board_content.writer && (writer_nickname != reply_nickName)) {
-            reply_coin_modal = '<button class="btn btn-sm pull-right" data-toggle="modal" data-target="#myModal" id="' + temp + '" onclick="setModalData(this,' + reply_seq + ')">+</button>';
+            reply_coin_modal = '<a class="pull-right" data-toggle="modal" data-target="#myModal" id="' + temp + '" onclick="setModalData(this,' + reply_seq + ')" style="border-bottom: #0a001f 1px dotted;">보상하기</a>';
         }
         var html = '<div class="media has-margin-bottom"><a class="pull-left" href="#none">' +
             ' <img class="media-object" alt="avatar" src=' + reply_profile + '> </a>' +
