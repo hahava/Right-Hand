@@ -70,6 +70,17 @@ public class BoardController {
             return false;
     }
 
+    private Map checkIsSuccess(ReturnType rtn) {
+        Map<String, Object> data = new HashMap<>();
+        if (rtn.equals(ReturnType.RTN_TYPE_BOARD_INSERT_NG)) {
+            data.put("isSuccess", "False");
+        }
+        else {
+            data.put("isSuccess", "True");
+        }
+        return data;
+    }
+
     private String storeImgsAndGetChangedText(Map<String, Object> params) {
         final String regex = "\\!\\[.*?\\)";
         final String[] srcTag = {"<img class=\"img-responsive\" src=\"", "\" data=todos/>"};
@@ -329,16 +340,7 @@ public class BoardController {
                             if (btype.equals("tech")) {
                                 try {
                                     rtn = boardService.insertBoardListTech(params, membershipInfo);
-                                    Map<String, Object> data = new HashMap<>();
-                                    if (rtn.equals(ReturnType.RTN_TYPE_OK)) {
-                                        data.put("isSuccess", "true");
-                                    } else if (rtn.equals(ReturnType.RTN_TYPE_BOARD_ALL_REWARDED)) {
-                                        data.put("isSuccess", "true");
-                                    }
-                                    else {
-                                        data.put("isSuccess", "false");
-                                    }
-                                    result.setData(data);
+                                    result.setData(checkIsSuccess(rtn));
                                     result.setReturnCode(rtn);
                                 } catch (Exception e) {
                                     logger.error("[TechBoard][Exception] " + e.toString());
@@ -347,6 +349,7 @@ public class BoardController {
                             } else if (btype.equals("dev")) {
                                 try {
                                     rtn = boardService.insertBoardListDev(params, membershipInfo);
+                                    result.setData(checkIsSuccess(rtn));
                                     result.setReturnCode(rtn);
                                 } catch (Exception e) {
                                     logger.error("[DevBoard][Exception] " + e.toString());
@@ -370,6 +373,8 @@ public class BoardController {
         result.setReturnCode(ReturnType.RTN_TYPE_NO_DATA);
         return result;
     }
+
+
 
 
     @ApiOperation("게시물 상세보기")
