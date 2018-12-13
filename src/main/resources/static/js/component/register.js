@@ -249,7 +249,7 @@ $('#register_phone').focusout(function () {
         return false;
     } else {
         $('#register_phone_hint').text("전화번호를 입력하세요.");
-        $('#register_phone_hint').css("color", "gray");
+        $('#register_phone_hint').css("color", "red");
         input_checker = false;
     }
 
@@ -258,22 +258,45 @@ $('#register_phone').focusout(function () {
             $('#register_phone_hint').text("전화번호 양식이 옳바르지 않습니다.");
             $('#register_phone_hint').css("color", "red");
         } else {
-            input_checker = true;
-            $('#register_phone_hint').text("전화번호 입력되었습니다.");
-            $('#register_phone_hint').css("color", "green");
+            if (hasSamePhone($('#register_phone').val())) {
+                $('#register_phone_hint').text("전화번호 중복입니다..");
+                $('#register_phone_hint').css("color", "red");
+                input_checker = false;
+            } else {
+                $('#register_phone_hint').text("전화번호 입력되었습니다.");
+                $('#register_phone_hint').css("color", "green");
+                input_checker = true;
+            }
         }
     }
+
 });
 
-$('#register_phone').on("focusout", function () {
-    if (!$('#register_phone').val().length == 13) {
-        $('#register_phone_hint').text("전화번호를 입력해주세요");
-        $('#register_phone_hint').css("color", "red");
-        input_checker = false;
-    } else if ($('#register_phone').val().length == 0) {
-        input_checker = false;
-    }
-});
+
+function hasSamePhone(phone) {
+    var data = {"tel": phone};
+    var isSamePhone = false;
+    $.ajax({
+        type: 'POST',
+        data: JSON.stringify(data),
+        async: false,
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        url: '/api/membership/check/tel/dup',
+        success: function (result) {
+            console.log(result);
+            if (result.code == 318) {
+                isSamePhone = true;
+            } else {
+                isSamePhone = false;
+            }
+        }, error: function (e) {
+        }
+    })
+    return isSamePhone;
+}
 
 // 출생년도
 $('#register_birth').focusout(function () {
