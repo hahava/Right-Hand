@@ -4,8 +4,9 @@ function setBoardList(data, list_type) {
 
     for (var i = 0; i < board_list.length; i++) {
 
+        console.log(board_list[i]);
         var board = new Board(board_list[i].BOARD_SEQ, board_list[i].BOARD_TITLE, board_list[i].BOARD_CONTENT,
-            board_list[i].NICK_NAME, board_list[i].BOARD_TYPE, board_list[i].BOARD_DATE.substring(0, 10));
+            board_list[i].NICK_NAME, board_list[i].BOARD_TYPE, board_list[i].BOARD_DATE.substring(0, 10), board_list[i].REPLY_CNT);
 
         $('#tempEditor').empty();
         var editor = new tui.Editor.factory({
@@ -40,7 +41,7 @@ function setBoardList(data, list_type) {
         $('#board_list').append('  <div class="row has-margin-bottom">' +
             '<div class="col-md-12 col-sm-12">' + '<div class="col-md-2 col-sm-2 title_image">' + board.first_image + '</div>' +
             '<div class="col-md-8 col-sm-8 bulletin" style="text-overflow: ellipsis;  overflow : hidden;">' +
-            '<a href=' + address + '><h4 class="media-heading" id="title" style="display: inline-block">' + board.title + ' </h4><span class="badge" style="margin-left: 5px;">4</span></a>' +
+            '<a href=' + address + '><h4 class="media-heading" id="title" style="display: inline-block">' + board.title + ' </h4><span class="badge" style="margin-left: 5px;">' + board.reply_cnt + '</span></a>' +
             '<p>' + board.date + ' <a href="#" class="link-reverse">' + board.nick_name + '</a></p>' +
             '<p>' + board.content + '</p></div></div>');
 
@@ -52,13 +53,14 @@ function setBoardList(data, list_type) {
 }
 
 // 게시판 객체
-function Board(boardSeq, title, content, nick_name, type, date) {
+function Board(boardSeq, title, content, nick_name, type, date, reply_cnt) {
     this.boardSeq = boardSeq;
     this.title = title;
     this.content = content;
     this.nick_name = nick_name;
     this.type = type;
     this.date = date;
+    this.reply_cnt = reply_cnt;
     this.first_image = getFirstImage(content);
 
     // 업로드한 이미지 중, 대표 이미지를 등록한다.
