@@ -453,6 +453,7 @@ public class BoardController {
                 return result;
             }
             MembershipInfo membershipInfo = (MembershipInfo) membershipInfoAndReturnType.get("membershipInfo");
+
             Map<String, Object> params = ConvertUtil.convertObjectToMap(replyReq);
             params.put("replyProfileSeq", membershipInfo.getProfileSeq());
             params.put("replyContent", params.get("content"));

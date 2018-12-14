@@ -59,8 +59,14 @@ function write_content() {
                     alert("등록되었습니다.");
                     writer_success = true;
                     break;
+                case 321:
+                    alert("등록되었습니다.");
+                    writer_success = true;
+                    break;
                 default:
                     alert("등록 실패 입니다.");
+                    console.log(result.code);
+                    console.log(result.message);
                     writer_success = false;
 
             }
