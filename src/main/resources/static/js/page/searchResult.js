@@ -20,6 +20,7 @@ function searchResult() {
         type: 'GET',
         url: "http://localhost:8080/board/list/searched/" + type + "?searchedWord=" + keyword + "&page=" + page,
         dataType: 'json',
+        async: false,
         success: function (result) {
 
 
