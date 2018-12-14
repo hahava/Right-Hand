@@ -72,7 +72,7 @@ function write_content() {
 
     //성공시 이전 게시글 목록으로 리다이렉트 한다.
     if (writer_success) {
-        location.href = "http://localhost:8080/board/list?type=" + type;
+        location.replace("http://localhost:8080/board/list?type=" + type);
     }
 
 }

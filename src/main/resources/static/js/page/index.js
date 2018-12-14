@@ -24,6 +24,7 @@ $(document).ready(function () {
         // 새로고침 등의 방지를 위해 로그인 여부를 한번 더 체크
         if (sessionChecker().code == 101) {
             alert("로그인 후 이용해주세요");
+            location.replace("/");
         }
     }
     var board_list = getNewBoardList();
