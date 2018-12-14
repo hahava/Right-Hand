@@ -43,4 +43,5 @@ public interface BoardService {
 
     int findProfileSeqByBoardSeqDev(int boardSeq) throws Exception;
 
+
 }

@@ -151,6 +151,7 @@ public class BoardServiceImpl implements BoardService {
         vo.setStart(start);
         vo.setOffset(offset);
         List<Map<String, Object>> resBoardData;
+        Map<String, Object> result = new HashMap<>();
         boardSemaphore.acquire();
         try {
             resBoardData = boardDao.selectBoardListTech(vo);
@@ -596,6 +597,7 @@ public class BoardServiceImpl implements BoardService {
         logger.info("[Service][findProfileSeqByBoardSeqDev]");
         return boardDao.findProfileSeqByBoardSeqDev(boardSeq);
     }
+
 
 
 }
