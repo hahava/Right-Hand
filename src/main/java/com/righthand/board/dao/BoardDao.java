@@ -58,4 +58,6 @@ public interface BoardDao {
     String findBoardTitleTech(int boardSeq);
 
     int findBoardSeqByReplySeq(int replySeq);
+
+    int selectCountReplyTech(int boardSeq);
 }
