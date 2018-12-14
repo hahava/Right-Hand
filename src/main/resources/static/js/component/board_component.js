@@ -33,6 +33,9 @@ function setBoardList(data, list_type) {
         var address = '/board/' + list_type + '?';
         address = address + set_address(params);
 
+        console.log("=----=" + list_type);
+        console.log(address);
+        console.log("===---");
 
         $('#board_list').append('  <div class="row has-margin-bottom">' +
             '<div class="col-md-12 col-sm-12">' + '<div class="col-md-2 col-sm-2 title_image">' + board.first_image + '</div>' +
@@ -41,7 +44,6 @@ function setBoardList(data, list_type) {
             '<p>' + board.date + ' <a href="#" class="link-reverse">' + board.nick_name + '</a></p>' +
             '<p>' + board.content + '</p></div></div>');
 
-        $('#board_list').css('min-height', '300px');
 
     }
 

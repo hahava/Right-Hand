@@ -96,9 +96,15 @@ function setSubPageText(type) {
         case "userToken":
             board_title = "MyPage";
             board_info = "토큰사용내역";
+            break;
         case "userActivity":
             board_title = "MyPage";
             board_info = "RH파워 획득 내역";
+            break;
+        case "userBoard":
+            board_title = "MyPage";
+            board_info = "작성글 내역";
+            break;
     }
     setSubpageParam(board_title, board_info);
 }
