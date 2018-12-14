@@ -339,6 +339,10 @@ $('#register_recommender').on("focusout", function () {
                 $('#register_recommender_hint').text('추천인이 존재하지 않습니다.');
                 $('#register_recommender_hint').css('color', 'red');
                 return false;
+            } else {
+                $('#register_recommender_hint').text('추천인이 입력되었습니다..');
+                $('#register_recommender_hint').css('color', 'green');
+                return true;
             }
         }
 
