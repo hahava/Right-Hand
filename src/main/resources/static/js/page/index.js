@@ -1,19 +1,3 @@
-// 최신 게시판 데이터를 불러온다.
-var getNewBoardList = function () {
-    var data;
-    $.ajax({
-        type: "GET",
-        url: "/board/new",
-        dataType: "json",
-        async: false,
-        success: function (result) {
-            data = result;
-        }, error: function () {
-        }
-    });
-    return data;
-};
-
 $(document).ready(function () {
     /*
     * 로그인이 필요한 메뉴를 로그인 없이 접근할 경우,
@@ -30,5 +14,20 @@ $(document).ready(function () {
     var board_list = getNewBoardList();
     setBoardList(board_list.data, "content");
     resizeFooterTag();
-
 });
+
+// 최신 게시판 데이터를 불러온다.
+function getNewBoardList() {
+    var data;
+    $.ajax({
+        type: "GET",
+        url: "/board/new",
+        dataType: "json",
+        async: false,
+        success: function (result) {
+            data = result;
+        }, error: function () {
+        }
+    });
+    return data;
+}

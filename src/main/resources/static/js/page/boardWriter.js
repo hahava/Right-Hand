@@ -13,10 +13,10 @@ $(document).ready(function () {
             break;
         case 'notice':
             $('#notice_nav').attr('class', 'active');
-            title = 'notice'
+            title = 'notice';
             break;
     }
-    setSubpageParam(title, '게시글작성');
+    setSubPageText(type);
     /*초기화*/
     $('#writer_title').attr('value', '');
 
