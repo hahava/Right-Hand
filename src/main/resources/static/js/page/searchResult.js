@@ -23,6 +23,7 @@ function searchResult() {
         async: false,
         success: function (result) {
 
+            console.log(result);
 
             // 게시판 리스트를 초기화 한다..
             $('#blog_list').empty();
