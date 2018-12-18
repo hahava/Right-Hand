@@ -11,6 +11,7 @@ import com.righthand.notice.dto.req.BoardReq;
 import com.righthand.notice.service.TbNoticeService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,16 +24,15 @@ import java.util.*;
 
 @Slf4j
 @RestController
-//@AllArgsConstructor
+@RequiredArgsConstructor
 public class NoticeController{
 
-    @Autowired
-    private TbNoticeService tbNoticeService;
+    private final TbNoticeService tbNoticeService;
 
-    @Autowired
-    MembershipService membershipService;
+    private final MembershipService membershipService;
 
     private List<HashMap<String, Object>> transform(Page<TbNoticeBoard> params){
+        final String nickname = "운영자";
         List<HashMap<String, Object>> datas = new ArrayList<HashMap<String, Object>>();
         for (int i = 0; i < params.getTotalElements(); i++) {
             HashMap<String, Object> map = new HashMap<>();
@@ -41,18 +41,21 @@ public class NoticeController{
             map.put("BOARD_SEQ", params.getContent().get(i).getBoardSeq());
             map.put("BOARD_DATE", params.getContent().get(i).getBoardDate());
             map.put("BOARD_TYPE", "notice");
+            map.put("NICK_NAME", nickname);
             datas.add(i, map);
         }
         return datas;
     }
 
     private Map<String, Object> transform(TbNoticeBoard param){
+        final String nickname = "운영자";
         HashMap<String, Object> data = new HashMap<>();
         data.put("BOARD_TITLE", param.getBoardTitle());
         data.put("BOARD_CONTENT", param.getBoardContent());
         data.put("BOARD_SEQ", param.getBoardSeq());
         data.put("BOARD_DATE", param.getBoardDate());
         data.put("BOARD_TYPE", "notice");
+        data.put("NICK_NAME", nickname);
         return data;
     }
 
@@ -61,7 +64,6 @@ public class NoticeController{
     public ResponseHandler<?> showNoticeList(@ApiParam(value = "페이지 번호")@RequestParam int page) {
         final ResponseHandler<Map<String,Object>> result = new ResponseHandler<>();
         final int size = 5;
-
         // RESPONSE
         Map<String, Object> res = new HashMap<>();
         Page<TbNoticeBoard> allBoardDateDesc;
@@ -89,7 +91,6 @@ public class NoticeController{
             res.put("total", allBoardDateDesc.getTotalElements());
             res.put("data", transform(allBoardDateDesc));
             res.put("authority", userInfo.get("authority"));
-            res.put("nickname", userInfo.get("nickname"));
             result.setData(res);
             result.setReturnCode(ReturnType.RTN_TYPE_OK);
         }
@@ -122,7 +123,6 @@ public class NoticeController{
             res.put("total", allBySearchedWord.getTotalElements());
             res.put("data", transform(allBySearchedWord));
             res.put("authority", userInfo.get("authority"));
-            res.put("nickname", userInfo.get("nickname"));
             result.setData(res);
         }catch (Exception e){
             result.setReturnCode(ReturnType.RTN_TYPE_NG);
@@ -185,7 +185,6 @@ public class NoticeController{
             }
             res.put("data", transform(tbNoticeBoard));
             res.put("authority", userInfo.get("authority"));
-            res.put("nickname", userInfo.get("nickname"));
             result.setReturnCode(ReturnType.RTN_TYPE_OK);
             result.setData(res);
         }catch (Exception e){
