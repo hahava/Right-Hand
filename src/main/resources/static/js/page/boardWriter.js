@@ -36,7 +36,6 @@ function write_content() {
     board_title = tagRemover(board_title);
 
     var data = {"boardTitle": board_title, "boardContent": board_content};
-    console.log(board_content);
 
 
     var writer_success = false;
@@ -65,8 +64,6 @@ function write_content() {
                     break;
                 default:
                     alert("등록 실패 입니다.");
-                    console.log(result.code);
-                    console.log(result.message);
                     writer_success = false;
 
             }
@@ -99,6 +96,11 @@ function tagRemover(tag) {
     return text;
 }
 
+/*
+* 에디터에서 동적으로 객체를 제어하는 기능
+* 생성된 이미지 태그의 클래스를 변경한다.
+*
+* */
 function imageFinder() {
     var mutationObserver = new MutationObserver(function (mutations) {
         mutations.forEach(function (mutation) {

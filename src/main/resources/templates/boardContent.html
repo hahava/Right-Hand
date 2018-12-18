@@ -81,7 +81,7 @@
                     </div>
                     <div class="row">
                         <div class="pull-right">
-                            <a class="btn btn-primary" href="javascript:send_reply()">댓글작성</a>
+                            <a class="btn btn-primary" href="javascript:sendReply()">댓글작성</a>
                         </div>
                     </div>
                 </form>
@@ -124,7 +124,9 @@
 
 <!--footer-->
 <footer th:replace="fragment/footer"/>
+<!--Script for function-->
 <script th:replace="fragment/commonScript"/>
+<!--Script for page-->
 <script th:src="@{../js/page/boardContent.js}"></script>
 
 </body>

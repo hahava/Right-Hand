@@ -47,6 +47,7 @@ function getBoardList(requested_page, board_type) {
     });
 }
 
+/* 검색 기능 */
 function getSearchResults() {
     var keyword = $('#board_search').val();
     var type = getParameterByName('type');

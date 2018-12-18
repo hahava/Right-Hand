@@ -105,7 +105,6 @@ function getUserInfo() {
         dataType: 'json',
         async: false,
         success: function (result) {
-            console.log(result.code);
             if (result.code == 0) {
                 userInfoData = result.data;
             } else {
@@ -220,14 +219,12 @@ function resetProfile() {
         async: false,
         success: function (result) {
             $('#user_profile_photo').attr('src', 'https://via.placeholder.com/200');
-            console.log("성공");
         }, error: function (e) {
         }
     });
 }
 
 function encodeImagetoBase64(element) {
-    console.log("encodeImagetoBase64")
     var file = element.files[0];
     var reader = new FileReader();
     reader.onloadend = function () {
@@ -247,7 +244,6 @@ function encodeImagetoBase64(element) {
         contentType: false,
         success: function (result) {
             if (result.code == 0) {
-                console.log("파일변경됨")
             }
         }, error: function (e) {
 
@@ -286,7 +282,6 @@ function reqModifiedUserInfo() {
     var user_tel = $('#user_tel').val();
     var user_nickname = $('#user_nickname').val();
     var data = {"nickname": user_nickname, "tel": user_tel};
-    console.log(data);
     $.ajax({
         type: 'PUT',
         url: "http://localhost:8080/profile",
@@ -301,10 +296,8 @@ function reqModifiedUserInfo() {
             if (result.code === 0) {
                 alert("수정되었습니다.");
                 location.href = "/user/info";
-                console.log(result);
             }
             else {
-                console.log(result)
             }
         }, error: function (e) {
         }
@@ -327,8 +320,6 @@ function reqModifiedUserPw() {
         /*반드시 JSON 변환을 거쳐서 요청 보낼 것*/
         data: JSON.stringify(data),
         success: function (result) {
-            console.log(result.code);
-            console.log(result.message);
             alert("수정되었습니다.");
             location.href = "/user/info";
         }, error: function (e) {

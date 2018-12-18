@@ -1,5 +1,4 @@
 function loginChecker() {
-    var user_nickname;
     $.ajax({
         type: 'POST',
         url: 'http://localhost:8080/api/membership/coin',
