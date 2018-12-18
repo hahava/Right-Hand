@@ -11,7 +11,6 @@ function login() {
         alert("항목을 전부 채워주세요");
         return;
     }
-
     $.ajax({
         type: 'POST',
         url: "http://localhost:8080/api/login",
@@ -21,6 +20,7 @@ function login() {
             userId: user_login_email,
             userPwd: user_login_pw
         },
+        /* spring security를 사용했기 때문에 success는 반드시 로그인 성공을 의미한다.*/
         success: function (data) {
             alert("로그인 되었습니다. 반갑습니다.");
             loginOk = true;
@@ -30,8 +30,8 @@ function login() {
             loginUser();
         },
         error: function () {
-            loginOk = false;
             alert("id 또는 password 가 틀렸습니다.");
+            loginOk = false;
         }
     });
     return loginOk;

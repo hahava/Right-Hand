@@ -105,7 +105,6 @@ function setReplyView(board_content) {
 function setModalData(elem, reply_seq) {
     $('#myModalLabel').text('코인 보상을 하시겠습니까?');
     $('#reply_seq').val(reply_seq);
-    console.log($('#reply_seq').val());
 }
 
 // <,> 등의 태그를 &lt, &gt 변환
@@ -117,7 +116,7 @@ function tagRemover(tag) {
 }
 
 // 댓글 작성
-function send_reply() {
+function sendReply() {
 
     var session = sessionChecker();
 
@@ -130,8 +129,6 @@ function send_reply() {
     content = tagRemover(content);
     var token;
     var token_value = $('#coin_value').val().length != 0 ? $('#coin_value').val() : 0;
-    console.log(token_value.length);
-    console.log(typeof token_value);
 
     if ($('#coin').hasClass('active')) {
         token = 'coin';
@@ -159,12 +156,10 @@ function send_reply() {
                 switch (result.code) {
                     case 320 :
                         reply_success = true;
-                        console.log(result.code);
                         alert("댓글 작성되었습니다.");
                         break;
                     case 322 :
                         reply_success = true;
-                        console.log(result.code);
                         alert("댓글 작성되었습니다.");
                         break;
                     default :
@@ -200,7 +195,6 @@ function setReplyWriterView(isWriter) {
         "                               max=10\n" +
         "                               placeholder='코인' size='5' value='0' />";
 
-    console.log(type);
     /* 작성자일 경우 코인을 전송하지 못하도록 한다.*/
     if (!isWriter && type != 'dev') {
         $('#coin_dev').append(function () {
@@ -237,7 +231,6 @@ function sendCoin() {
             'Content-Type': 'application/json'
         },
         success: function (result) {
-            console.log(result);
             if (result.code == 511 || result.code == 512) {
                 coin_send = true;
             } else {
