@@ -34,7 +34,7 @@ public class NoticeController{
     private List<HashMap<String, Object>> transform(Page<TbNoticeBoard> params){
         final String nickname = "운영자";
         List<HashMap<String, Object>> datas = new ArrayList<HashMap<String, Object>>();
-        for (int i = 0; i < params.getTotalElements(); i++) {
+        for (int i = 0; i < params.getNumberOfElements(); i++) {
             HashMap<String, Object> map = new HashMap<>();
             map.put("BOARD_TITLE", params.getContent().get(i).getBoardTitle());
             map.put("BOARD_CONTENT", params.getContent().get(i).getBoardContent());
