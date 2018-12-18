@@ -63,7 +63,7 @@ function getBoardWriterPage() {
     var session = sessionChecker();
     var type = getParameterByName('type');
     var authorityLevel = session.data.authorityLevel;
-    if (authorityLevel == 1 || authorityLevel == 103) {
+    if (authorityLevel == 1 || authorityLevel == 113) {
         location.href = "/board/writer?type=" + type;
     } else {
         alert("로그인 후 이용해 주세요!");
