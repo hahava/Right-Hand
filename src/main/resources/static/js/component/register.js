@@ -6,6 +6,7 @@ function registerUser() {
     /*
     *  공백 및 유효성을 동시에 검사한다.
     *  focus 이벤트를 체크하기 때문에 동시에 검사 불가능
+    *  따라서 && 연산으로 각각 해야한다.
     */
     if (nullChecker() && check) {
 
@@ -20,7 +21,6 @@ function registerUser() {
             "recommender": $('#register_recommender').val()
         };
 
-        console.log(member);
         $.ajax({
             type: 'POST',
             url: "http://localhost:8080/api/membership/signUp",
@@ -55,7 +55,7 @@ function registerUser() {
         return true;
     }
     return register_success;
-};
+}
 
 /* 회원가입 데이터 유효성 검증 */
 var input_checker = false;
@@ -75,10 +75,10 @@ $('#register_id').focusout(function () {
             $('#register_id_hint').text("이메일 형식으로 입력해주세요");
             $('#register_id_hint').css('color', 'black');
         }
-        // 패턴 체크, 첫 글자는 숫자 불가
+        // 이메일 패턴 체크, 첫 글자는 숫자 불가
         var pattern = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
         if ($('#register_id').val().search(pattern) == -1) {
-            $('#register_id_hint').text("옳바른 이메일 형식이 아닙니다!");
+            $('#register_id_hint').text("올바른 이메일 형식이 아닙니다!");
             $('#register_id_hint').css('color', 'red');
             return false;
         }
@@ -99,6 +99,7 @@ function hasSameId(register_id) {
 
     var data = {"userId": register_id};
     var isSameId = false;
+    // 아이디 중복체크
     $.ajax({
         type: 'POST',
         url: "/api/membership/check/id/dup",
@@ -109,6 +110,7 @@ function hasSameId(register_id) {
             'Content-Type': 'application/json'
         },
         success: function (data) {
+            console.log(data);
             if (data.code == 202) {
                 isSameId = true;
             } else {
@@ -144,6 +146,7 @@ $('#register_nickname').focusout(function () {
     }
 });
 
+// 닉네임 중복체크
 function hasSameNickname(register_nickname) {
 
     var data = {"nickName": register_nickname};
@@ -272,7 +275,7 @@ $('#register_phone').focusout(function () {
 
 });
 
-
+// 핸드폰 번호 중복 확인
 function hasSamePhone(phone) {
     var data = {"tel": phone};
     var isSamePhone = false;
@@ -321,9 +324,9 @@ $('#register_birth').focusout(function () {
         return true;
     }
 });
+
 // 추천인
 $('#register_recommender').on("focusout", function () {
-
 
     input_checker = recommenderChecker();
 
@@ -338,11 +341,15 @@ $('#register_recommender').on("focusout", function () {
                 $('#register_recommender_hint').text('추천인이 존재하지 않습니다.');
                 $('#register_recommender_hint').css('color', 'red');
                 return false;
+            } else {
+                $('#register_recommender_hint').text('추천인이 입력되었습니다..');
+                $('#register_recommender_hint').css('color', 'green');
+                return true;
             }
         }
 
     }
-})
+});
 
 function nullChecker() {
     if ($('#register_id').val().length == 0) {

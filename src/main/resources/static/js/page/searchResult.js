@@ -1,25 +1,21 @@
-// 기본은 dev 게시판
-var type = getParameterByName('type') != null ? getParameterByName('type') : 'dev';
-
-// 현재 페이지 정보
-var page = getParameterByName('page');
-
-// 검색 키워드
-var keyword = getParameterByName('searchedWord');
-
 $(document).ready(function () {
+
+    var type = getParameterByName('type') != null ? getParameterByName('type') : 'dev';
+    var page = getParameterByName('page');
+    var keyword = getParameterByName('searchedWord');
     setNavActive(type);
     setSubPageText(type);
-    searchResult();
+    searchResult(type, page, keyword);
     resizeFooterTag();
 });
 
 
-function searchResult() {
+function searchResult(type, page, keyword) {
     $.ajax({
         type: 'GET',
         url: "http://localhost:8080/board/list/searched/" + type + "?searchedWord=" + keyword + "&page=" + page,
         dataType: 'json',
+        async: false,
         success: function (result) {
 
 

@@ -13,10 +13,10 @@ $(document).ready(function () {
             break;
         case 'notice':
             $('#notice_nav').attr('class', 'active');
-            title = 'notice'
+            title = 'notice';
             break;
     }
-    setSubpageParam(title, '게시글작성');
+    setSubPageText(type);
     /*초기화*/
     $('#writer_title').attr('value', '');
 
@@ -36,7 +36,6 @@ function write_content() {
     board_title = tagRemover(board_title);
 
     var data = {"boardTitle": board_title, "boardContent": board_content};
-    console.log(board_content);
 
 
     var writer_success = false;
@@ -59,6 +58,10 @@ function write_content() {
                     alert("등록되었습니다.");
                     writer_success = true;
                     break;
+                case 321:
+                    alert("등록되었습니다.");
+                    writer_success = true;
+                    break;
                 default:
                     alert("등록 실패 입니다.");
                     writer_success = false;
@@ -72,7 +75,7 @@ function write_content() {
 
     //성공시 이전 게시글 목록으로 리다이렉트 한다.
     if (writer_success) {
-        location.href = "http://localhost:8080/board/list?type=" + type;
+        location.replace("http://localhost:8080/board/list?type=" + type);
     }
 
 }
@@ -93,6 +96,11 @@ function tagRemover(tag) {
     return text;
 }
 
+/*
+* 에디터에서 동적으로 객체를 제어하는 기능
+* 생성된 이미지 태그의 클래스를 변경한다.
+*
+* */
 function imageFinder() {
     var mutationObserver = new MutationObserver(function (mutations) {
         mutations.forEach(function (mutation) {

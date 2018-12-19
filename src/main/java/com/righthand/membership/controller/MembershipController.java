@@ -163,10 +163,9 @@ public class MembershipController {
 
     @ApiOperation("회원탈퇴")
     @PutMapping("/resign")
-    @CacheEvict(value = "findUserAndProfileCache", key = "#{userSeq}")
     public ResponseHandler<?> resign(@ApiParam("탈퇴사유") @Valid @RequestBody(required = false) final ResignReq _params,
                                      HttpServletRequest request) {
-        final ResponseHandler<?> res = new ResponseHandler<>();
+        final ResponseHandler<Object> res = new ResponseHandler<>();
         Map<String, Object> params = ConvertUtil.convertObjectToMap(_params);
         ReturnType rtn;
         try {
@@ -175,8 +174,15 @@ public class MembershipController {
             tbUserService.refreshCache(userSeq);
             params.put("userSeq", userSeq);
             rtn = membershipService.resign(params);
+            Map<String, Object> data = new HashMap<>();
+            if (rtn.equals(ReturnType.RTN_TYPE_OK)) {
+                data.put("isSuccess", true);
+            }else {
+                data.put("isSuccess", false);
+            }
             //TODO 세션 파기
             request.getSession().invalidate();
+            res.setData(data);
             res.setReturnCode(rtn);
         } catch (Exception e) {
             logger.error("[Resign][Exception] " + e.toString());

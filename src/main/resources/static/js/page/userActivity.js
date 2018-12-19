@@ -40,14 +40,15 @@ function setUserActivityTable(data) {
         var boardSeq = infoList[i].boardSeq;
         var activityType = infoList[i].activityType;
         var content = infoList[i].content;
-        if (boardType != null) {
-            content = '<a href="/board/content?boardSeq=' + boardSeq + '&type=' + boardType + '">' + content + '</a>'
-        }
         var html = '<tr><td >' + count + '</td>\n' +
             '<td>' + activityDate + '</td>\n' +
             '<td>' + activityType + '</td>\n' +
             '<td style="color: skyblue">' + rhPower + '</td>\n' +
             '<td>' + content + '</td></tr>'
         $('#user_token_table_body').append(html);
+        if (boardType != null) {
+            content = '<a href="/board/content?boardSeq=' + boardSeq + '&type=' + boardType + '">' + content + '</a>'
+        }
+
     }
 }

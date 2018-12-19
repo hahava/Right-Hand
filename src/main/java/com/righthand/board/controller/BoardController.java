@@ -70,6 +70,17 @@ public class BoardController {
             return false;
     }
 
+    private Map checkIsSuccess(ReturnType rtn) {
+        Map<String, Object> data = new HashMap<>();
+        if (rtn.equals(ReturnType.RTN_TYPE_BOARD_INSERT_NG)) {
+            data.put("isSuccess", "False");
+        }
+        else {
+            data.put("isSuccess", "True");
+        }
+        return data;
+    }
+
     private String storeImgsAndGetChangedText(Map<String, Object> params) {
         final String regex = "\\!\\[.*?\\)";
         final String[] srcTag = {"<img class=\"img-responsive\" src=\"", "\" data=todos/>"};
@@ -302,7 +313,7 @@ public class BoardController {
     public ResponseHandler<?> writeBoard(@ApiParam(value = "게시물 제목, 내용") @Valid @RequestBody BoardReq _params, BindingResult bindingResult,
                                          @ApiParam(value = "게시판 종류") @PathVariable String btype
     ) {
-        final ResponseHandler<?> result = new ResponseHandler<>();
+        final ResponseHandler<Object> result = new ResponseHandler<>();
         if (!bindingResult.hasFieldErrors()) {
             try {
                 MembershipInfo membershipInfo = membershipService.currentSessionUserInfo();
@@ -329,6 +340,7 @@ public class BoardController {
                             if (btype.equals("tech")) {
                                 try {
                                     rtn = boardService.insertBoardListTech(params, membershipInfo);
+                                    result.setData(checkIsSuccess(rtn));
                                     result.setReturnCode(rtn);
                                 } catch (Exception e) {
                                     logger.error("[TechBoard][Exception] " + e.toString());
@@ -337,6 +349,7 @@ public class BoardController {
                             } else if (btype.equals("dev")) {
                                 try {
                                     rtn = boardService.insertBoardListDev(params, membershipInfo);
+                                    result.setData(checkIsSuccess(rtn));
                                     result.setReturnCode(rtn);
                                 } catch (Exception e) {
                                     logger.error("[DevBoard][Exception] " + e.toString());
@@ -360,6 +373,8 @@ public class BoardController {
         result.setReturnCode(ReturnType.RTN_TYPE_NO_DATA);
         return result;
     }
+
+
 
 
     @ApiOperation("게시물 상세보기")
@@ -438,6 +453,7 @@ public class BoardController {
                 return result;
             }
             MembershipInfo membershipInfo = (MembershipInfo) membershipInfoAndReturnType.get("membershipInfo");
+
             Map<String, Object> params = ConvertUtil.convertObjectToMap(replyReq);
             params.put("replyProfileSeq", membershipInfo.getProfileSeq());
             params.put("replyContent", params.get("content"));
