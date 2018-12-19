@@ -12,6 +12,10 @@ $(document).ready(function () {
     setBoardContentView(board_content.data);
     setReplyView(board_content);
     setReplyWriterView(board_content.writer);
+    console.log(type);
+    if (type != 'notice') {
+        $('#post-comment-form').css('visibility','visible');
+    }
     resizeFooterTag();
 
 });

@@ -101,7 +101,7 @@ function getUserInfo() {
     var userInfoData;
     $.ajax({
         type: "GET",
-        url: "http://localhost:8080/profile",
+        url: "/profile",
         dataType: 'json',
         async: false,
         success: function (result) {
