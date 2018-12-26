@@ -6,13 +6,40 @@ branches:
   only:
   - master
 
-# Travis CI 서버의 Home
-#cache:
-#  directories:
-#  - '$HOME/.m2/repository'
-#  - '$HOME/.gradle'
-
 script: "mvn clean package -DskipTests=true"
+
+before_deploy:
+- zip -r right-hand *
+- mkdir -p deploy
+- mv right-hand.zip deploy/right-hand.zip
+
+deploy:
+- provider: s3
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
+  bucket: right-hand-deploy
+  region: ap-northeast-2
+  skip_cleanup: true
+  acl: public_read
+  local-dir: deploy
+  wait-until-deployed: true
+  on:
+    repo: sangnyyy/Right-Hand
+    branch: master
+
+- provider: codedeploy
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
+  bucket: right-hand-deploy
+  key: right-hand.zip
+  bundle_type: zip
+  application: right-hand
+  deployment_group: right-hand-group
+  region: ap-northeast-2
+  wait-until-deployed: true
+  on:
+    repo: sangnyyy/Right-Hand
+    branch: master
 
 # CI 실행 완료시 메일로 알람
 notifications:
