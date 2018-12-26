@@ -1,4 +1,4 @@
-# Right Hand
+# Right Hand [![Build Status](https://travis-ci.com/sangnyyy/Right-Hand.svg?token=npsQLNTNcFcm4XrdnETF&branch=master)](https://travis-ci.com/sangnyyy/Right-Hand)
 
 ## 로컬 이미지 등록 방법
 
