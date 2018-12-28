@@ -13,7 +13,7 @@ function login() {
     }
     $.ajax({
         type: 'POST',
-        url: "http://localhost:8080/api/login",
+        url: "/api/login",
         /* 비동기로 처리 시 리다이렉트 정상적으로 실행 안될 수 있음 */
         async: false,
         data: {

@@ -24,7 +24,7 @@ $(document).ready(function () {
 function getBoardList(requested_page, board_type) {
     $.ajax({
         type: 'GET',
-        url: "http://localhost:8080/board/list/" + board_type + "?page=" + requested_page,
+        url: "/board/list/" + board_type + "?page=" + requested_page,
         dataType: 'json',
         async: false,
         success: function (result) {

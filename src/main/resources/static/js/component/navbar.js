@@ -1,7 +1,7 @@
 function loginChecker() {
     $.ajax({
         type: 'POST',
-        url: 'http://localhost:8080/api/membership/coin',
+        url: '/api/membership/coin',
         async: false,
         success: function (result) {
             var auth = result.code;

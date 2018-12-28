@@ -284,7 +284,7 @@ function reqModifiedUserInfo() {
     var data = {"nickname": user_nickname, "tel": user_tel};
     $.ajax({
         type: 'PUT',
-        url: "http://localhost:8080/profile",
+        url: "/profile",
         async: false,
         headers: {
             'Accept': 'application/json',
@@ -311,7 +311,7 @@ function reqModifiedUserPw() {
 
     $.ajax({
         type: 'PUT',
-        url: "http://localhost:8080/pwd",
+        url: "/pwd",
         async: false,
         headers: {
             'Accept': 'application/json',

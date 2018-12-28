@@ -18,7 +18,7 @@ function getUserBoardList(page) {
     var data;
     $.ajax({
         type: 'GET',
-        url: 'http://localhost:8080/myBoard?page=' + page,
+        url: '/myBoard?page=' + page,
         dataType: 'json',
         async: false,
         success: function (result) {

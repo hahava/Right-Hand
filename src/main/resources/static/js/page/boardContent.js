@@ -24,7 +24,7 @@ function getBoardContent(type, board_seq) {
     var content;
     $.ajax({
         type: 'GET',
-        url: "http://localhost:8080/board/detail/" + type + "?boardSeq=" + Number(board_seq),
+        url: "/board/detail/" + type + "?boardSeq=" + Number(board_seq),
         dataType: 'json',
         async: false,
         success: function (result) {
@@ -149,7 +149,7 @@ function sendReply() {
         var reply_success = false;
         $.ajax({
             async: false,
-            url: "http://localhost:8080/reply/" + type + "?ctype=" + token + "&reqCoin=" + parseFloat(token_value),
+            url: "/reply/" + type + "?ctype=" + token + "&reqCoin=" + parseFloat(token_value),
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -174,7 +174,8 @@ function sendReply() {
             }
         });
         if (reply_success) {
-            window.location.href = "http://localhost:8080/board/content?boardSeq=" + board_seq + "&type=" + type;
+            let url = window.location.protocol + "//" + window.location.host;
+            window.location.href = url + "/board/content?boardSeq=" + board_seq + "&type=" + type;
         }
     } else {
         alert("로그인 후 이용해주세요");
@@ -228,7 +229,7 @@ function sendCoin() {
     }
     $.ajax({
         async: false,
-        url: "http://localhost:8080/coin/dev?ctype=" + token + "&reqCoin=" + token_value + "&replySeq=" + $('#reply_seq').val(),
+        url: "/coin/dev?ctype=" + token + "&reqCoin=" + token_value + "&replySeq=" + $('#reply_seq').val(),
         method: 'POST',
         headers: {
             'Accept': 'application/json',

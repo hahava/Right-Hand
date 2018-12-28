@@ -13,7 +13,7 @@ $(document).ready(function () {
 function searchResult(type, page, keyword) {
     $.ajax({
         type: 'GET',
-        url: "http://localhost:8080/board/list/searched/" + type + "?searchedWord=" + keyword + "&page=" + page,
+        url: "/board/list/searched/" + type + "?searchedWord=" + keyword + "&page=" + page,
         dataType: 'json',
         async: false,
         success: function (result) {
