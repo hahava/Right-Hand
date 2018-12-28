@@ -23,7 +23,7 @@ function registerUser() {
 
         $.ajax({
             type: 'POST',
-            url: "http://localhost:8080/api/membership/signUp",
+            url: "/api/membership/signUp",
             async: false,
             headers: {
                 'Accept': 'application/json',

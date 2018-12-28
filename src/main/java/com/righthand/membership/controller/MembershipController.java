@@ -276,6 +276,9 @@ public class MembershipController {
     }
 
 
+    /**
+     * TODO : URL 변경
+     * */
     @ApiOperation("아이디 찾기")
     @GetMapping("/email")
     public ResponseHandler<?> findIdByEmail(@RequestParam final String userId) {
