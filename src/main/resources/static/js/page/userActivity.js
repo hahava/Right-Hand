@@ -16,7 +16,7 @@ function getUserActivity(page) {
     var data = null;
     $.ajax({
         type: 'GET',
-        url: 'http://localhost:8080/rhpower?page=' + page,
+        url: '/rhpower?page=' + page,
         dataType: 'json',
         async: false,
         success: function (result) {

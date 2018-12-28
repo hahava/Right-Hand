@@ -42,7 +42,7 @@ function write_content() {
     $.ajax({
         type: 'POST',
         async: false,
-        url: "http://localhost:8080/board/" + type,
+        url: "/board/" + type,
         data: JSON.stringify(data),
         headers: {
             'Accept': 'application/json',
