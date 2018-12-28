@@ -173,6 +173,7 @@ function sendReply() {
             }, error: function (e) {
             }
         });
+
         if (reply_success) {
             let url = window.location.protocol + "//" + window.location.host;
             window.location.href = url + "/board/content?boardSeq=" + board_seq + "&type=" + type;
