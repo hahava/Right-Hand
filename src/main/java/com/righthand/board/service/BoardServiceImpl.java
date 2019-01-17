@@ -357,6 +357,11 @@ public class BoardServiceImpl implements BoardService {
         ReturnType rtn;
         boardSemaphore.acquire();
         try {
+            String boardContent = (String) input_data.get("boardContent");
+            boardContent = boardContent.replaceAll("\\\\", "")
+                            .replaceAll("<", "&lt;")
+                            .replaceAll(">", "&gt;");
+            input_data.replace("boardContent", boardContent);
             boardDao.insertBoardListDev(input_data);
             rtn = giveRhPowerAndDecreaseLimitAtBoard(membershipInfo);
             insertRhpBreakdown(input_data, membershipInfo, "dev", 'b');
