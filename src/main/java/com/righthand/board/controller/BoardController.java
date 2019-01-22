@@ -5,6 +5,7 @@ import com.righthand.board.dto.model.BoardSearchVO;
 import com.righthand.board.dto.req.BoardReq;
 import com.righthand.board.dto.req.ReplyReq;
 import com.righthand.board.service.BoardService;
+import com.righthand.board.service.BoardsService;
 import com.righthand.common.BASE64DecodedMultipartFile;
 import com.righthand.common.board.BoardChecker;
 import com.righthand.common.GetClientProfile;
@@ -12,6 +13,7 @@ import com.righthand.common.dto.res.ResponseHandler;
 import com.righthand.common.type.ReturnType;
 
 import io.swagger.annotations.Api;
+import lombok.RequiredArgsConstructor;
 import org.springframework.validation.BindingResult;
 
 import com.righthand.common.util.ConvertUtil;
@@ -34,20 +36,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Slf4j
+@RequiredArgsConstructor
 @RestController
 public class BoardController {
 
-    @Autowired
-    BoardService boardService;
-
-    @Autowired
-    MembershipService membershipService;
-
-    @Autowired
-    FileService fileService;
-
-    @Autowired
-    BoardDao boardDao;
+    private final BoardService boardService;
+    private final MembershipService membershipService;
+    private final FileService fileService;
+    private final BoardDao boardDao;
+    private final BoardsService boardsService;
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private final String bucketUrl = "https://s3.ap-northeast-2.amazonaws.com/right-hand-dev";

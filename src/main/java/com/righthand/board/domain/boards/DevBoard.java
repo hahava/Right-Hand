@@ -1,4 +1,4 @@
-package com.righthand.notice.domain.boards;
+package com.righthand.board.domain.boards;
 
 import com.righthand.common.BaseTimeEntity;
 import lombok.AccessLevel;
@@ -7,29 +7,36 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Entity
-@Table(name = "TB_NOTICE_BOARD")
-public class TbNoticeBoard extends BaseTimeEntity {
+@Entity(name = "TB_DEVELOP_STORY_BOARD")
+public class DevBoard extends BaseTimeEntity {
 
     @Id
     @Column(name = "BOARD_SEQ")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long boardSeq;
 
-    @Column(length = 50, name = "BOARD_TITLE", nullable = false)
+    @Column(name = "BOARD_TITLE", nullable = false)
     private String boardTitle;
 
     @Column(columnDefinition = "TEXT", name = "BOARD_CONTENT", nullable = false)
     private String boardContent;
 
+    @Lob
+    @Column(name = "BOARD_CONTENT4SEARCHING")
+    private String boardContent4Searching;
+
+    @Column(name = "BOARD_PROFILE_SEQ")
+    private Long boardProfileSeq;
+
     @Builder
-    public TbNoticeBoard(String boardTitle, String boardContent){
+    public DevBoard(String boardTitle, String boardContent, String boardContent4Searching,
+                    Long boardProfileSeq) {
         this.boardTitle = boardTitle;
         this.boardContent = boardContent;
+        this.boardContent4Searching = boardContent4Searching;
+        this.boardProfileSeq = boardProfileSeq;
     }
-
 }
