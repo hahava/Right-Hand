@@ -13,7 +13,7 @@ import java.util.Map;
 
 @Repository
 @Mapper
-@ComponentScan(basePackages = "com.righthand.board.dao")
+//@ComponentScan(basePackages = "com.righthand.board.dao")
 public interface BoardDao {
     List<Map<String, Object>> selectBoardListTech(BoardCountVO vo);
     List<Map<String, Object>> selectBoardListDev(BoardCountVO vo);
