@@ -26,9 +26,9 @@ spring:
   profiles: dev
   datasource:
     driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-    url: jdbc:log4jdbc:mysql://121.134.77.202:3408/RIGHT_HAND_DEV
-    username: todos
-    password: wkdqkr3266@
+    url: jdbc:log4jdbc:mysql://smldb.czxi1b10dlvz.ap-northeast-2.rds.amazonaws.com:3306/RIGHT_HAND_DEV
+    username: root
+    password: password!
   jpa:
     show-sql: true
     hibernate:
