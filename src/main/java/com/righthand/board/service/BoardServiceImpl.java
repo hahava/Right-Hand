@@ -341,8 +341,7 @@ public class BoardServiceImpl implements BoardService {
             rtn = giveRhPowerAndDecreaseLimitAtBoard(membershipInfo);
 
             // TB_MY_ACTIVITY DB의 데이터를 갱신한다.
-            insertRhpBreakdown(input_data, membershipInfo, "tech", 'b');
-
+            if(rtn == ReturnType.RTN_TYPE_OK)insertRhpBreakdown(input_data, membershipInfo, "tech", 'b');
         } catch (Exception e) {
             boardSemaphore.release();
             return ReturnType.RTN_TYPE_BOARD_INSERT_NG;
@@ -364,7 +363,7 @@ public class BoardServiceImpl implements BoardService {
             input_data.replace("boardContent", boardContent);
             boardDao.insertBoardListDev(input_data);
             rtn = giveRhPowerAndDecreaseLimitAtBoard(membershipInfo);
-            insertRhpBreakdown(input_data, membershipInfo, "dev", 'b');
+            if(rtn == ReturnType.RTN_TYPE_OK) insertRhpBreakdown(input_data, membershipInfo, "dev", 'b');
         } catch (Exception e) {
             boardSemaphore.release();
             return ReturnType.RTN_TYPE_BOARD_INSERT_NG;
