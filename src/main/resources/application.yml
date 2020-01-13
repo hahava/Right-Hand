@@ -4,6 +4,26 @@
 spring:
   profiles:
     active: dev
+
+# dev 환경
+---
+spring:
+  profiles: prod
+    include: real-db
+  jpa:
+    show-sql: true
+    hibernate:
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+  resources:
+    static-locations: classpath:/resources,classpath:/static/,classpath:/templates/static/,file:../Right-Hand-Imgs/
+
+  redis:
+    port: 6379
+    host: 127.0.0.1
+  session:
+    store-type: redis
   thymeleaf:
     check-template: false
     prefix: classpath:/templates/
@@ -20,15 +40,11 @@ mybatis:
   configuration:
     map-underscore-to-camel-case: true
 
-# dev 환경
 ---
+
 spring:
   profiles: dev
-  datasource:
-    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-    url: jdbc:log4jdbc:mysql://smldb.czxi1b10dlvz.ap-northeast-2.rds.amazonaws.com:3306/RIGHT_HAND_DEV
-    username: root
-    password: password!
+    include: dev-db
   jpa:
     show-sql: true
     hibernate:
@@ -38,30 +54,6 @@ spring:
   resources:
     static-locations: classpath:/resources,classpath:/static/,classpath:/templates/static/,file:../Right-Hand-Imgs/
 
-  redis:
-    port: 6379
-    host: 127.0.0.1
-  session:
-    store-type: redis
-
----
-
-spring:
-  profiles: local
-  datasource:
-    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-    url: jdbc:log4jdbc:mysql://121.134.77.202:3408/RIGHT_HAND_DEV
-    username: todos
-    password: wkdqkr3266@
-    jpa:
-      show-sql: true
-      hibernate:
-        naming:
-          implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
-          physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-    resources:
-      static-locations: classpath:/resources,classpath:/static/,classpath:/templates/static/,file:../Right-Hand-Imgs/
-
 # test 환경
 ---
 spring:
@@ -69,18 +61,3 @@ spring:
   h2:
     console:
       enabled: true
-
-
-
-# prod(deploy) 환경
----
-spring:
-  profiles: prod
-  redis:
-    host: 127.0.0.1
-    port: 6379
-  session:
-    store-type: redis
-#  resources:
-#  static-locations:
-
